@@ -10,7 +10,7 @@ UnionWebApi is a modular, layered web API project built with **.NET 9** and C# 1
 - **AutoMapper**: Automatic mapping between DTOs and entities.
 - **CAP (EventBus)**: Distributed transaction and event bus integration (with SQL Server and RabbitMQ).
 - **RabbitMQ**: Message queue infrastructure.
-- **Swagger / OpenAPI**: Interactive API documentation and testing.
+- **Scalar / OpenAPI**: Interactive API documentation and testing.
 - **JWT Bearer Authentication**: Secure authentication and authorization.
 - **Redis**: Caching layer (via Infrastructure).
 - **Newtonsoft.Json & System.Text.Json**: JSON serialization and reference handling.
