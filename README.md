@@ -1,6 +1,6 @@
 # OnionWebApi
 
-UnionWebApi is a modular, layered web API project built with **.NET 9** and C# 13, designed for scalable, maintainable, and modern web service development. The project leverages best practices such as dependency injection, modular service registration, and OpenAPI/Swagger documentation.
+OnionWebApi is a modular, layered web API project built with **.NET 9** and C# 13, designed for scalable, maintainable, and modern web service development. The project leverages best practices such as dependency injection, modular service registration, and OpenAPI/Swagger documentation.
 
 ## Technologies Used
 
