@@ -37,8 +37,8 @@ UnionWebApi is a modular, layered web API project built with **.NET 9** and C# 1
   dotnet run --project src/Presentation/UnionWebApi.Api
 
 
-6. **Access Swagger UI:**
-   - Navigate to `https://localhost:<port>/swagger` in your browser.
+6. **Access Scalar UI:**
+   - Navigate to `https://localhost:<port>/scalar` in your browser.
 
 ## Usage
 
