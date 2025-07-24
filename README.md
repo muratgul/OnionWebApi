@@ -2,6 +2,22 @@
 
 UnionWebApi is a modular, layered web API project built with **.NET 9** and C# 13, designed for scalable, maintainable, and modern web service development. The project leverages best practices such as dependency injection, modular service registration, and OpenAPI/Swagger documentation.
 
+## Technologies Used
+
+- **.NET 9** and **C# 13**: Modern, high-performance platform for web API development.
+- **ASP.NET Core Web API**: Framework for building RESTful services.
+- **Entity Framework Core**: Object-relational mapping (ORM) for data access.
+- **AutoMapper**: Automatic mapping between DTOs and entities.
+- **CAP (EventBus)**: Distributed transaction and event bus integration (with SQL Server and RabbitMQ).
+- **RabbitMQ**: Message queue infrastructure.
+- **Swagger / OpenAPI**: Interactive API documentation and testing.
+- **JWT Bearer Authentication**: Secure authentication and authorization.
+- **Redis**: Caching layer (via Infrastructure).
+- **Newtonsoft.Json & System.Text.Json**: JSON serialization and reference handling.
+- **OData (optional)**: Advanced querying support (available in code comments).
+- **CORS**: Cross-Origin Resource Sharing configuration.
+- **Layered Architecture**: Application, Persistence, Infrastructure, Mapper, and API layers.
+
 ## Features
 
 - **Layered Architecture:** Clean separation of concerns with Application, Persistence, Infrastructure, and API layers.
