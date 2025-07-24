@@ -1,0 +1,15 @@
+﻿global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using UnionWebApi.Domain.Entities;
+global using System.Reflection;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using System.Linq.Expressions;
+global using Microsoft.EntityFrameworkCore.Query;
+global using UnionWebApi.Application.Interfaces.Repositories;
+global using UnionWebApi.Domain.Common;
+global using UnionWebApi.Application.Interfaces.UnitOfWorks;
+global using UnionWebApi.Persistence.Context;
+global using UnionWebApi.Persistence.Repositories;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using UnionWebApi.Persistence.UnitOfWorks;
