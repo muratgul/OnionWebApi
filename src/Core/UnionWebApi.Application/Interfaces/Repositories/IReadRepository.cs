@@ -1,4 +1,6 @@
-﻿namespace UnionWebApi.Application.Interfaces.Repositories;
+﻿using UnionWebApi.Application.Utilities.Results;
+
+namespace UnionWebApi.Application.Interfaces.Repositories;
 public interface IReadRepository<T> where T : class, IEntityBase, new()
 {
     Task<IList<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null,
@@ -6,7 +8,7 @@ public interface IReadRepository<T> where T : class, IEntityBase, new()
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         bool enableTracking = false);
 
-    Task<IList<T>> GetAllByPagingAsync(Expression<Func<T, bool>>? predicate = null,
+    Task<PagedList<T>> GetAllByPagingAsync(Expression<Func<T, bool>>? predicate = null,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         bool enableTracking = false, int currentPage = 1, int pageSize = 3);
@@ -18,4 +20,9 @@ public interface IReadRepository<T> where T : class, IEntityBase, new()
     IQueryable<T> Find(Expression<Func<T, bool>> predicate, bool enableTracking = false);
 
     Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null);
+
+    PagingResult<T> GetListForPaging(int page, string propertyName, bool asc,
+       Expression<Func<T, bool>>? expression = null, params Expression<Func<T, object>>[]? includeEntities);
+
+    Task<IQueryable<T>> GetAllQueryable();
 }

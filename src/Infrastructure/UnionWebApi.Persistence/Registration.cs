@@ -8,6 +8,7 @@ public static class Registration
 
         services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
         services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
+        services.AddScoped(typeof(ICustomRepository<>), typeof(CustomRepository<>));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

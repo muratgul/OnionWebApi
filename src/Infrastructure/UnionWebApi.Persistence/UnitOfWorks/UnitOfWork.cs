@@ -12,6 +12,7 @@ public class UnitOfWork : IUnitOfWork
 
     public int Save() => dbContext.SaveChanges();
     public async Task<int> SaveAsync() => await dbContext.SaveChangesAsync();
+    ICustomRepository<T> IUnitOfWork.GetCustomRepository<T>() => new CustomRepository<T>(dbContext);
     IReadRepository<T> IUnitOfWork.GetReadRepository<T>() => new ReadRepository<T>(dbContext);
     IWriteRepository<T> IUnitOfWork.GetWriteRepository<T>() => new WriteRepository<T>(dbContext);
 }
