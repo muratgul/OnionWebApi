@@ -1,6 +1,6 @@
 # OnionWebApi
 
-OnionWebApi is a modular, layered web API project built with **.NET 9** and C# 13, designed for scalable, maintainable, and modern web service development. The project leverages best practices such as dependency injection, modular service registration, and OpenAPI/Swagger documentation.
+OnionWebApi is a modular, layered web API project built with **.NET 9** and C# 13, designed for scalable, maintainable, and modern web service development. The project leverages best practices such as dependency injection, modular service registration, and OpenAPI/Scalar documentation.
 
 ## Technologies Used
 
@@ -22,7 +22,7 @@ OnionWebApi is a modular, layered web API project built with **.NET 9** and C# 1
 
 - **Layered Architecture:** Clean separation of concerns with Application, Persistence, Infrastructure, and API layers.
 - **Modular Service Registration:** Uses registrar classes for environment, third-party, MVC, and layer-specific service configuration.
-- **OpenAPI & Swagger:** Integrated API documentation and JWT Bearer authentication support.
+- **OpenAPI & Scalar:** Integrated API documentation and JWT Bearer authentication support.
 - **Authentication & Authorization:** Built-in JWT authentication.
 - **Pagination Helper:** Utilities for paginated API responses.
 - **OData (Optional):** Ready for OData integration (commented in code).
@@ -60,7 +60,7 @@ OnionWebApi is a modular, layered web API project built with **.NET 9** and C# 1
 
 - The API is organized with controllers under the `src/Presentation/UnionWebApi.Api` project.
 - JWT Bearer authentication is required for protected endpoints.
-- Use the Swagger UI for interactive API exploration and testing.
+- Use the Scalar UI for interactive API exploration and testing.
 
 ## Project Structure
 
