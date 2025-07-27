@@ -12,6 +12,14 @@ public class CreateBrandCommandHandler : BaseHandler, IRequestHandler<CreateBran
 
     public async Task<Unit> Handle(CreateBrandCommandRequest request, CancellationToken cancellationToken)
     {        
+        await _unitOfWork.GetWriteRepository<Brand>().AddAsync(new Brand
+        {
+            Name = request.Name,
+            IsDeleted = false
+        });
+
+        await _unitOfWork.SaveAsync();
+
         return Unit.Value;
     }
 }

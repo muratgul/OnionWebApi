@@ -1,16 +1,21 @@
-﻿namespace UnionWebApi.Application.Beheviors;
+﻿using Microsoft.Extensions.Options;
+using UnionWebApi.Application.RedisCache;
+
+namespace UnionWebApi.Application.Beheviors;
 public class RedisCacheBehevior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 {
     private readonly IRedisCacheService redisCacheService;
+    private readonly RedisCacheSettings _settings;
 
-    public RedisCacheBehevior(IRedisCacheService redisCacheService)
+    public RedisCacheBehevior(IRedisCacheService redisCacheService, IOptions<RedisCacheSettings> settings)
     {
         this.redisCacheService = redisCacheService;
+        _settings = settings.Value;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        if (request is ICacheableQuery query)
+        if (_settings.Enabled && request is ICacheableQuery query)
         {
             var cacheKey = query.CacheKey;
             var cacheTime = query.CacheTime;

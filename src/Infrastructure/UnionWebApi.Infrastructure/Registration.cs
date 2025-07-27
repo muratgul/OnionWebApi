@@ -1,4 +1,6 @@
-﻿namespace UnionWebApi.Infrastructure;
+﻿using UnionWebApi.Application.RedisCache;
+
+namespace UnionWebApi.Infrastructure;
 public static class Registration
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)

@@ -1,4 +1,6 @@
-﻿namespace UnionWebApi.Infrastructure.RedisCache;
+﻿using UnionWebApi.Application.RedisCache;
+
+namespace UnionWebApi.Infrastructure.RedisCache;
 
 public class RedisCacheService : IRedisCacheService
 {

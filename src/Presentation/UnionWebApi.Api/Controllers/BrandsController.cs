@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using UnionWebApi.Application.Features.Brands.Commands;
 using UnionWebApi.Application.Features.Brands.Quaries;
 
 namespace UnionWebApi.Api.Controllers;
@@ -16,10 +18,17 @@ public class BrandsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetAllBrandsQueryRequest request)
     {
-        var response = await mediator.Send(new GetAllBrandsQueryRequest());
+        Log.Information("Handling GetAllBrandsQueryRequest");
+        var response = await mediator.Send(request);
+        return Ok(response);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Add([FromBody] CreateBrandCommandRequest request)
+    {
+        var response = await mediator.Send(request);
         return Ok(response);
     }
 }

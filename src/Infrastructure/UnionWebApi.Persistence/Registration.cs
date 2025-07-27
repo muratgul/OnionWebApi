@@ -1,4 +1,6 @@
-﻿namespace UnionWebApi.Persistence;
+﻿using UnionWebApi.Application.Interfaces.RedisCache;
+
+namespace UnionWebApi.Persistence;
 public static class Registration
 {
     public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)

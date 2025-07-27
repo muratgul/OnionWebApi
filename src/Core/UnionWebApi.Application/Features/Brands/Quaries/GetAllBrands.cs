@@ -1,36 +1,48 @@
-﻿using UnionWebApi.Application.Utilities.Results;
+﻿using Serilog;
 
 namespace UnionWebApi.Application.Features.Brands.Quaries;
 public class GetAllBrandsQueryResponse
 {
     public required string Name { get; set; }
-    public bool IsDeleted
-    {
-        get; set;
-    }
+    public bool IsDeleted { get; set; }
 }
 
 
-public class GetAllBrandsQueryRequest : IRequest<IDataResult<IList<GetAllBrandsQueryResponse>>>, ICacheableQuery
+public class GetAllBrandsQueryRequest : PagingParameter, IRequest<PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>, ICacheableQuery
 {
     public string CacheKey => "GetAllBrands";
     public double CacheTime => 5;
 }
 
-public class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrandsQueryRequest, IDataResult<IList<GetAllBrandsQueryResponse>>>
+public class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrandsQueryRequest, PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>
 {
-    public GetAllBrandsQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor) : base(mapper, unitOfWork, httpContextAccessor)
+    private readonly IUriService _uriService;
+    public GetAllBrandsQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService) : base(mapper, unitOfWork, httpContextAccessor)
     {
+        _uriService = uriService;
     }
 
-    public async Task<IDataResult<IList<GetAllBrandsQueryResponse>>> Handle(GetAllBrandsQueryRequest request, CancellationToken cancellationToken)
+    public async Task<PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>> Handle(GetAllBrandsQueryRequest request, CancellationToken cancellationToken)
     {
-        var brands = await _unitOfWork.GetReadRepository<Brand>().GetAllAsync();
+        Log.Information("Voodoo");
 
-        var mapperData = _mapper.Map<GetAllBrandsQueryResponse, Brand>(brands);
+        var pagedBrands = await _unitOfWork.GetReadRepository<Brand>().GetAllByPagingAsync(
+         predicate: null,
+         include: null,
+         orderBy: null,
+         enableTracking: false,
+         currentPage: request.PageNumber,
+         pageSize: request.PageSize);
 
-        var result = new SuccessDataResult<IList<GetAllBrandsQueryResponse>>(mapperData, "Brands retrieved successfully.");
+        var mappedData = _mapper.Map<GetAllBrandsQueryResponse, Brand>(pagedBrands.Items);
 
-        return result;
+        return PaginationHelper.CreatePaginatedResponse(
+           isDynamic: false,
+           data: mappedData,
+           paginationFilter: new PaginationFilter(request.PageNumber, request.PageSize),
+           totalRecords: pagedBrands.TotalCount,
+           uriService: _uriService,
+           route: "Brands/GetAll",
+           fields: null);
     }
 }

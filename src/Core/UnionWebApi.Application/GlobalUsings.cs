@@ -26,3 +26,7 @@ global using System.Reflection;
 global using Microsoft.Extensions.DependencyInjection;
 global using UnionWebApi.Application.Beheviors;
 global using UnionWebApi.Application.Exceptions;
+global using UnionWebApi.Application.Helpers;
+global using UnionWebApi.Application.RequestParameters;
+global using UnionWebApi.Application.Utilities.Results;
+global using UnionWebApi.Application.Utilities.URI;

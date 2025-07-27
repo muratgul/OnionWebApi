@@ -8,31 +8,28 @@ public static class PaginationHelper
 
     public static PaginatedResult<IEnumerable<T>> CreatePaginatedResponse<T>(bool isDynamic, IEnumerable<T> data, PaginationFilter paginationFilter, int totalRecords, IUriService uriService, string route, string fields = "")
     {
+        var pageNumber = paginationFilter.PageNumber < 1 ? 1 : paginationFilter.PageNumber;
+        var pageSize = paginationFilter.PageSize < 1 ? 10 : paginationFilter.PageSize;
+
         if (!isDynamic)
-            data = data.Skip((paginationFilter.PageNumber - 1) * paginationFilter.PageSize).Take(paginationFilter.PageSize);
+            data = data.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-        int roundedTotalPages;
-        var response = new PaginatedResult<IEnumerable<T>>(data, paginationFilter.PageNumber, paginationFilter.PageSize);
-        var totalPages = totalRecords / (double)paginationFilter.PageSize;
-        if (paginationFilter.PageNumber <= 0 || paginationFilter.PageSize <= 0)
-        {
-            roundedTotalPages = 1;
-            paginationFilter.PageNumber = 1;
-            paginationFilter.PageSize = 1;
-        }
-        else
-        {
-            roundedTotalPages = Convert.ToInt32(Math.Ceiling(totalPages));
-        }
+        var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
 
-        response.NextPage = paginationFilter.PageNumber >= 1 && paginationFilter.PageNumber < roundedTotalPages
-            ? uriService.GeneratePageRequestUri(new PaginationFilter(paginationFilter.PageNumber + 1, paginationFilter.PageSize), route, fields) : null;
-        response.PreviousPage = paginationFilter.PageNumber - 1 >= 1 && paginationFilter.PageNumber <= roundedTotalPages ? uriService.GeneratePageRequestUri(
-                    new PaginationFilter(paginationFilter.PageNumber - 1, paginationFilter.PageSize), route, fields) : null;
-        response.FirstPage = uriService.GeneratePageRequestUri(new PaginationFilter(1, paginationFilter.PageSize), route, fields);
-        response.LastPage = uriService.GeneratePageRequestUri(new PaginationFilter(roundedTotalPages, paginationFilter.PageSize), route, fields);
-        response.TotalPages = roundedTotalPages;
-        response.TotalRecords = totalRecords;
+        var response = new PaginatedResult<IEnumerable<T>>(data, pageNumber, pageSize)
+        {
+            TotalPages = totalPages,
+            TotalRecords = totalRecords,
+            FirstPage = uriService.GeneratePageRequestUri(new PaginationFilter(1, pageSize), route, fields),
+            LastPage = uriService.GeneratePageRequestUri(new PaginationFilter(totalPages, pageSize), route, fields),
+            NextPage = pageNumber < totalPages
+           ? uriService.GeneratePageRequestUri(new PaginationFilter(pageNumber + 1, pageSize), route, fields)
+           : null,
+            PreviousPage = pageNumber > 1
+           ? uriService.GeneratePageRequestUri(new PaginationFilter(pageNumber - 1, pageSize), route, fields)
+           : null
+        };
+
         return response;
     }
 

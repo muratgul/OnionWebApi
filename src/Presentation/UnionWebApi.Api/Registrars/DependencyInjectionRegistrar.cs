@@ -9,7 +9,7 @@ public class DependencyInjectionRegistrar : IWebApplicationBuilderRegistrar
     {
         builder.Services.AddScoped<IUriService>(provider =>
         {
-            return new UriManager("http://localhost:5800/api/");
+            return new UriManager("http://localhost:5193/api/");
         });
     }
 }

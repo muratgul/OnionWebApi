@@ -11,6 +11,6 @@ public class BaseHandler
         _mapper = mapper;
         _unitOfWork = unitOfWork;
         _httpContextAccessor = httpContextAccessor;
-        _userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }
