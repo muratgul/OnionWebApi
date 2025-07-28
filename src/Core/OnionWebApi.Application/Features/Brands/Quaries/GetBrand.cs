@@ -1,9 +1,6 @@
 ﻿namespace OnionWebApi.Application.Features.Brands.Quaries;
-public class GetBrandQueryResponse
+public class GetBrandQueryResponse : BrandDto
 {
-    public string Name { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public DateTime? UpdatedDate { get; set; }
 }
 
 public class GetBrandQueryRequest : IRequest<IDataResult<GetBrandQueryResponse>>

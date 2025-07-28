@@ -1,6 +1,6 @@
 # OnionWebApi
 
-OnionWebApi is a modular, layered web API project built with **.NET 9** and C# 13, designed for scalable, maintainable, and modern web service development. The project leverages best practices such as dependency injection, modular service registration, and OpenAPI/Scalar documentation.
+OnionWebApi (Onion Architecture) is a modular, layered web API project built with **.NET 9** and C# 13, designed for scalable, maintainable, and modern web service development. The project leverages best practices such as dependency injection, modular service registration, and OpenAPI/Scalar documentation.
 
 ## Technologies Used
 

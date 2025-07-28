@@ -1,8 +1,6 @@
 ﻿namespace OnionWebApi.Application.Features.Brands.Quaries;
-public class GetAllBrandsQueryResponse : Brand
+public class GetAllBrandsQueryResponse : BrandDto
 {
-    //public required string Name { get; set; }
-    //public bool IsDeleted { get; set; }
 }
 
 

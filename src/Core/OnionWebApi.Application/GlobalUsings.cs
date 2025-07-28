@@ -39,3 +39,4 @@ global using System.Security.Cryptography;
 global using System.Text;
 global using Newtonsoft.Json.Linq;
 global using OnionWebApi.Application.Interfaces.AutoMapper;
+global using OnionWebApi.Application.DTOs;
