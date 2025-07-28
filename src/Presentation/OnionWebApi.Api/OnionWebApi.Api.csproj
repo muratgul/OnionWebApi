@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -35,10 +35,6 @@
     <ProjectReference Include="..\..\Core\OnionWebApi.Application\OnionWebApi.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\OnionWebApi.Infrastructure\OnionWebApi.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\OnionWebApi.Persistence\OnionWebApi.Persistence.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\UnionWebApi.Infrastructure\OnionWebApi.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\UnionWebApi.Persistence\OnionWebApi.Persistence.csproj" />
     <ProjectReference Include="..\..\Mapper\OnionWebApi.Mapper\OnionWebApi.Mapper.csproj" />
-    <ProjectReference Include="..\..\Mapper\UnionWebApi.Mapper\OnionWebApi.Mapper.csproj" />
   </ItemGroup>
-
 </Project>
