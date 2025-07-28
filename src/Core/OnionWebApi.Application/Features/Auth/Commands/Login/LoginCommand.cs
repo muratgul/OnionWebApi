@@ -1,18 +1,21 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.Login;
 public class LoginCommandResponse
 {
-    public string Token { get; set; } 
-    public string RefreshToken { get; set; }
+    public string Token { get; set; } = default!;
+    public string RefreshToken { get; set; } = default!;
     public DateTime Expiration { get; set; }
 }
 
 public class LoginCommandRequest : IRequest<LoginCommandResponse>
 {
-    [DefaultValue("cemkeskin12@gmail.com")]
-    public string Email { get; set; }
-    
+    [Required]
+    [EmailAddress]
+    [DefaultValue("muratgul@gmail.com")]
+    public string Email { get; set; } = default!;
+
+    [Required]
     [DefaultValue("123456")] 
-    public string Password { get; set; }
+    public string Password { get; set; } = default!;
 }
 
 public class LoginCommandHandler : BaseHandler, IRequestHandler<LoginCommandRequest, LoginCommandResponse>
@@ -22,7 +25,7 @@ public class LoginCommandHandler : BaseHandler, IRequestHandler<LoginCommandRequ
     private readonly ITokenService tokenService;
     private readonly AuthRules authRules;
 
-    public LoginCommandHandler(UserManager<User> userManager, IConfiguration configuration, ITokenService tokenService, AuthRules authRules, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor) : base(mapper, unitOfWork, httpContextAccessor)
+    public LoginCommandHandler(UserManager<User> userManager, IConfiguration configuration, ITokenService tokenService, AuthRules authRules, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService) : base(mapper, unitOfWork, httpContextAccessor, uriService)
     {
         this.userManager = userManager;
         this.configuration = configuration;
@@ -31,25 +34,31 @@ public class LoginCommandHandler : BaseHandler, IRequestHandler<LoginCommandRequ
     }
     public async Task<LoginCommandResponse> Handle(LoginCommandRequest request, CancellationToken cancellationToken)
     {
-        User user = await userManager.FindByEmailAsync(request.Email);
-        bool checkPassword = await userManager.CheckPasswordAsync(user, request.Password);
+        var user = await userManager.FindByEmailAsync(request.Email);
+
+        if(user is null)
+        {
+            await authRules.EmailOrPasswordShouldNotBeInvalid(null, false);
+        }
+
+        var checkPassword = await userManager.CheckPasswordAsync(user, request.Password);
 
         await authRules.EmailOrPasswordShouldNotBeInvalid(user, checkPassword);
 
-        IList<string> roles = await userManager.GetRolesAsync(user);
+        var roles = await userManager.GetRolesAsync(user);
 
-        JwtSecurityToken token = await tokenService.CreateToken(user, roles);
-        string refreshToken = tokenService.GenerateRefreshToken();
+        var token = await tokenService.CreateToken(user, roles);
+        var refreshToken = tokenService.GenerateRefreshToken();
 
-        _ = int.TryParse(configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+        _ = int.TryParse(configuration["JWT:RefreshTokenValidityInDays"], out var refreshTokenValidityInDays);
 
         user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(refreshTokenValidityInDays);
 
         await userManager.UpdateAsync(user);
         await userManager.UpdateSecurityStampAsync(user);
 
-        string _token = new JwtSecurityTokenHandler().WriteToken(token);
+        var _token = new JwtSecurityTokenHandler().WriteToken(token);
 
         await userManager.SetAuthenticationTokenAsync(user, "Default", "AccessToken", _token);
 

@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Api.Registrars.Interfaces;
-
-namespace OnionWebApi.Api.Registrars;
+﻿namespace OnionWebApi.Api.Registrars;
 
 public class CorsRegistrar : IWebApplicationBuilderRegistrar
 {

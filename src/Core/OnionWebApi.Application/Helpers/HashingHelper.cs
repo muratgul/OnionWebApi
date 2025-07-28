@@ -1,7 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-
-namespace OnionWebApi.Application.Helpers;
+﻿namespace OnionWebApi.Application.Helpers;
 public class HashingHelper
 {
     public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

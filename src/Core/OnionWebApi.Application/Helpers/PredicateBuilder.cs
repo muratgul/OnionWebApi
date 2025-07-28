@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace OnionWebApi.Application.Helpers;
+﻿namespace OnionWebApi.Application.Helpers;
 public class PredicateBuilder<T>
 {
 

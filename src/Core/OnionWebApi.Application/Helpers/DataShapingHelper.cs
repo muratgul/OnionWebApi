@@ -1,6 +1,4 @@
-﻿using System.Dynamic;
-
-namespace OnionWebApi.Application.Helpers;
+﻿namespace OnionWebApi.Application.Helpers;
 public static class DataShapingHelper
 {
     public static IEnumerable<ExpandoObject> ShapeDataList<TSource>(this IEnumerable<TSource> source, string fields)

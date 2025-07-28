@@ -1,16 +1,9 @@
 ﻿namespace OnionWebApi.Application.Bases;
-public class BaseHandler
+public class BaseHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService)
 {
-    public readonly IMapper _mapper;
-    public readonly IUnitOfWork _unitOfWork;
-    public readonly IHttpContextAccessor _httpContextAccessor;
-    public readonly string _userId;
-
-    public BaseHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
-    {
-        _mapper = mapper;
-        _unitOfWork = unitOfWork;
-        _httpContextAccessor = httpContextAccessor;
-        _userId = httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-    }
+    public readonly IMapper _mapper = mapper;
+    public readonly IUnitOfWork _unitOfWork = unitOfWork;
+    public readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    public readonly string _userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+    public readonly IUriService _uriService = uriService;
 }

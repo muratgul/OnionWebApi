@@ -1,21 +1,21 @@
 ﻿namespace OnionWebApi.Infrastructure.Tokens;
 public class TokenService : ITokenService
 {
-    private readonly UserManager<User> userManager;
-    private readonly TokenSettings tokenSettings;
+    private readonly UserManager<User> _userManager;
+    private readonly TokenSettings _tokenSettings;
 
     public TokenService(IOptions<TokenSettings> options, UserManager<User> userManager)
     {
-        tokenSettings = options.Value;
-        this.userManager = userManager;
+        _tokenSettings = options.Value;
+        _userManager = userManager;
     }
     public async Task<JwtSecurityToken> CreateToken(User user, IList<string> roles)
     {
         var claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email)
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(JwtRegisteredClaimNames.Email, user.Email)
             };
 
         foreach (var role in roles)
@@ -23,17 +23,17 @@ public class TokenService : ITokenService
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Secret));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenSettings.Secret));
 
         var token = new JwtSecurityToken(
-            issuer: tokenSettings.Issuer,
-            audience: tokenSettings.Audience,
-            expires: DateTime.Now.AddMinutes(tokenSettings.TokenValidityInMunitues),
+            issuer: _tokenSettings.Issuer,
+            audience: _tokenSettings.Audience,
+            expires: DateTime.Now.AddMinutes(_tokenSettings.TokenValidityInMunitues),
             claims: claims,
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
 
-        await userManager.AddClaimsAsync(user, claims);
+        await _userManager.AddClaimsAsync(user, claims);
 
         return token;
 
@@ -54,7 +54,7 @@ public class TokenService : ITokenService
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSettings.Secret)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenSettings.Secret)),
             ValidateLifetime = false
         };
 

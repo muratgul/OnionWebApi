@@ -15,3 +15,5 @@ global using System.Security.Claims;
 global using System.Security.Cryptography;
 global using Microsoft.AspNetCore.Identity;
 global using OnionWebApi.Domain.Entities;
+global using DotNetCore.CAP;
+global using OnionWebApi.Application.RedisCache;

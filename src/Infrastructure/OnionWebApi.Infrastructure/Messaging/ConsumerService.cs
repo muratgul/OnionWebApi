@@ -1,6 +1,4 @@
-﻿using DotNetCore.CAP;
-
-namespace OnionWebApi.Infrastructure.Messaging;
+﻿namespace OnionWebApi.Infrastructure.Messaging;
 public class ConsumerService : ICapSubscribe
 {
     [CapSubscribe("sample.rabbitmq.message")]

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace OnionWebApi.Application.Enums;
+﻿namespace OnionWebApi.Application.Enums;
 public enum ESort
 {
     [Display(Name = "OrderBy")]

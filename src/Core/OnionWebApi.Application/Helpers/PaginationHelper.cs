@@ -1,8 +1,4 @@
-﻿using System.Dynamic;
-using OnionWebApi.Application.Utilities.Results;
-using OnionWebApi.Application.Utilities.URI;
-
-namespace OnionWebApi.Application.Helpers;
+﻿namespace OnionWebApi.Application.Helpers;
 public static class PaginationHelper
 {
 

@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.RedisCache;
-
-namespace OnionWebApi.Infrastructure;
+﻿namespace OnionWebApi.Infrastructure;
 public static class Registration
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)

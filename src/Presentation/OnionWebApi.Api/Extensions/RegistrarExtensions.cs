@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Api.Registrars.Interfaces;
-
-namespace OnionWebApi.Api.Extensions;
+﻿namespace OnionWebApi.Api.Extensions;
 
 public static class RegistrarExtensions
 {

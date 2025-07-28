@@ -14,21 +14,20 @@ public class ExceptionMiddleware : IMiddleware
     }
     private static Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
     {
-        int statusCode = GetStatusCode(exception);
+        var statusCode = GetStatusCode(exception);
         httpContext.Response.ContentType = "application/json";
         httpContext.Response.StatusCode = statusCode;
 
-        if (exception.GetType() == typeof(ValidationException))
+        if (exception.GetType() == typeof(FluentValidation.ValidationException))
+        {
             return httpContext.Response.WriteAsync(new ExceptionModel
             {
-                Errors = ((ValidationException)exception).Errors.Select(x => x.ErrorMessage),
+                Errors = ((FluentValidation.ValidationException)exception).Errors.Select(x => x.ErrorMessage),
                 StatusCode = StatusCodes.Status400BadRequest
             }.ToString());
+        }
 
-        List<string> errors = new()
-            {
-                $"Hata Mesajı : {exception.Message}"
-            };
+        List<string> errors = [$"Hata Mesajı : {exception.Message}"];
 
         return httpContext.Response.WriteAsync(new ExceptionModel
         {
@@ -42,7 +41,7 @@ public class ExceptionMiddleware : IMiddleware
             {
                 BadRequestException => StatusCodes.Status400BadRequest,
                 NotFoundException => StatusCodes.Status400BadRequest,
-                ValidationException => StatusCodes.Status422UnprocessableEntity,
+                FluentValidation.ValidationException => StatusCodes.Status422UnprocessableEntity,
                 _ => StatusCodes.Status500InternalServerError
             };
 }

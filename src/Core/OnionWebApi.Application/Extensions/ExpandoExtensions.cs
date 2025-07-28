@@ -1,6 +1,4 @@
-﻿using System.Dynamic;
-
-namespace OnionWebApi.Application.Extensions;
+﻿namespace OnionWebApi.Application.Extensions;
 public static class ExpandoExtensions
 {
     public static ExpandoObject ToExpandoObject(this object obj)

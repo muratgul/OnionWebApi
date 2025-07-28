@@ -1,17 +1,9 @@
 ﻿namespace OnionWebApi.Persistence.Repositories;
-public class WriteRepository<T> : IWriteRepository<T> where T : class, IEntityBase, new()
+public class WriteRepository<T>(DbContext dbContext) : IWriteRepository<T> where T : class, IEntityBase, new()
 {
-    private readonly DbContext dbContext;
+    private readonly DbContext dbContext = dbContext;
 
-    public WriteRepository(DbContext dbContext)
-    {
-        this.dbContext = dbContext;
-    }
-
-    private DbSet<T> Table
-    {
-        get => dbContext.Set<T>();
-    }
+    private DbSet<T> Table => dbContext.Set<T>();
 
     public async Task AddAsync(T entity)
     {

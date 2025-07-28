@@ -1,7 +1,7 @@
 ﻿namespace OnionWebApi.Application.Exceptions;
 public class ExceptionModel : ErrorStatusCode
 {
-    public IEnumerable<string> Errors { get; set; }
+    public IEnumerable<string>? Errors { get; set; }
 
     public override string ToString()
     {
@@ -10,8 +10,5 @@ public class ExceptionModel : ErrorStatusCode
 }
 public class ErrorStatusCode
 {
-    public int StatusCode
-    {
-        get; set;
-    }
+    public int StatusCode { get; set; }
 }

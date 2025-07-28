@@ -1,11 +1,4 @@
-﻿using OnionWebApi.Api.Registrars.Interfaces;
-using OnionWebApi.Application;
-using OnionWebApi.Persistence;
-using OnionWebApi.Infrastructure;
-using OnionWebApi.Mapper;
-
-
-namespace OnionWebApi.Api.Registrars;
+﻿namespace OnionWebApi.Api.Registrars;
 
 public class LayersRegistrar : IWebApplicationBuilderRegistrar
 {

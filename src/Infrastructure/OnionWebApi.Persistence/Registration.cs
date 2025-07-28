@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.Interfaces.RedisCache;
-
-namespace OnionWebApi.Persistence;
+﻿namespace OnionWebApi.Persistence;
 public static class Registration
 {
     public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -11,7 +9,6 @@ public static class Registration
         services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
         services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
         services.AddScoped(typeof(ICustomRepository<>), typeof(CustomRepository<>));
-
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddIdentityCore<User>(opt =>

@@ -1,10 +1,5 @@
 ﻿namespace OnionWebApi.Persistence.Repositories;
-public class CustomRepository<T> : ICustomRepository<T>
+public class CustomRepository<T>(DbContext dbContext) : ICustomRepository<T>
 {
-    private readonly DbContext dbContext;
-
-    public CustomRepository(DbContext dbContext)
-    {
-        this.dbContext = dbContext;
-    }
+    private readonly DbContext dbContext = dbContext;
 }

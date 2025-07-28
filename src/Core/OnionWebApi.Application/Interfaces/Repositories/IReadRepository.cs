@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.Utilities.Results;
-
-namespace OnionWebApi.Application.Interfaces.Repositories;
+﻿namespace OnionWebApi.Application.Interfaces.Repositories;
 public interface IReadRepository<T> where T : class, IEntityBase, new()
 {
     IQueryable<T> GetAllQueryable(Expression<Func<T, bool>>? predicate = null,

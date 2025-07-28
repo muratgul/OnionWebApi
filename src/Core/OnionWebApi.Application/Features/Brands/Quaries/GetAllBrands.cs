@@ -1,10 +1,8 @@
-﻿using Serilog;
-
-namespace OnionWebApi.Application.Features.Brands.Quaries;
-public class GetAllBrandsQueryResponse
+﻿namespace OnionWebApi.Application.Features.Brands.Quaries;
+public class GetAllBrandsQueryResponse : Brand
 {
-    public required string Name { get; set; }
-    public bool IsDeleted { get; set; }
+    //public required string Name { get; set; }
+    //public bool IsDeleted { get; set; }
 }
 
 
@@ -16,10 +14,8 @@ public class GetAllBrandsQueryRequest : PagingParameter, IRequest<PaginatedResul
 
 public class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrandsQueryRequest, PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>
 {
-    private readonly IUriService _uriService;
-    public GetAllBrandsQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService) : base(mapper, unitOfWork, httpContextAccessor)
+    public GetAllBrandsQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService) : base(mapper, unitOfWork, httpContextAccessor, uriService)
     {
-        _uriService = uriService;
     }
 
     public async Task<PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>> Handle(GetAllBrandsQueryRequest request, CancellationToken cancellationToken)

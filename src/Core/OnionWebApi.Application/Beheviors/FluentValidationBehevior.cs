@@ -18,9 +18,6 @@ public class FluentValidationBehevior<TRequest, TResponse> : IPipelineBehavior<T
             .Where(f => f != null)
             .ToList();
 
-        if (failtures.Any())
-            throw new ValidationException(failtures);
-
-        return next();
+        return failtures.Count != 0 ? throw new FluentValidation.ValidationException(failtures) : next(cancellationToken);
     }
 }

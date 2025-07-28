@@ -1,7 +1,4 @@
-﻿using OnionWebApi.Api.Registrars.Interfaces;
-using OnionWebApi.Application.Utilities.URI;
-
-namespace OnionWebApi.Api.Registrars;
+﻿namespace OnionWebApi.Api.Registrars;
 
 public class DependencyInjectionRegistrar : IWebApplicationBuilderRegistrar
 {

@@ -1,9 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.OpenApi.Models;
-using OnionWebApi.Api.Registrars.Interfaces;
-
-namespace OnionWebApi.Api.Registrars;
+﻿namespace OnionWebApi.Api.Registrars;
 
 public class MvcRegistrar : IWebApplicationBuilderRegistrar
 {

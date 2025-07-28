@@ -1,31 +1,32 @@
-﻿using OnionWebApi.Application.RedisCache;
+﻿namespace OnionWebApi.Infrastructure.RedisCache;
 
-namespace OnionWebApi.Infrastructure.RedisCache;
-
-public class RedisCacheService : IRedisCacheService
+public class RedisCacheService : IRedisCacheService, IDisposable
 {
-    private readonly ConnectionMultiplexer redisConnection;
-    private readonly IDatabase database;
-    private readonly RedisCacheSettings settings;
+    private readonly ConnectionMultiplexer _redisConnection;
+    private readonly IDatabase _database;
+    private readonly RedisCacheSettings _settings;
     public RedisCacheService(IOptions<RedisCacheSettings> options)
     {
-        settings = options.Value;
-        var opt = ConfigurationOptions.Parse(settings.ConnectionString);
-        redisConnection = ConnectionMultiplexer.Connect(opt);
-        database = redisConnection.GetDatabase();
+        _settings = options.Value;
+        var opt = ConfigurationOptions.Parse(_settings.ConnectionString);
+        _redisConnection = ConnectionMultiplexer.Connect(opt);
+        _database = _redisConnection.GetDatabase();
     }
     public async Task<T> GetAsync<T>(string key)
     {
-        var value = await database.StringGetAsync(key);
-        if (value.HasValue)
-            return JsonConvert.DeserializeObject<T>(value);
-
-        return default;
+        var value = await _database.StringGetAsync(key);
+        return value.HasValue ? JsonConvert.DeserializeObject<T>(value) : default;
     }
 
     public async Task SetAsync<T>(string key, T value, DateTime? expirationTime = null)
     {
-        TimeSpan timeUnitExpiration = expirationTime.Value - DateTime.Now;
-        await database.StringSetAsync(key, JsonConvert.SerializeObject(value), timeUnitExpiration);
+        TimeSpan? expiry = null;
+        if (expirationTime.HasValue)
+        {
+            expiry = expirationTime.Value - DateTime.UtcNow;
+        }
+
+        await _database.StringSetAsync(key, JsonConvert.SerializeObject(value), expiry);
     }
+    public void Dispose() => _redisConnection?.Dispose();
 }

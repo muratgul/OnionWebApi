@@ -1,12 +1,4 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using OnionWebApi.Application.Features.Auth.Commands.Login;
-using OnionWebApi.Application.Features.Auth.Commands.RefreshToken;
-using OnionWebApi.Application.Features.Auth.Commands.Register;
-using OnionWebApi.Application.Features.Auth.Commands.Revoke;
-using OnionWebApi.Application.Features.Auth.Commands.RevokeAll;
-
-namespace OnionWebApi.Api.Controllers;
+﻿namespace OnionWebApi.Api.Controllers;
 [Route("api/[controller]/[action]")]
 [ApiController]
 public class AuthController : ControllerBase
