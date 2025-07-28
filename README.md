@@ -41,7 +41,7 @@ OnionWebApi is a modular, layered web API project built with **.NET 9** and C# 1
 ### Installation
 
 1. **Clone the repository:**
-  git clone https://github.com/your-org/UnionWebApi.git cd UnionWebApi
+  git clone https://github.com/muratgul/OnionWebApi.git cd OnionWebApi
 
 2. **Configure the database and RabbitMQ:**
    - Update `appsettings.json` with your SQL Server and RabbitMQ connection details.
