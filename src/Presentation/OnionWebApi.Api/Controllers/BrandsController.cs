@@ -3,7 +3,7 @@ using OnionWebApi.Application.Features.Brands.Commands.Delete;
 using OnionWebApi.Application.Features.Brands.Commands.Update;
 
 namespace OnionWebApi.Api.Controllers;
-[Route("api/[controller]/[action]")]
+[Route("api/[controller]")]
 [ApiController]
 public class BrandsController : ControllerBase
 {
@@ -34,6 +34,12 @@ public class BrandsController : ControllerBase
 
     [HttpDelete]
     public async Task<IActionResult> Delete([FromBody] DeleteBrandCommandRequest request)
+    {
+        return Ok(await _mediator.Send(request));
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById([FromQuery] GetBrandQueryRequest request)
     {
         return Ok(await _mediator.Send(request));
     }

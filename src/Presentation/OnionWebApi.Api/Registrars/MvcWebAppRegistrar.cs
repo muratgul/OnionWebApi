@@ -1,9 +1,12 @@
-﻿namespace OnionWebApi.Api.Registrars;
+﻿using OnionWebApi.Application.Exceptions;
+
+namespace OnionWebApi.Api.Registrars;
 
 public class MvcWebAppRegistrar : IWebApplicationRegistrar
 {
     public void RegisterPipelineComponents(WebApplication app)
     {
+        app.UseMiddleware<ExceptionMiddleware>();
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
