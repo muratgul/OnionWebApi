@@ -1,0 +1,15 @@
+﻿global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using OnionWebApi.Domain.Entities;
+global using System.Reflection;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using System.Linq.Expressions;
+global using Microsoft.EntityFrameworkCore.Query;
+global using OnionWebApi.Application.Interfaces.Repositories;
+global using OnionWebApi.Domain.Common;
+global using OnionWebApi.Application.Interfaces.UnitOfWorks;
+global using OnionWebApi.Persistence.Context;
+global using OnionWebApi.Persistence.Repositories;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using OnionWebApi.Persistence.UnitOfWorks;
