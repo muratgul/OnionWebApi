@@ -30,7 +30,7 @@ public class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrand
 
         var mappedData = _mapper.Map<GetAllBrandsQueryResponse, Brand>(pagedBrands.Items);
 
-        return PaginationHelper.CreatePaginatedResponse(
+        var result = PaginationHelper.CreatePaginatedResponse(
            isDynamic: false,
            data: mappedData,
            paginationFilter: new PaginationFilter(request.PageNumber, request.PageSize),
@@ -38,5 +38,7 @@ public class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrand
            uriService: _uriService,
            route: "Brands/GetAll",
            fields: null);
+
+        return result;
     }
 }

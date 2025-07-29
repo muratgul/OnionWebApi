@@ -15,9 +15,13 @@ public static class Registration
             opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>
         {
+            opt.Authority = configuration["JWT:Authority"];
+            opt.Audience = configuration["JWT:Audience"];
+            opt.RequireHttpsMetadata = false;
             opt.SaveToken = true;
             opt.TokenValidationParameters = new TokenValidationParameters()
             {
+
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 ValidateIssuerSigningKey = true,

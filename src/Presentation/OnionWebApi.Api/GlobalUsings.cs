@@ -20,3 +20,6 @@ global using Microsoft.OpenApi.Models;
 global using Scalar.AspNetCore;
 global using OnionWebApi.Persistence.Context;
 global using OnionWebApi.Api.Extensions;
+global using OnionWebApi.Application.Features.Brands.Commands.Create;
+global using OnionWebApi.Application.Features.Brands.Commands.Delete;
+global using OnionWebApi.Application.Features.Brands.Commands.Update;
