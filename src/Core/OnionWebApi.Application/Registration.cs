@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application;
+﻿using OnionWebApi.Application.Services;
+
+namespace OnionWebApi.Application;
 
 public static class Registration
 {
@@ -14,6 +16,8 @@ public static class Registration
 
         services.AddValidatorsFromAssembly(assembly);
         ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("tr");
+
+        services.AddScoped<IPaginationService, PaginationService>();
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehevior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RedisCacheBehevior<,>));

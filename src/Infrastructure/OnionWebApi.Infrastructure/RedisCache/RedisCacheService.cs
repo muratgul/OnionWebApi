@@ -14,7 +14,7 @@ public class RedisCacheService : IRedisCacheService, IDisposable
     }
     public async Task<T> GetAsync<T>(string key)
     {
-        var value = await _database.StringGetAsync(key);
+        var value = await _database.StringGetAsync($"{_settings.InstanceName}_{key}");
         return value.HasValue ? JsonConvert.DeserializeObject<T>(value) : default;
     }
 
@@ -26,12 +26,12 @@ public class RedisCacheService : IRedisCacheService, IDisposable
             expiry = expirationTime.Value - DateTime.UtcNow;
         }
 
-        await _database.StringSetAsync(key, JsonConvert.SerializeObject(value), expiry);
+        await _database.StringSetAsync($"{_settings.InstanceName}_{key}", JsonConvert.SerializeObject(value), expiry);
     }
 
     public async Task RemoveAsync(string key)
     {
-        await _database.KeyDeleteAsync(key);
+        await _database.KeyDeleteAsync($"{_settings.InstanceName}_{key}");
     }
     public void Dispose() => _redisConnection?.Dispose();
 }
