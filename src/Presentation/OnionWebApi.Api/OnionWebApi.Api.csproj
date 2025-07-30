@@ -14,10 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetCore.CAP" Version="8.3.5" />
-    <PackageReference Include="DotNetCore.CAP.Dashboard" Version="8.3.5" />
-    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="8.3.5" />
-    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="8.3.5" />
+    <PackageReference Include="MassTransit" Version="8.5.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.1" />
     <PackageReference Include="MediatR" Version="13.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />

@@ -9,6 +9,7 @@ public static class Registration
         var assembly = Assembly.GetExecutingAssembly();
 
         services.AddTransient<ExceptionMiddleware>();
+        
 
         services.AddRulesFromAssemblyContaining(assembly, typeof(BaseRules));
 

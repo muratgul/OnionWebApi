@@ -1,11 +1,13 @@
-﻿namespace OnionWebApi.Infrastructure;
+﻿using OnionWebApi.Infrastructure.Messaging;
+
+namespace OnionWebApi.Infrastructure;
 public static class Registration
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<TokenSettings>(configuration.GetSection("JWT"));
         services.AddTransient<ITokenService, TokenService>();
-
+        services.AddScoped<MassTransitSendToQueue>();
         services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCacheSettings"));
         services.AddTransient<IRedisCacheService, RedisCacheService>();
 

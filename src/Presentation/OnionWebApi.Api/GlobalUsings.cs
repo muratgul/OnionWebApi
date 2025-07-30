@@ -23,3 +23,4 @@ global using OnionWebApi.Api.Extensions;
 global using OnionWebApi.Application.Features.Brands.Commands.Create;
 global using OnionWebApi.Application.Features.Brands.Commands.Delete;
 global using OnionWebApi.Application.Features.Brands.Commands.Update;
+global using MassTransit;

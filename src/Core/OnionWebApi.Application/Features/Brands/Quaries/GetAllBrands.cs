@@ -1,4 +1,5 @@
-﻿using OnionWebApi.Application.Services;
+﻿using OnionWebApi.Application.Interfaces.Messaging;
+using OnionWebApi.Application.Services;
 using OnionWebApi.Application.Wrappers;
 
 namespace OnionWebApi.Application.Features.Brands.Quaries;
@@ -22,6 +23,7 @@ public class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrand
 
     public async Task<PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>> Handle(GetAllBrandsQueryRequest request, CancellationToken cancellationToken)
     {
+
         var paginationRequest = new PaginationRequest<Brand>
         {
             PageNumber = request.PageNumber,
