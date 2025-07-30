@@ -6,17 +6,19 @@ public class CreateBrandCommandRequest : IRequest<Brand>
 
 public class CreateBrandCommandHandler : BaseHandler, IRequestHandler<CreateBrandCommandRequest, Brand>
 {
-    public CreateBrandCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService) : base(mapper, unitOfWork, httpContextAccessor, uriService)
-    {
+    public CreateBrandCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    {        
     }
 
     public async Task<Brand> Handle(CreateBrandCommandRequest request, CancellationToken cancellationToken)
-    {   
+    {
         var brand = _mapper.Map<Brand, CreateBrandCommandRequest>(request);
         brand.IsDeleted = false;
 
         await _unitOfWork.GetWriteRepository<Brand>().AddAsync(brand);
-        await _unitOfWork.SaveAsync();       
+        await _unitOfWork.SaveAsync();
+
+        await _redisCacheService.RemoveAsync("GetAllBrands");
 
         return brand;
     }

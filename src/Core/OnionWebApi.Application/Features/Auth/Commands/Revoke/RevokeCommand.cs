@@ -8,7 +8,7 @@ public class RevokeCommandHandler : BaseHandler, IRequestHandler<RevokeCommandRe
     private readonly UserManager<User> _userManager;
     private readonly AuthRules _authRules;
 
-    public RevokeCommandHandler(UserManager<User> userManager, AuthRules authRules, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService) : base(mapper, unitOfWork, httpContextAccessor, uriService)
+    public RevokeCommandHandler(UserManager<User> userManager, AuthRules authRules, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
     {
         _userManager = userManager;
         _authRules = authRules;

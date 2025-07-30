@@ -28,5 +28,10 @@ public class RedisCacheService : IRedisCacheService, IDisposable
 
         await _database.StringSetAsync(key, JsonConvert.SerializeObject(value), expiry);
     }
+
+    public async Task RemoveAsync(string key)
+    {
+        await _database.KeyDeleteAsync(key);
+    }
     public void Dispose() => _redisConnection?.Dispose();
 }

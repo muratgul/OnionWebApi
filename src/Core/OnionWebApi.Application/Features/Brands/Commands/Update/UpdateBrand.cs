@@ -8,7 +8,7 @@ public class UpdateBrandCommandRequest : IRequest<Brand>
 
 public class UpdateBrandCommandHandler : BaseHandler, IRequestHandler<UpdateBrandCommandRequest, Brand>
 {
-    public UpdateBrandCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService) : base(mapper, unitOfWork, httpContextAccessor, uriService)
+    public UpdateBrandCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
     {
     }
     public async Task<Brand> Handle(UpdateBrandCommandRequest request, CancellationToken cancellationToken)
@@ -22,6 +22,9 @@ public class UpdateBrandCommandHandler : BaseHandler, IRequestHandler<UpdateBran
 
         await _unitOfWork.GetWriteRepository<Brand>().UpdateAsync(brand);
         await _unitOfWork.SaveAsync();
+
+        await _redisCacheService.RemoveAsync("GetAllBrands");
+
         return brand;
     }
 }

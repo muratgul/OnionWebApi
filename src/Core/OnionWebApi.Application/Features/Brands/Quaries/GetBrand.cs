@@ -10,7 +10,7 @@ public class GetBrandQueryRequest : IRequest<IDataResult<GetBrandQueryResponse>>
 
 public class GetBrandQueryHandler : BaseHandler, IRequestHandler<GetBrandQueryRequest, IDataResult<GetBrandQueryResponse>>
 {
-    public GetBrandQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService) : base(mapper, unitOfWork, httpContextAccessor, uriService)
+    public GetBrandQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
     {
     }
 

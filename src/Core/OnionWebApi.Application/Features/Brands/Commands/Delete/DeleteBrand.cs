@@ -8,7 +8,7 @@ public class DeleteBrandCommandRequest : IRequest<Unit>
 
 public class DeleteBrandCommandHandler : BaseHandler, IRequestHandler<DeleteBrandCommandRequest, Unit>
 {
-    public DeleteBrandCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService) : base(mapper, unitOfWork, httpContextAccessor, uriService)
+    public DeleteBrandCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
     {
     }
 
@@ -24,6 +24,8 @@ public class DeleteBrandCommandHandler : BaseHandler, IRequestHandler<DeleteBran
 
         await _unitOfWork.GetWriteRepository<Brand>().SoftDeleteAsync(brand);
         await _unitOfWork.SaveAsync();
+
+        await _redisCacheService.RemoveAsync("GetAllBrands");
 
         return Unit.Value;
     }
