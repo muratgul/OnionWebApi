@@ -1,6 +1,4 @@
-﻿
-
-namespace OnionWebApi.Api.Registrars;
+﻿namespace OnionWebApi.Api.Registrars;
 
 public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
 {

@@ -40,3 +40,5 @@ global using OnionWebApi.Domain.Common;
 global using OnionWebApi.Domain.Entities;
 global using SendGrid.Helpers.Errors.Model;
 global using OnionWebApi.Application.Wrappers;
+global using OnionWebApi.Application.Interfaces.Messaging;
+global using OnionWebApi.Application.Services;

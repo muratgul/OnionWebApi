@@ -1,28 +1,29 @@
-﻿using OnionWebApi.Application.Interfaces.Messaging;
-using OnionWebApi.Application.Services;
-using OnionWebApi.Application.Wrappers;
-
-namespace OnionWebApi.Application.Features.Brands.Quaries;
+﻿namespace OnionWebApi.Application.Features.Brands.Quaries;
 public class GetAllBrandsQueryResponse : BrandDto
 {
 }
 
 public class GetAllBrandsQueryRequest : PagingParameter, IRequest<PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>, ICacheableQuery
 {
+    [JsonIgnore]
     public string CacheKey => "GetAllBrands";
+    [JsonIgnore]
     public double CacheTime => 5;
 }
 
 public class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrandsQueryRequest, PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>
 {
     private readonly IPaginationService _paginationService;
-    public GetAllBrandsQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService, IPaginationService paginationService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    private readonly IMassTransitSend _massTransitSend;
+    public GetAllBrandsQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService, IPaginationService paginationService, IMassTransitSend massTransitSend) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
     {
         _paginationService = paginationService;
+        _massTransitSend = massTransitSend;
     }
 
     public async Task<PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>> Handle(GetAllBrandsQueryRequest request, CancellationToken cancellationToken)
     {
+        await _massTransitSend.SendToQueue(message: "Buraya bilgi gelecek", queueName: "xxx", cancellationToken: default);
 
         var paginationRequest = new PaginationRequest<Brand>
         {
@@ -36,27 +37,6 @@ public class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrand
             Fields = null
         };
 
-        return await _paginationService.GetPaginatedDataAsync<Brand, GetAllBrandsQueryResponse>(paginationRequest, cancellationToken);
-
-        //var pagedBrands = await _unitOfWork.GetReadRepository<Brand>().GetAllByPagingAsync(
-        // predicate: null,
-        // include: null,
-        // orderBy: null,
-        // enableTracking: false,
-        // currentPage: request.PageNumber,
-        // pageSize: request.PageSize);
-
-        //var mappedData = _mapper.Map<GetAllBrandsQueryResponse, Brand>(pagedBrands.Items);
-
-        //var result = PaginationHelper.CreatePaginatedResponse(
-        //   isDynamic: false,
-        //   data: mappedData,
-        //   paginationFilter: new PaginationFilter(request.PageNumber, request.PageSize),
-        //   totalRecords: pagedBrands.TotalCount,
-        //   uriService: _uriService,
-        //   route: "Brands/GetAll",
-        //   fields: null);
-
-        //return result;
+        return await _paginationService.GetPaginatedDataAsync<Brand, GetAllBrandsQueryResponse>(paginationRequest, cancellationToken);        
     }
 }

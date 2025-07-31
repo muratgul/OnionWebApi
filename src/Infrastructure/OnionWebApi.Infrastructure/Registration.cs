@@ -1,4 +1,5 @@
-﻿using OnionWebApi.Infrastructure.Messaging;
+﻿using OnionWebApi.Application.Interfaces.Messaging;
+using OnionWebApi.Infrastructure.Messaging;
 
 namespace OnionWebApi.Infrastructure;
 public static class Registration
@@ -7,7 +8,7 @@ public static class Registration
     {
         services.Configure<TokenSettings>(configuration.GetSection("JWT"));
         services.AddTransient<ITokenService, TokenService>();
-        services.AddScoped<MassTransitSendToQueue>();
+        services.AddScoped<IMassTransitSend, MassTransitSend>();
         services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCacheSettings"));
         services.AddTransient<IRedisCacheService, RedisCacheService>();
 
@@ -19,7 +20,7 @@ public static class Registration
         {
             opt.Authority = configuration["JWT:Authority"];
             opt.Audience = configuration["JWT:Audience"];
-            opt.RequireHttpsMetadata = false;
+            opt.RequireHttpsMetadata = Convert.ToBoolean(configuration["JWT:RequireHttpsMetadata"]);
             opt.SaveToken = true;
             opt.TokenValidationParameters = new TokenValidationParameters()
             {
@@ -29,7 +30,7 @@ public static class Registration
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
                 ValidateLifetime = false,
-                ValidIssuer = configuration["JWT:Issuer"],
+                ValidIssuer = configuration["JWT:ValidIssuer"],
                 ValidAudience = configuration["JWT:Audience"],
                 ClockSkew = TimeSpan.Zero
             };
