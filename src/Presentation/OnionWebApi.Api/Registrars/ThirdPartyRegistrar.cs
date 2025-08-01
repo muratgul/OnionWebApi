@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.Services;
-
-namespace OnionWebApi.Api.Registrars;
+﻿namespace OnionWebApi.Api.Registrars;
 
 public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
 {
@@ -10,6 +8,8 @@ public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
 
             builder.Services.AddMassTransit(opt =>
             {
+                // Register MassTransit Consumer
+                opt.AddConsumer<BrandMessageConsumer>();
 
                 opt.UsingRabbitMq((context, cfg) =>
                 {
@@ -17,6 +17,11 @@ public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
                     {
                         h.Username(builder.Configuration["RabbitMQ:UserName"]!);
                         h.Password(builder.Configuration["RabbitMQ:Password"]!);
+                    });
+
+                    cfg.ReceiveEndpoint("brand-message-queue", e =>
+                    {
+                        e.Consumer<BrandMessageConsumer>(context);
                     });
 
                     cfg.UseMessageRetry(r =>

@@ -11,8 +11,38 @@ public class MassTransitSend : IMassTransitSend
         _publishEndpoint = publishEndpoint;
         _rabbitMQSettings = rabbitMQSettings.Value;
     }
+    public async Task SendToEndpoint<T>(string endpoint, T message, CancellationToken cancellationToken = default) where T : class
+    {
+        if (!_rabbitMQSettings.Enabled)
+            return;
 
-    public async Task SendToExchange(object message, CancellationToken cancellationToken = default)
+        try
+        {
+            var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri($"queue:{endpoint}"));
+            await sendEndpoint.Send(message, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message);
+        }
+    }
+
+    public async Task Publish<T>(T message, CancellationToken cancellationToken = default) where T : class
+    {
+        if (!_rabbitMQSettings.Enabled)
+            return;
+
+        try
+        {
+            await _publishEndpoint.Publish(message, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message);
+        }        
+    }
+
+    public async Task Publish(object message, CancellationToken cancellationToken = default)
     {
         if (!_rabbitMQSettings.Enabled)
             return;
@@ -59,4 +89,6 @@ public class MassTransitSend : IMassTransitSend
             Log.Error(ex.Message);
         }
     }
+
+    
 }

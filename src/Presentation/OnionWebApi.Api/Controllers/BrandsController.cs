@@ -1,7 +1,4 @@
-﻿using OnionWebApi.Application.Interfaces.Otp;
-using OnionWebApi.Application.Services;
-
-namespace OnionWebApi.Api.Controllers;
+﻿namespace OnionWebApi.Api.Controllers;
 
 //[Authorize]
 public class BrandsController : BaseController
@@ -45,7 +42,13 @@ public class BrandsController : BaseController
 
     [HttpPost("PublishTestEvent")]
     public async Task<IActionResult> PublishTestEvent()
-    {      
+    {   
+        var message = new MassTransitMessage<string>
+        {
+            Data = "Test event from BrandsController" + " at " + DateTime.UtcNow.ToString("o")
+        };
+
+        await _massTransitSend.SendToEndpoint("brand-message-queue", message, cancellationToken: default);
         await _massTransitSend.SendToQueue("Buraya bilgi gelecek","MuratQueue", cancellationToken: default);
         return Ok("Test event published to RabbitMQ.");
     }

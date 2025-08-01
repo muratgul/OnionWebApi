@@ -25,3 +25,5 @@ global using OnionWebApi.Persistence;
 global using Scalar.AspNetCore;
 global using Serilog;
 global using OnionWebApi.Application.Exceptions;
+global using OnionWebApi.Application.Features.Brands.Consumers;
+global using OnionWebApi.Application.Wrappers;

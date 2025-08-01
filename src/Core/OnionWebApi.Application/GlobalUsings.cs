@@ -45,3 +45,4 @@ global using OnionWebApi.Application.Services;
 global using OnionWebApi.Application.Interfaces.Otp;
 global using OtpNet;
 global using QRCoder;
+global using MassTransit;
