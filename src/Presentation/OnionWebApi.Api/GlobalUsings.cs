@@ -2,7 +2,6 @@
 global using System.Text.Json.Serialization;
 global using MassTransit;
 global using MediatR;
-global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.OpenApi.Models;
 global using OnionWebApi.Api.Extensions;
@@ -24,3 +23,4 @@ global using OnionWebApi.Mapper;
 global using OnionWebApi.Persistence;
 global using Scalar.AspNetCore;
 global using Serilog;
+global using OnionWebApi.Infrastructure.Messaging.Settings;

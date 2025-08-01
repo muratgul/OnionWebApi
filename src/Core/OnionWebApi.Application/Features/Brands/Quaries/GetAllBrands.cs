@@ -23,6 +23,7 @@ public class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrand
 
     public async Task<PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>> Handle(GetAllBrandsQueryRequest request, CancellationToken cancellationToken)
     {
+        
         await _massTransitSend.SendToQueue(message: "Buraya bilgi gelecek", queueName: "xxx", cancellationToken: default);
 
         var paginationRequest = new PaginationRequest<Brand>

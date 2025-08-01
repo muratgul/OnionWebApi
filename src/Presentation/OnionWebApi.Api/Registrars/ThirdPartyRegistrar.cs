@@ -4,17 +4,27 @@ public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
 {
     public void RegisterServices(WebApplicationBuilder builder)
     {
-        builder.Services.AddMassTransit(opt =>
-        {
-            opt.UsingRabbitMq((context, cfg)=>
+            builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQ"));
+
+            builder.Services.AddMassTransit(opt =>
             {
-                cfg.Host(builder.Configuration["RabbitMQ:HostName"], "/", h =>
+
+                opt.UsingRabbitMq((context, cfg) =>
                 {
-                    h.Username(builder.Configuration["RabbitMQ:UserName"]!);
-                    h.Password(builder.Configuration["RabbitMQ:Password"]!);                    
+                    cfg.Host(builder.Configuration["RabbitMQ:HostName"], "/", h =>
+                    {
+                        h.Username(builder.Configuration["RabbitMQ:UserName"]!);
+                        h.Password(builder.Configuration["RabbitMQ:Password"]!);
+                    });
+
+                    cfg.UseMessageRetry(r =>
+                    {
+                        r.Incremental(5, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10));
+                    });
+
+                    cfg.ConfigureEndpoints(context);
                 });
-                cfg.ConfigureEndpoints(context);
-            });
-        });
+
+            });       
     }   
 }

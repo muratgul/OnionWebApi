@@ -16,3 +16,8 @@ global using OnionWebApi.Domain.Entities;
 global using OnionWebApi.Infrastructure.RedisCache;
 global using OnionWebApi.Infrastructure.Tokens;
 global using StackExchange.Redis;
+global using MassTransit;
+global using OnionWebApi.Application.Interfaces.Messaging;
+global using OnionWebApi.Application.Wrappers;
+global using Serilog;
+global using OnionWebApi.Infrastructure.Messaging.Settings;
