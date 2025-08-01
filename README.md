@@ -8,11 +8,12 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **ASP.NET Core Web API**: Framework for building RESTful services.
 - **Entity Framework Core**: Object-relational mapping (ORM) for data access.
 - **AutoMapper**: Automatic mapping between DTOs and entities.
-- **CAP (EventBus)**: Distributed transaction and event bus integration (with SQL Server and RabbitMQ).
+- **MassTransit**: Distributed application framework for .NET.
 - **RabbitMQ**: Message queue infrastructure.
 - **Scalar / OpenAPI**: Interactive API documentation and testing.
 - **JWT Bearer Authentication**: Secure authentication and authorization.
 - **Redis**: Caching layer (via Infrastructure).
+- **Otp.NET & QRCoder**: For Two-Factor Authentication (2FA) using Time-Based One-Time Passwords (TOTP).
 - **Newtonsoft.Json & System.Text.Json**: JSON serialization and reference handling.
 - **OData (optional)**: Advanced querying support (available in code comments).
 - **CORS**: Cross-Origin Resource Sharing configuration.
@@ -27,8 +28,9 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **Pagination Helper:** Utilities for paginated API responses.
 - **OData (Optional):** Ready for OData integration (commented in code).
 - **CORS Support:** Configurable CORS policy.
-- **CAP Integration:** Distributed transaction support with CAP, SQL Server, and RabbitMQ.
+- **MassTransit Integration:** Distributed application framework for .NET.
 - **AutoMapper:** Object mapping for DTOs and entities.
+- **OTP Service:** Generates and validates Time-Based One-Time Passwords (TOTP) for Two-Factor Authentication (2FA), including QR code generation for easy setup in authenticator apps.
 
 ## Getting Started
 
@@ -44,13 +46,13 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
   git clone https://github.com/muratgul/OnionWebApi.git cd OnionWebApi
 
 2. **Configure the database and RabbitMQ:**
-   - Update `appsettings.json` with your SQL Server and RabbitMQ connection details.
+   - Update `appsettings.json` with your SQL Server and RabbitMQ/MassTransit connection details.
 
 3. **Restore dependencies:**
   dotnet restore
 
 4. **Build the project:**
-  dotnet run --project src/Presentation/UnionWebApi.Api
+  dotnet run --project src/Presentation/OnionWebApi.Api
 
 
 6. **Access Scalar UI:**
@@ -58,7 +60,7 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 
 ## Usage
 
-- The API is organized with controllers under the `src/Presentation/UnionWebApi.Api` project.
+- The API is organized with controllers under the `src/Presentation/OnionWebApi.Api` project.
 - JWT Bearer authentication is required for protected endpoints.
 - Use the Scalar UI for interactive API exploration and testing.
 
