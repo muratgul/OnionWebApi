@@ -1,9 +1,13 @@
-﻿namespace OnionWebApi.Api.Controllers;
+﻿using OnionWebApi.Application.Interfaces.Otp;
+using OnionWebApi.Application.Services;
+
+namespace OnionWebApi.Api.Controllers;
 
 //[Authorize]
 public class BrandsController : BaseController
 {
     private readonly IMassTransitSend _massTransitSend;
+   
     public BrandsController(IMassTransitSend massTransitSend)
     {
         _massTransitSend = massTransitSend;
@@ -45,7 +49,4 @@ public class BrandsController : BaseController
         await _massTransitSend.SendToQueue("Buraya bilgi gelecek","MuratQueue", cancellationToken: default);
         return Ok("Test event published to RabbitMQ.");
     }
-
-
-  
 }

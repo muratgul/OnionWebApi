@@ -1,10 +1,12 @@
-﻿namespace OnionWebApi.Api.Registrars;
+﻿using OnionWebApi.Application.Services;
+
+namespace OnionWebApi.Api.Registrars;
 
 public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
 {
     public void RegisterServices(WebApplicationBuilder builder)
-    {
-            builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQ"));
+    {        
+        builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQ"));
 
             builder.Services.AddMassTransit(opt =>
             {

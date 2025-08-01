@@ -7,7 +7,9 @@ public class PredicateBuilder<T>
         var jArray = JsonConvert.DeserializeObject<JArray>(json);
 
         if (jArray == null || jArray.Count == 0)
+        {
             throw new ArgumentException("Invalid JSON format");
+        }
 
         var parameter = Expression.Parameter(typeof(T), "x");
         Expression combinedExpression = null;

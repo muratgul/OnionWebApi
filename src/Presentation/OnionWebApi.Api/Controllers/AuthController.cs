@@ -1,8 +1,16 @@
-﻿namespace OnionWebApi.Api.Controllers;
+﻿using OnionWebApi.Application.Interfaces.Otp;
+
+namespace OnionWebApi.Api.Controllers;
 
 [Route("api/[controller]/[action]")]
 public class AuthController : BaseController
 {
+    private readonly IOtpService _otpService;
+    public AuthController(IOtpService otpService)
+    {
+        _otpService = otpService;
+    }
+
     [HttpPost]
     public async Task<IActionResult> Register(RegisterCommandRequest request)
     {
@@ -36,5 +44,13 @@ public class AuthController : BaseController
     {
         await Mediator.Send(new RevokeAllCommandRequest());
         return StatusCode(StatusCodes.Status200OK);
+    }
+
+    [HttpGet("OtpTest")]
+    public IActionResult OtpTest()
+    {
+        var result = _otpService.FirstCode("OnionWebApi", "muratgul");
+
+        return Ok(result);
     }
 }

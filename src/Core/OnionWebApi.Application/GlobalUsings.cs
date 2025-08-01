@@ -42,3 +42,6 @@ global using SendGrid.Helpers.Errors.Model;
 global using OnionWebApi.Application.Wrappers;
 global using OnionWebApi.Application.Interfaces.Messaging;
 global using OnionWebApi.Application.Services;
+global using OnionWebApi.Application.Interfaces.Otp;
+global using OtpNet;
+global using QRCoder;

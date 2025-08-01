@@ -8,7 +8,9 @@ public static class PaginationHelper
         var pageSize = paginationFilter.PageSize < 1 ? 10 : paginationFilter.PageSize;
 
         if (!isDynamic)
+        {
             data = data.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        }
 
         var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
 

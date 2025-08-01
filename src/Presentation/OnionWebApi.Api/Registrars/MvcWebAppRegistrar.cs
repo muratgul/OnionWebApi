@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.Exceptions;
-
-namespace OnionWebApi.Api.Registrars;
+﻿namespace OnionWebApi.Api.Registrars;
 
 public class MvcWebAppRegistrar : IWebApplicationRegistrar
 {
