@@ -1,5 +1,5 @@
 ﻿namespace OnionWebApi.Domain.Entities;
-public class User : IdentityUser<int>
+public class AppUser : IdentityUser<int>
 {
     public string FullName { get; set; }
     public string? RefreshToken { get; set; }

@@ -1,4 +1,7 @@
-﻿using OnionWebApi.Application.Interfaces.Otp;
+﻿using OnionWebApi.Application.Features.Auth.Commands.ChangePassword;
+using OnionWebApi.Application.Features.Auth.Commands.ForgotPassword;
+using OnionWebApi.Application.Features.Auth.Queries;
+using OnionWebApi.Application.Interfaces.Otp;
 
 namespace OnionWebApi.Api.Controllers;
 
@@ -19,10 +22,38 @@ public class AuthController : BaseController
     }
 
     [HttpPost]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordCommandRequest request)
+    {
+        return Ok(await Mediator.Send(request));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Users()
+    {
+        var response = await Mediator.Send(new GetAllUsersQueryRequest());
+        return Ok(response);
+    }
+
+
+    [HttpPost]
     public async Task<IActionResult> Login(LoginCommandRequest request)
     {
         var response = await Mediator.Send(request);
         return StatusCode(StatusCodes.Status200OK, response);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ChangePassword(ChangePasswordCommandRequest request)
+    {
+        await Mediator.Send(request);
+        return StatusCode(StatusCodes.Status200OK);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ChangePasswordUsingToken(ChangePasswordUsingTokenCommandRequest request)
+    {
+        await Mediator.Send(request);
+        return StatusCode(StatusCodes.Status200OK);
     }
 
     [HttpPost]

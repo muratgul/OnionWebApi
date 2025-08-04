@@ -1,13 +1,13 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Rules;
 public class AuthRules : BaseRules
 {
-    public Task UserShouldNotBeExist(User? user)
+    public Task UserShouldNotBeExist(AppUser? user)
     {
         if (user is not null)
             throw new UserAlreadyExistException();
         return Task.CompletedTask;
     }
-    public Task EmailOrPasswordShouldNotBeInvalid(User? user, bool checkPassword)
+    public Task EmailOrPasswordShouldNotBeInvalid(AppUser? user, bool checkPassword)
     {
         if (user is null || !checkPassword)
             throw new EmailOrPasswordShouldNotBeInvalidException();
@@ -20,7 +20,7 @@ public class AuthRules : BaseRules
         return Task.CompletedTask;
     }
 
-    public Task EmailAddressShouldBeValid(User? user)
+    public Task EmailAddressShouldBeValid(AppUser? user)
     {
         if (user is null)
             throw new EmailAddressShouldBeValidException();

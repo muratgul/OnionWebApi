@@ -9,10 +9,10 @@ public class RegisterCommandRequest : IRequest<Unit>
 public class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterCommandRequest, Unit>
 {
     private readonly AuthRules _authRules;
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<Role> _roleManager;
 
-    public RegisterCommandHandler(AuthRules authRules, UserManager<User> userManager, RoleManager<Role> roleManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public RegisterCommandHandler(AuthRules authRules, UserManager<AppUser> userManager, RoleManager<Role> roleManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
     {
         _authRules = authRules;
         _userManager = userManager;
@@ -22,7 +22,7 @@ public class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterComma
     {
         await _authRules.UserShouldNotBeExist(await _userManager.FindByEmailAsync(request.Email));
 
-        User user = _mapper.Map<User, RegisterCommandRequest>(request);
+        AppUser user = _mapper.Map<AppUser, RegisterCommandRequest>(request);
         user.UserName = request.Email;
         user.SecurityStamp = Guid.NewGuid().ToString();
 

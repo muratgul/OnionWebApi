@@ -1,15 +1,15 @@
 ﻿namespace OnionWebApi.Infrastructure.Tokens;
 public class TokenService : ITokenService
 {
-    private readonly UserManager<User> _userManager;
+    private readonly UserManager<AppUser> _userManager;
     private readonly TokenSettings _tokenSettings;
 
-    public TokenService(IOptions<TokenSettings> options, UserManager<User> userManager)
+    public TokenService(IOptions<TokenSettings> options, UserManager<AppUser> userManager)
     {
         _tokenSettings = options.Value;
         _userManager = userManager;
     }
-    public async Task<JwtSecurityToken> CreateToken(User user, IList<string> roles)
+    public async Task<JwtSecurityToken> CreateToken(AppUser user, IList<string> roles)
     {
         var claims = new List<Claim>()
             {

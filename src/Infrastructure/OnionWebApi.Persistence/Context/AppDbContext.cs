@@ -1,6 +1,6 @@
 ﻿
 namespace OnionWebApi.Persistence.Context;
-public class AppDbContext : IdentityDbContext<User, Role, int>
+public class AppDbContext : IdentityDbContext<AppUser, Role, int>
 {
     public AppDbContext()
     {

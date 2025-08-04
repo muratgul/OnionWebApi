@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Persistence;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace OnionWebApi.Persistence;
 public static class Registration
 {
     public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -11,7 +13,7 @@ public static class Registration
         services.AddScoped(typeof(ICustomRepository<>), typeof(CustomRepository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        services.AddIdentityCore<User>(opt =>
+        services.AddIdentityCore<AppUser>(opt =>
         {
             opt.Password.RequireNonAlphanumeric = false;
             opt.Password.RequiredLength = 2;
@@ -21,6 +23,6 @@ public static class Registration
             opt.SignIn.RequireConfirmedEmail = false;
         })
             .AddRoles<Role>()
-            .AddEntityFrameworkStores<AppDbContext>();
+            .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
     }
 }

@@ -20,47 +20,47 @@ public class LoginCommandRequest : IRequest<LoginCommandResponse>
 
 public class LoginCommandHandler : BaseHandler, IRequestHandler<LoginCommandRequest, LoginCommandResponse>
 {
-    private readonly UserManager<User> userManager;
-    private readonly IConfiguration configuration;
-    private readonly ITokenService tokenService;
-    private readonly AuthRules authRules;
+    private readonly UserManager<AppUser> _userManager;
+    private readonly IConfiguration _configuration;
+    private readonly ITokenService _tokenService;
+    private readonly AuthRules _authRules;
 
-    public LoginCommandHandler(UserManager<User> userManager, IConfiguration configuration, ITokenService tokenService, AuthRules authRules, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public LoginCommandHandler(UserManager<AppUser> userManager, IConfiguration configuration, ITokenService tokenService, AuthRules authRules, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
     {
-        this.userManager = userManager;
-        this.configuration = configuration;
-        this.tokenService = tokenService;
-        this.authRules = authRules;
+        _userManager = userManager;
+        _configuration = configuration;
+        _tokenService = tokenService;
+        _authRules = authRules;
     }
     public async Task<LoginCommandResponse> Handle(LoginCommandRequest request, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByEmailAsync(request.Email);
+        var user = await _userManager.FindByEmailAsync(request.Email);
 
         if(user is null)
         {
-            await authRules.EmailOrPasswordShouldNotBeInvalid(null, false);
+            await _authRules.EmailOrPasswordShouldNotBeInvalid(null, false);
         }
 
-        var checkPassword = await userManager.CheckPasswordAsync(user, request.Password);
+        var checkPassword = await _userManager.CheckPasswordAsync(user!, request.Password);
 
-        await authRules.EmailOrPasswordShouldNotBeInvalid(user, checkPassword);
+        await _authRules.EmailOrPasswordShouldNotBeInvalid(user, checkPassword);
 
-        var roles = await userManager.GetRolesAsync(user);
+        var roles = await _userManager.GetRolesAsync(user!);
 
-        var token = await tokenService.CreateToken(user, roles);
-        var refreshToken = tokenService.GenerateRefreshToken();
+        var token = await _tokenService.CreateToken(user!, roles);
+        var refreshToken = _tokenService.GenerateRefreshToken();
 
-        _ = int.TryParse(configuration["JWT:RefreshTokenValidityInDays"], out var refreshTokenValidityInDays);
+        _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out var refreshTokenValidityInDays);
 
-        user.RefreshToken = refreshToken;
+        user!.RefreshToken = refreshToken;
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(refreshTokenValidityInDays);
 
-        await userManager.UpdateAsync(user);
-        await userManager.UpdateSecurityStampAsync(user);
+        await _userManager.UpdateAsync(user);
+        await _userManager.UpdateSecurityStampAsync(user);
 
         var _token = new JwtSecurityTokenHandler().WriteToken(token);
 
-        await userManager.SetAuthenticationTokenAsync(user, "Default", "AccessToken", _token);
+        await _userManager.SetAuthenticationTokenAsync(user, "Default", "AccessToken", _token);
 
         return new()
         {
