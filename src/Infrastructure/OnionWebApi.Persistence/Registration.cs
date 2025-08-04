@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OnionWebApi.Persistence;
 public static class Registration
@@ -13,7 +14,7 @@ public static class Registration
         services.AddScoped(typeof(ICustomRepository<>), typeof(CustomRepository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-        services.AddIdentityCore<AppUser>(opt =>
+        services.AddIdentity<AppUser, AppRole>(opt =>
         {
             opt.Password.RequireNonAlphanumeric = false;
             opt.Password.RequiredLength = 2;
@@ -22,7 +23,6 @@ public static class Registration
             opt.Password.RequireDigit = false;
             opt.SignIn.RequireConfirmedEmail = false;
         })
-            .AddRoles<Role>()
             .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
     }
 }

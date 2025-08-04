@@ -10,9 +10,9 @@ public class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterComma
 {
     private readonly AuthRules _authRules;
     private readonly UserManager<AppUser> _userManager;
-    private readonly RoleManager<Role> _roleManager;
+    private readonly RoleManager<AppRole> _roleManager;
 
-    public RegisterCommandHandler(AuthRules authRules, UserManager<AppUser> userManager, RoleManager<Role> roleManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public RegisterCommandHandler(AuthRules authRules, UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
     {
         _authRules = authRules;
         _userManager = userManager;
@@ -30,7 +30,7 @@ public class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterComma
         if (result.Succeeded)
         {
             if (!await _roleManager.RoleExistsAsync("user"))
-                await _roleManager.CreateAsync(new Role
+                await _roleManager.CreateAsync(new AppRole
                 {
                     Name = "user",
                     NormalizedName = "USER",

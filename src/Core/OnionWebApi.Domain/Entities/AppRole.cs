@@ -1,4 +1,4 @@
 ﻿namespace OnionWebApi.Domain.Entities;
-public class Role : IdentityRole<int>
+public class AppRole : IdentityRole<int>
 {
 }
