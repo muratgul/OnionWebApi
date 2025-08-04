@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Commands;
+﻿namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Commands;
 public class UpdateRoleCommandRequest : IRequest<Unit>
 {
     public int Id { get; set; }
@@ -26,12 +24,17 @@ public class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommandRequest
 
         if (role is null)
         {
-            throw new ArgumentException(nameof(role));
+            throw new ArgumentNullException(nameof(role));
         }
 
         role.Name = request.RoleName;
 
-        await _roleManager.UpdateAsync(role);
+        var result = await _roleManager.UpdateAsync(role);
+
+        if (!result.Succeeded)
+        {
+            throw new Exception(result.Errors.Select(x => x.Description).FirstOrDefault());
+        }
 
         return Unit.Value;
     }

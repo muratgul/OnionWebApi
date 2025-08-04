@@ -20,7 +20,12 @@ public class DeleteRoleCommandHandler : IRequestHandler<DeleteRoleCommandRequest
             throw new ArgumentNullException(nameof(request.RoleName));
         }        
 
-        await _roleManager.DeleteAsync(new() { Name = request.RoleName });
+        var result = await _roleManager.DeleteAsync(new() { Name = request.RoleName });
+
+        if (!result.Succeeded)
+        {
+            throw new Exception(result.Errors.Select(x => x.Description).FirstOrDefault());
+        }
 
         return Unit.Value;
     }

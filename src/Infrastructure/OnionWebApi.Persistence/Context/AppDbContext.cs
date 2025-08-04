@@ -1,6 +1,8 @@
 ﻿
+using OnionWebApi.Application.Interfaces.DbContext;
+
 namespace OnionWebApi.Persistence.Context;
-public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>
+public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbContext
 {
     public AppDbContext()
     {

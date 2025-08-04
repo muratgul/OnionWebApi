@@ -27,3 +27,5 @@ global using Serilog;
 global using OnionWebApi.Application.Exceptions;
 global using OnionWebApi.Application.Features.Brands.Consumers;
 global using OnionWebApi.Application.Wrappers;
+global using OnionWebApi.Application.Features.Auth.Commands.Roles.Commands;
+global using OnionWebApi.Application.Features.Auth.Commands.Roles.Quaries;

@@ -1,6 +1,9 @@
-﻿namespace OnionWebApi.Application.Features.Auth.Queries;
+﻿using System.Collections.Generic;
+
+namespace OnionWebApi.Application.Features.Auth.Queries;
 public class GetAllUsersQueryResponse : UserDto
 {
+    //public IList<string> Roles { get; set; }
 }
 
 public class GetAllUsersQueryRequest : IRequest<IEnumerable<GetAllUsersQueryResponse>>
@@ -17,7 +20,24 @@ public class GetAllUsersQueryHandler : BaseHandler, IRequestHandler<GetAllUsersQ
 
     public async Task<IEnumerable<GetAllUsersQueryResponse>> Handle(GetAllUsersQueryRequest request, CancellationToken cancellationToken)
     {
-        var users = await _userManager.Users.ToListAsync();
+        var users = await _userManager.Users.AsNoTracking().ToListAsync();
+        
+        //List with roles
+        /*
+        var list = new List<GetAllUsersQueryResponse>();
+        foreach (var user in users)
+        {
+            var roles = await _userManager.GetRolesAsync(user);
+            list.Add(new GetAllUsersQueryResponse
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                PasswordHash = user.PasswordHash,
+                UserName = user.UserName,
+                Roles = roles.ToList()
+            });
+        }
+        */
 
         var mappedUsers = _mapper.Map<GetAllUsersQueryResponse, AppUser>(users);
 

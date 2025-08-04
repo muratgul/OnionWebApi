@@ -19,8 +19,12 @@ public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommandRequest
             throw new ArgumentNullException(nameof(request.RoleName));
         }
 
-        await _roleManager.CreateAsync(new() { Name = request.RoleName });
+        var result = await _roleManager.CreateAsync(new() { Name = request.RoleName });
 
+        if (!result.Succeeded)
+        {
+            throw new Exception(result.Errors.Select(x => x.Description).FirstOrDefault());
+        }
         return Unit.Value;
     }
 }

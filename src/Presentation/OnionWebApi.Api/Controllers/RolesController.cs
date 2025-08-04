@@ -1,7 +1,4 @@
-﻿using OnionWebApi.Application.Features.Auth.Commands.Roles.Commands;
-using OnionWebApi.Application.Features.Auth.Commands.Roles.Quaries;
-
-namespace OnionWebApi.Api.Controllers;
+﻿namespace OnionWebApi.Api.Controllers;
 
 public class RolesController : BaseController
 {
@@ -27,6 +24,20 @@ public class RolesController : BaseController
 
     [HttpDelete]
     public async Task<IActionResult> Delete(DeleteRoleCommandRequest request)
+    {
+        await Mediator.Send(request);
+        return Ok();
+    }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> AddUserRole(CreateUserRoleCommandRequest request)
+    {
+        await Mediator.Send(request);
+        return Ok();
+    }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> DeleteUserRole(DeleteUserRoleCommandRequest request)
     {
         await Mediator.Send(request);
         return Ok();
