@@ -1,8 +1,8 @@
 ﻿namespace OnionWebApi.Application.Beheviors;
-public class RedisCacheBehevior<TRequest, TResponse>(IRedisCacheService redisCacheService, IOptions<RedisCacheSettings> settings) : IPipelineBehavior<TRequest, TResponse>
+public class RedisCacheBehevior<TRequest, TResponse>(IRedisCacheService redisCacheService, IRedisCacheSettings settings) : IPipelineBehavior<TRequest, TResponse>
 {
     private readonly IRedisCacheService _redisCacheService = redisCacheService;
-    private readonly RedisCacheSettings _settings = settings.Value;
+    private readonly IRedisCacheSettings _settings = settings;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {

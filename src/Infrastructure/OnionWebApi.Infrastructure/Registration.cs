@@ -9,7 +9,12 @@ public static class Registration
         services.Configure<TokenSettings>(configuration.GetSection("JWT"));
         services.AddTransient<ITokenService, TokenService>();
         services.AddScoped<IMassTransitSend, MassTransitSend>();
+        
         services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCacheSettings"));
+        services.AddSingleton<IRedisCacheSettings>(sp =>
+        {
+            return sp.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
+        });
         services.AddTransient<IRedisCacheService, RedisCacheService>();
 
         services.AddAuthentication(opt =>

@@ -4,10 +4,10 @@ public class RedisCacheService : IRedisCacheService, IDisposable
 {
     private readonly ConnectionMultiplexer _redisConnection;
     private readonly IDatabase _database;
-    private readonly RedisCacheSettings _settings;
-    public RedisCacheService(IOptions<RedisCacheSettings> options)
+    private readonly IRedisCacheSettings _settings;
+    public RedisCacheService(IRedisCacheSettings settings)
     {
-        _settings = options.Value;
+        _settings = settings;
         var opt = ConfigurationOptions.Parse(_settings.ConnectionString);
         _redisConnection = ConnectionMultiplexer.Connect(opt);
         _database = _redisConnection.GetDatabase();

@@ -11,7 +11,6 @@ global using Microsoft.IdentityModel.Tokens;
 global using Newtonsoft.Json;
 global using OnionWebApi.Application.Interfaces.RedisCache;
 global using OnionWebApi.Application.Interfaces.Tokens;
-global using OnionWebApi.Application.RedisCache;
 global using OnionWebApi.Domain.Entities;
 global using OnionWebApi.Infrastructure.RedisCache;
 global using OnionWebApi.Infrastructure.Tokens;

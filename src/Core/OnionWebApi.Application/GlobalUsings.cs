@@ -32,7 +32,6 @@ global using OnionWebApi.Application.Interfaces.RedisCache;
 global using OnionWebApi.Application.Interfaces.Repositories;
 global using OnionWebApi.Application.Interfaces.Tokens;
 global using OnionWebApi.Application.Interfaces.UnitOfWorks;
-global using OnionWebApi.Application.RedisCache;
 global using OnionWebApi.Application.RequestParameters;
 global using OnionWebApi.Application.Utilities.Results;
 global using OnionWebApi.Application.Utilities.URI;
