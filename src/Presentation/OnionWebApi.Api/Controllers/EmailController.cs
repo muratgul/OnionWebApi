@@ -114,7 +114,7 @@ public class EmailController : BaseController
 
         var result = await _emailService.SendBulkEmailAsync(messages);
 
-        if (result)
+        if (result.All(x => x.Value))
             return Ok(new
             {
                 success = true,

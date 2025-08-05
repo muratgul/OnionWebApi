@@ -11,4 +11,6 @@ public class EmailConfiguration
     public string FromDisplayName { get; set; }
     public int TimeoutSeconds { get; set; } = 30;
     public bool EnableLogging { get; set; } = true;
+    public int RetryCount { get; set; }
+    public int RetryDelaySecond { get; set; }
 }

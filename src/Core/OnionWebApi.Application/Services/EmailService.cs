@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Services;
+﻿using Polly;
+
+namespace OnionWebApi.Application.Services;
 public class EmailService : IEmailService
 {
     private readonly EmailConfiguration _emailConfig;
@@ -34,14 +36,13 @@ public class EmailService : IEmailService
             ScheduledDate = scheduledDate
         };
 
-        // Scheduled email logic - şimdilik direkt gönderir, gelecekte scheduler eklenebilir
         if (scheduledDate <= DateTime.UtcNow)
         {
             return await SendEmailAsync(message);
         }
         else
         {
-            return true; // Scheduled successfully
+            return true;
         }
     }
     public async Task<bool> SendEmailAsync(EmailMessage message)
@@ -49,7 +50,16 @@ public class EmailService : IEmailService
         using var client = CreateSmtpClient();
         using var mailMessage = CreateMailMessage(message);
 
-        await client.SendMailAsync(mailMessage);
+        var retryPolicy = Policy
+            .Handle<SmtpException>()
+            .Or<TimeoutException>()
+            .WaitAndRetryAsync(retryCount: _emailConfig.RetryCount, sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(_emailConfig.RetryDelaySecond),
+            onRetry: (exception, timeSpan, retryCount, context) =>
+            {
+                Console.WriteLine($"[Polly] {retryCount}. deneme başarısız: {exception.Message}");
+            });
+
+        await retryPolicy.ExecuteAsync(() => client.SendMailAsync(mailMessage));
 
         return true;
 
@@ -66,9 +76,9 @@ public class EmailService : IEmailService
 
         return await SendEmailAsync(message);
     }
-    public async Task<Dictionary<string, bool>> SendBulkEmailAsync(List<EmailMessage> messages)
+    public async Task<Dictionary<EmailMessage, bool>> SendBulkEmailAsync(List<EmailMessage> messages)
     {
-        var results = new Dictionary<string, bool>();
+        var results = new Dictionary<EmailMessage, bool>();
         using var client = CreateSmtpClient();
 
         foreach (var message in messages)
@@ -77,11 +87,11 @@ public class EmailService : IEmailService
             {
                 using var mailMessage = CreateMailMessage(message);
                 await client.SendMailAsync(mailMessage);
-                results.Add(message.To, true);
+                results.Add(message, true);
             }
             catch
             {
-                results.Add(message.To, false);
+                results.Add(message, false);
             }
         }
 
