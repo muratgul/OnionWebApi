@@ -36,4 +36,8 @@
     <ProjectReference Include="..\..\Infrastructure\OnionWebApi.Persistence\OnionWebApi.Persistence.csproj" />
     <ProjectReference Include="..\..\Mapper\OnionWebApi.Mapper\OnionWebApi.Mapper.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="uploads\" />
+  </ItemGroup>
 </Project>
