@@ -13,4 +13,5 @@ public class EmailConfiguration
     public bool EnableLogging { get; set; } = true;
     public int RetryCount { get; set; }
     public int RetryDelaySecond { get; set; }
+    public bool RetryEnabled { get; set; }
 }

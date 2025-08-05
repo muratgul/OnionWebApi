@@ -50,7 +50,9 @@ public class EmailService : IEmailService
         using var client = CreateSmtpClient();
         using var mailMessage = CreateMailMessage(message);
 
-        var retryPolicy = Policy
+        if (_emailConfig.RetryEnabled)
+        {
+            var retryPolicy = Policy
             .Handle<SmtpException>()
             .Or<TimeoutException>()
             .WaitAndRetryAsync(retryCount: _emailConfig.RetryCount, sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(_emailConfig.RetryDelaySecond),
@@ -59,7 +61,12 @@ public class EmailService : IEmailService
                 Console.WriteLine($"[Polly] {retryCount}. deneme başarısız: {exception.Message}");
             });
 
-        await retryPolicy.ExecuteAsync(() => client.SendMailAsync(mailMessage));
+            await retryPolicy.ExecuteAsync(() => client.SendMailAsync(mailMessage));
+        }
+        else
+        {
+            await client.SendMailAsync(mailMessage);
+        }
 
         return true;
 
