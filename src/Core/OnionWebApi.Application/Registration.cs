@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application;
+﻿using OnionWebApi.Application.Interfaces.Email;
+
+namespace OnionWebApi.Application;
 
 public static class Registration
 {
@@ -7,7 +9,6 @@ public static class Registration
         var assembly = Assembly.GetExecutingAssembly();
 
         services.AddTransient<ExceptionMiddleware>();
-        
 
         services.AddRulesFromAssemblyContaining(assembly, typeof(BaseRules));
 
@@ -18,6 +19,9 @@ public static class Registration
 
         services.AddScoped<IPaginationService, PaginationService>();
         services.AddScoped<IOtpService, OtpService>();
+
+        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehevior<,>));

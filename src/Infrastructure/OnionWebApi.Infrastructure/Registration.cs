@@ -1,4 +1,5 @@
 ﻿using OnionWebApi.Application.Interfaces.Messaging;
+using OnionWebApi.Infrastructure.Email;
 using OnionWebApi.Infrastructure.Messaging;
 
 namespace OnionWebApi.Infrastructure;
@@ -16,6 +17,8 @@ public static class Registration
             return sp.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
         });
         services.AddTransient<IRedisCacheService, RedisCacheService>();
+
+        services.AddHostedService<BackgroundEmailService>();
 
         services.AddAuthentication(opt =>
         {

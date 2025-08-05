@@ -20,3 +20,6 @@ global using OnionWebApi.Application.Interfaces.Messaging;
 global using OnionWebApi.Application.Wrappers;
 global using Serilog;
 global using OnionWebApi.Infrastructure.Messaging.Settings;
+global using Microsoft.Extensions.Hosting;
+global using OnionWebApi.Application.Interfaces.Email;
+global using OnionWebApi.Domain.Models.Email;

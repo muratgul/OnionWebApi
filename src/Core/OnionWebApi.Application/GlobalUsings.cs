@@ -45,3 +45,7 @@ global using OnionWebApi.Application.Interfaces.Otp;
 global using OtpNet;
 global using QRCoder;
 global using MassTransit;
+global using OnionWebApi.Domain.Models.Email;
+global using System.Net;
+global using System.Net.Mail;
+global using OnionWebApi.Application.Interfaces.Email;

@@ -1,9 +1,4 @@
-﻿using OnionWebApi.Application.Features.Auth.Commands.ChangePassword;
-using OnionWebApi.Application.Features.Auth.Commands.ForgotPassword;
-using OnionWebApi.Application.Features.Auth.Queries;
-using OnionWebApi.Application.Interfaces.Otp;
-
-namespace OnionWebApi.Api.Controllers;
+﻿namespace OnionWebApi.Api.Controllers;
 
 [Route("api/[controller]/[action]")]
 public class AuthController : BaseController
