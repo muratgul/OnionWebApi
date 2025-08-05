@@ -36,3 +36,5 @@ global using OnionWebApi.Application.Interfaces.Otp;
 global using OnionWebApi.Application.DTOs.Email;
 global using OnionWebApi.Application.Interfaces.Email;
 global using OnionWebApi.Domain.Models.Email;
+global using OnionWebApi.Application.DTOs.File;
+global using OnionWebApi.Application.Interfaces.File;

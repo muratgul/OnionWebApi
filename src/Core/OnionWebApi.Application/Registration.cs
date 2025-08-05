@@ -20,6 +20,9 @@ public static class Registration
         services.AddScoped<IPaginationService, PaginationService>();
         services.AddScoped<IOtpService, OtpService>();
 
+        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IFileStorageService, LocalFileStorageService>();
+
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 

@@ -24,7 +24,6 @@ public class EmailService : IEmailService
 
         return await SendEmailAsync(message);
     }
-
     public async Task<bool> SendScheduledEmailAsync(string to, string subject, string body, DateTime scheduledDate, bool isHtml = true)
     {
         var message = new EmailMessage
@@ -104,7 +103,6 @@ public class EmailService : IEmailService
 
         return results;
     }
-
     public async Task<bool> SendEmailWithTemplateAsync<T>(string to, string templateName, T model)
     {
         try

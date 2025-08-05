@@ -49,3 +49,6 @@ global using OnionWebApi.Domain.Models.Email;
 global using System.Net;
 global using System.Net.Mail;
 global using OnionWebApi.Application.Interfaces.Email;
+global using OnionWebApi.Application.Interfaces.File;
+global using Serilog;
+global using OnionWebApi.Application.DTOs.File;
