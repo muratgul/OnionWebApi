@@ -66,9 +66,9 @@ public class EmailService : IEmailService
 
         return await SendEmailAsync(message);
     }
-    public async Task<bool> SendBulkEmailAsync(List<EmailMessage> messages)
+    public async Task<Dictionary<string, bool>> SendBulkEmailAsync(List<EmailMessage> messages)
     {
-        var results = new List<bool>();
+        var results = new Dictionary<string, bool>();
         using var client = CreateSmtpClient();
 
         foreach (var message in messages)
@@ -77,15 +77,15 @@ public class EmailService : IEmailService
             {
                 using var mailMessage = CreateMailMessage(message);
                 await client.SendMailAsync(mailMessage);
-                results.Add(true);
+                results.Add(message.To, true);
             }
-            catch (Exception ex)
+            catch
             {
-                results.Add(false);
+                results.Add(message.To, false);
             }
         }
 
-        return results.All(x => x);
+        return results;
     }
 
     public async Task<bool> SendEmailWithTemplateAsync<T>(string to, string templateName, T model)
@@ -111,7 +111,7 @@ public class EmailService : IEmailService
 
             return await SendEmailAsync(message);
         }
-        catch (Exception)
+        catch
         {
             return false;
         }

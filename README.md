@@ -31,6 +31,11 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **MassTransit Integration:** Distributed application framework for .NET.
 - **AutoMapper:** Object mapping for DTOs and entities.
 - **OTP Service:** Generates and validates Time-Based One-Time Passwords (TOTP) for Two-Factor Authentication (2FA), including QR code generation for easy setup in authenticator apps.
+- **Email Service:** A robust email service for sending transactional and bulk emails. Features include:
+  - **Single & Bulk Sending:** Send individual or mass emails efficiently.
+  - **Templating:** Use dynamic templates for personalized emails.
+  - **Attachments & Custom Headers:** Supports sending files and custom email headers.
+  - **Scheduled & Background Sending:** Queue emails for later delivery or send them in the background to avoid blocking application threads.
 
 ## Getting Started
 

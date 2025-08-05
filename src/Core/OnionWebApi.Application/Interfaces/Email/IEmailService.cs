@@ -3,7 +3,7 @@ public interface IEmailService
 {
     Task<bool> SendEmailAsync(EmailMessage message);
     Task<bool> SendEmailAsync(string to, string subject, string body, bool isHtml = true);
-    Task<bool> SendBulkEmailAsync(List<EmailMessage> messages);
+    Task<Dictionary<string, bool>> SendBulkEmailAsync(List<EmailMessage> messages);
     Task<bool> SendEmailWithTemplateAsync<T>(string to, string templateName, T model);
     Task<bool> SendEmailWithAttachmentsAsync(EmailMessage message, List<EmailAttachment> attachments);
     Task<bool> SendEmailWithHeadersAsync(string to, string subject, string body, Dictionary<string, string> customHeaders, bool isHtml = true);
