@@ -36,11 +36,11 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
   - **Templating:** Use dynamic templates for personalized emails.
   - **Attachments & Custom Headers:** Supports sending files and custom email headers.
   - **Scheduled & Background Sending:** Queue emails for later delivery or send them in the background to avoid blocking application threads.
-- **Idempotency:** Prevents duplicate operations for POST and PATCH requests using a middleware and an `[Idempotent]` attribute. It ensures that retried requests with the same `I-Idempotency-Key` header are processed only once, returning a cached response for subsequent attempts.
+- **Idempotency:** Prevents duplicate operations for POST and PATCH requests using a middleware and an `[Idempotent]` attribute. It ensures that retried requests with the same `Idempotency-Key` header are processed only once, returning a cached response for subsequent attempts.
 
 ### Idempotency Usage
 
-To make an endpoint idempotent, add the `[Idempotent]` attribute to a controller action and provide a unique `I-Idempotency-Key` in the request header.
+To make an endpoint idempotent, add the `[Idempotent]` attribute to a controller action and provide a unique `Idempotency-Key` in the request header.
 
 **Example:**
 
@@ -56,7 +56,7 @@ public async Task<IActionResult> CreateBrand(CreateBrandCommandRequest request)
 
 When calling this endpoint, the client must include the header:
 
-`I-Idempotency-Key: 0d8f3839-9357-4e42-8093-10d6f7c3652c`
+`Idempotency-Key: 0d8f3839-9357-4e42-8093-10d6f7c3652c`
 
 ## Getting Started
 
