@@ -40,10 +40,10 @@ public class FileService : IFileService
             return null;
         }
 
-        var content = await _fileStorageService.GetFileAsync(filePath);
+        var content = await _fileStorageService.GetFileContentAsync(filePath);
         if (content is null)
         {
-            throw new ArgumentNullException(nameof(filePath));
+            throw new FileNotFoundException(nameof(filePath));
         }
 
         var fileName = Path.GetFileName(filePath);
@@ -95,7 +95,7 @@ public class FileService : IFileService
             result.Errors.Add($"Desteklenmeyen dosya uzantısı: {extension}");
         }
 
-        if (fileUpload.Size == 0)
+        if (fileUpload.Size == 0 || fileUpload.Content?.Length == 0)
         {
             result.Errors.Add("Dosya boş olamaz");
         }
@@ -103,11 +103,6 @@ public class FileService : IFileService
         if (_options.AllowedContentTypes?.Any() == true && !_options.AllowedContentTypes.Contains(fileUpload.ContentType))
         {
             result.Errors.Add($"Desteklenmeyen dosya türü: {fileUpload.ContentType}");
-        }
-
-        if (fileUpload.Content?.Length == 0)
-        {
-            result.Errors.Add("Dosya içeriği boş.");
         }
 
         result.IsValid = !result.Errors.Any();
@@ -137,6 +132,6 @@ public class FileService : IFileService
     }
     public async Task<byte[]?> GetFileBytesAsync(string filePath)
     {
-        return await _fileStorageService.GetFileAsync(filePath);
+        return await _fileStorageService.GetFileContentAsync(filePath);
     }  
 }

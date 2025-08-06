@@ -30,7 +30,7 @@ public class LocalFileStorageService : IFileStorageService
 
         return relativePath;
     }
-    public async Task<byte[]?> GetFileAsync(string filePath)
+    public async Task<byte[]?> GetFileContentAsync(string filePath)
     {
         var fullPath = GetPhysicalPath(filePath);
         return !File.Exists(fullPath) ? null : await File.ReadAllBytesAsync(fullPath);

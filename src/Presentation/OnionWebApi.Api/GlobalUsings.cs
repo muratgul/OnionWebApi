@@ -38,3 +38,8 @@ global using OnionWebApi.Application.Interfaces.Email;
 global using OnionWebApi.Domain.Models.Email;
 global using OnionWebApi.Application.DTOs.File;
 global using OnionWebApi.Application.Interfaces.File;
+global using Microsoft.Extensions.Caching.Memory;
+global using OnionWebApi.Api.Middlewares;
+global using System.Reflection;
+global using Microsoft.AspNetCore.Mvc.Controllers;
+global using OnionWebApi.Api.Attributes;

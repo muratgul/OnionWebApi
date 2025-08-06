@@ -5,6 +5,7 @@ public class MvcWebAppRegistrar : IWebApplicationRegistrar
     public void RegisterPipelineComponents(WebApplication app)
     {
         app.UseMiddleware<ExceptionMiddleware>();
+        app.UseMiddleware<IdempotencyMiddleware>();
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
