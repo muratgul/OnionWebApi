@@ -57,6 +57,7 @@ public async Task<IActionResult> CreateBrand(CreateBrandCommandRequest request)
 When calling this endpoint, the client must include the header:
 
 `Idempotency-Key: 0d8f3839-9357-4e42-8093-10d6f7c3652c`
+- **File Service:** A service for managing file uploads and downloads. It supports local file storage and can be extended for cloud storage providers. It handles file validation, and storage, and provides a secure way to access files.
 
 ## Getting Started
 
