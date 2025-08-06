@@ -15,9 +15,9 @@ public class BrandsController : BaseController
     {
         return Ok(await Mediator.Send(request));
     }
-
-    [Idempotent]
+    
     [HttpPost]
+    [Idempotent]
     public async Task<IActionResult> Add([FromBody] CreateBrandCommandRequest request)
     {
         return Ok(await Mediator.Send(request));
