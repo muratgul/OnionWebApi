@@ -39,7 +39,7 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
   - **Scheduled & Background Sending:** Queue emails for later delivery or send them in the background to avoid blocking application threads.
 - **Idempotency:** Prevents duplicate operations for POST and PATCH requests using a middleware and an `[Idempotent]` attribute. It ensures that retried requests with the same `Idempotency-Key` header are processed only once, returning a cached response for subsequent attempts.
 - **Health Checks:** Provides a health check endpoint to monitor the status of the application and its dependencies (e.g., database, Redis).
-
+- **API Versioning:** OnionWebApi supports route-based API versioning, allowing each version of the API to be clearly defined within the URL path (e.g., `/api/v1/products`). This approach simplifies version management and works seamlessly with tools like Scalar for interactive testing.
 ### Idempotency Usage
 
 To make an endpoint idempotent, add the `[Idempotent]` attribute to a controller action and provide a unique `Idempotency-Key` in the request header.
@@ -74,6 +74,38 @@ curl https://localhost:<port>/healthapi
 
 The response will indicate the status of the application and its dependencies (e.g., "Healthy", "Unhealthy").
 - **File Service:** A service for managing file uploads and downloads. It supports local file storage and can be extended for cloud storage providers. It handles file validation, and storage, and provides a secure way to access files.
+
+### Versioning Controller Structure
+API versioning is configured in Program.cs using the AddApiVersioning method:
+
+**V1 Example:**
+```csharp
+[ApiController]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
+public class ProductsController : ControllerBase
+{
+    [HttpGet]
+    public IActionResult Get() => Ok("v1 product list");
+}
+```
+
+**V2 Example:**
+```csharp
+[ApiController]
+[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
+public class ProductsController : ControllerBase
+{
+    [HttpGet]
+    public IActionResult Get() => Ok("v2 enhanced product list");
+}
+```
+
+### Testing in Scalar
+With route-based versioning, no additional query string or header is required to specify the API version. Simply call endpoints like:
+`GET https://localhost:<port>/api/v1/products`
+`GET https://localhost:<port>/api/v2/products`
 
 ## Getting Started
 

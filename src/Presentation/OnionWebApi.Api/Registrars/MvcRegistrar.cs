@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Api.Registrars;
+﻿using Microsoft.AspNetCore.Mvc.Versioning;
+
+namespace OnionWebApi.Api.Registrars;
 
 public class MvcRegistrar : IWebApplicationBuilderRegistrar
 {
@@ -14,6 +16,14 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
     }
     public void RegisterServices(WebApplicationBuilder builder)
     {
+        builder.Services.AddApiVersioning(options =>
+        {
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.ReportApiVersions = true;
+            options.ApiVersionReader = new UrlSegmentApiVersionReader();            
+        });
+
         builder.Services.AddHealthChecks().
             AddSqlServer(connectionString: builder.Configuration.GetConnectionString("DefaultConnection")!, name: "SqlServer")
             .AddRedis(builder.Configuration["RedisCacheSettings:ConnectionString"]!, name: "Redis")
