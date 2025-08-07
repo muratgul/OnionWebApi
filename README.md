@@ -103,6 +103,7 @@ public class ProductsController : ControllerBase
 ```
 
 **Testing in Scalar**
+
 With route-based versioning, no additional query string or header is required to specify the API version. Simply call endpoints like:
 `GET https://localhost:<port>/api/v1/products`
 `GET https://localhost:<port>/api/v2/products`
