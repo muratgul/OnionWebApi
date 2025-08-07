@@ -69,7 +69,7 @@ The health check endpoint is available at `/health`. It provides the status of t
 To check the health of the application, navigate to `https://localhost:<port>/health` in your browser or use a tool like `curl`:
 
 ```bash
-curl https://localhost:<port>/health
+curl https://localhost:<port>/healthapi
 ```
 
 The response will indicate the status of the application and its dependencies (e.g., "Healthy", "Unhealthy").
