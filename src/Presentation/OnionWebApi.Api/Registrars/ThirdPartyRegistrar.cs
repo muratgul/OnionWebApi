@@ -11,6 +11,13 @@ public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
                 // Register MassTransit Consumer
                 opt.AddConsumer<BrandMessageConsumer>();
 
+                opt.ConfigureHealthCheckOptions(cfg =>
+                {
+                    cfg.Name = "MassTransit";
+                    cfg.MinimalFailureStatus = HealthStatus.Unhealthy;
+                    cfg.Tags.Add("health");
+                });
+
                 opt.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(builder.Configuration["RabbitMQ:HostName"], "/", h =>

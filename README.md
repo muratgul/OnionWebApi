@@ -6,6 +6,7 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 
 - **.NET 9** and **C# 13**: Modern, high-performance platform for web API development.
 - **ASP.NET Core Web API**: Framework for building RESTful services.
+- **ASP.NET Core Health Checks**: For monitoring the health of the application.
 - **Entity Framework Core**: Object-relational mapping (ORM) for data access.
 - **AutoMapper**: Automatic mapping between DTOs and entities.
 - **MassTransit**: Distributed application framework for .NET.
@@ -37,6 +38,7 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
   - **Attachments & Custom Headers:** Supports sending files and custom email headers.
   - **Scheduled & Background Sending:** Queue emails for later delivery or send them in the background to avoid blocking application threads.
 - **Idempotency:** Prevents duplicate operations for POST and PATCH requests using a middleware and an `[Idempotent]` attribute. It ensures that retried requests with the same `Idempotency-Key` header are processed only once, returning a cached response for subsequent attempts.
+- **Health Checks:** Provides a health check endpoint to monitor the status of the application and its dependencies (e.g., database, Redis).
 
 ### Idempotency Usage
 
@@ -57,6 +59,20 @@ public async Task<IActionResult> CreateBrand(CreateBrandCommandRequest request)
 When calling this endpoint, the client must include the header:
 
 `Idempotency-Key: 0d8f3839-9357-4e42-8093-10d6f7c3652c`
+
+### Health Check Usage
+
+The health check endpoint is available at `/health`. It provides the status of the application and its dependencies.
+
+**Example:**
+
+To check the health of the application, navigate to `https://localhost:<port>/health` in your browser or use a tool like `curl`:
+
+```bash
+curl https://localhost:<port>/health
+```
+
+The response will indicate the status of the application and its dependencies (e.g., "Healthy", "Unhealthy").
 - **File Service:** A service for managing file uploads and downloads. It supports local file storage and can be extended for cloud storage providers. It handles file validation, and storage, and provides a secure way to access files.
 
 ## Getting Started

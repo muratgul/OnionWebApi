@@ -43,3 +43,6 @@ global using OnionWebApi.Api.Middlewares;
 global using System.Reflection;
 global using Microsoft.AspNetCore.Mvc.Controllers;
 global using OnionWebApi.Api.Attributes;
+global using HealthChecks.UI.Client;
+global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+global using Microsoft.Extensions.Diagnostics.HealthChecks;

@@ -4,6 +4,18 @@ public class MvcWebAppRegistrar : IWebApplicationRegistrar
 {
     public void RegisterPipelineComponents(WebApplication app)
     {
+        app.MapHealthChecks("/healthapi", new HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+            ResultStatusCodes =
+                {
+                    [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                    [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
+                    [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
+                },
+        });
+        app.UseHealthChecksUI(options => { options.UIPath = "/health"; });
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseMiddleware<IdempotencyMiddleware>();
         if (app.Environment.IsDevelopment())

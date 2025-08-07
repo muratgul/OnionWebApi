@@ -14,6 +14,16 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
     }
     public void RegisterServices(WebApplicationBuilder builder)
     {
+        builder.Services.AddHealthChecks().
+            AddSqlServer(connectionString: builder.Configuration.GetConnectionString("DefaultConnection")!, name: "SqlServer")
+            .AddRedis(builder.Configuration["RedisCacheSettings:ConnectionString"]!, name: "Redis")
+            .AddUrlGroup(new Uri("https://www.tcmb.gov.tr/kurlar/kurlar_tr.html"), name: "External Api");
+        builder.Services.AddHealthChecksUI(setup =>
+        {
+            setup.AddHealthCheckEndpoint("HealthCheck API", "/healthapi");
+            setup.SetEvaluationTimeInSeconds(60);
+            setup.SetMinimumSecondsBetweenFailureNotifications(120);
+        }).AddInMemoryStorage();
         builder.Services.AddControllersWithViews();
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
