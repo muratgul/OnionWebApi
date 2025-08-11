@@ -153,12 +153,14 @@ With route-based versioning, no additional query string or header is required to
   ```
 
 3. **Configure Your Environment:**
-   The application uses a `.env` file to manage environment-specific variables. A sample is provided to make setup easier.
-   - Navigate to the `src/Presentation/OnionWebApi.Api` directory.
-   - Create a copy of the `.env-sample` file and rename it to `.env`.
-   - Open the new `.env` file and update the values for your local environment (e.g., database connection strings, secrets, API keys).
+   The application uses environment-specific `.env` files to manage variables. It automatically loads the correct file (`.env.development` or `.env.production`) based on the `ASPNETCORE_ENVIRONMENT` variable.
 
-   > **Note:** The `.env` file is included in `.gitignore` to prevent sensitive data from being committed to the repository.
+   - Navigate to the `src/Presentation/OnionWebApi.Api` directory.
+   - For local setup, create a copy of `.env-sample` and rename it to `.env.development`.
+   - For the production environment, create a `.env.production` file.
+   - Open your new `.env.*` file(s) and fill in the values for your specific environment (e.g., database connection strings, secrets, API keys).
+
+   > **Note:** All `.env.*` files are included in `.gitignore` to prevent sensitive data from being committed to the repository.
 
 4. **Apply Database Migrations:**
    Run the following command to apply the Entity Framework migrations and set up the database schema:

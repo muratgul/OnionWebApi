@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using OnionWebApi.Application.Helpers;
 
 namespace OnionWebApi.Application.Utilities.URI;
 public class UriManager : IUriService

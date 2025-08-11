@@ -363,3 +363,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /src/Presentation/OnionWebApi.Api/.env
+/src/Presentation/OnionWebApi.Api/.env.development
