@@ -1,12 +1,15 @@
-﻿using OnionWebApi.Application.Interfaces.Email;
-
-namespace OnionWebApi.Application;
+﻿namespace OnionWebApi.Application;
 
 public static class Registration
 {
     public static void AddApplication(this IServiceCollection services)
     {
         var assembly = Assembly.GetExecutingAssembly();
+
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(assembly);
+        services.AddSingleton(config);
+        services.AddScoped<IMapper, ServiceMapper>();
 
         services.AddTransient<ExceptionMiddleware>();
 

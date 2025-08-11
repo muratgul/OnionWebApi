@@ -26,7 +26,7 @@ public class PaginationService : IPaginationService
             currentPage: request.PageNumber,
             pageSize: request.PageSize);
 
-        var mappedData = _mapper.Map<TDto, TEntity>(pagedData.Items);
+        var mappedData = _mapper.Map<IEnumerable<TDto>>(pagedData.Items);
 
         return PaginationHelper.CreatePaginatedResponse(
                 isDynamic: false,

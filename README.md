@@ -8,7 +8,7 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **ASP.NET Core Web API**: Framework for building RESTful services.
 - **ASP.NET Core Health Checks**: For monitoring the health of the application.
 - **Entity Framework Core**: Object-relational mapping (ORM) for data access.
-- **AutoMapper**: Automatic mapping between DTOs and entities.
+- **Mapster**: A high-performance object-to-object mapper.
 - **MassTransit**: Distributed application framework for .NET.
 - **RabbitMQ**: Message queue infrastructure.
 - **Scalar / OpenAPI**: Interactive API documentation and testing.
@@ -30,7 +30,7 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **OData (Optional):** Ready for OData integration (commented in code).
 - **CORS Support:** Configurable CORS policy.
 - **MassTransit Integration:** Distributed application framework for .NET.
-- **AutoMapper:** Object mapping for DTOs and entities.
+- **Mapster:** High-performance object mapping for DTOs and entities.
 - **OTP Service:** Generates and validates Time-Based One-Time Passwords (TOTP) for Two-Factor Authentication (2FA), including QR code generation for easy setup in authenticator apps.
 - **Email Service:** A robust email service for sending transactional and bulk emails. Features include:
   - **Single & Bulk Sending:** Send individual or mass emails efficiently.

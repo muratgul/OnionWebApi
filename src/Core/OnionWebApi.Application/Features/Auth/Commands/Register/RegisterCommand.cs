@@ -22,7 +22,7 @@ public class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterComma
     {
         await _authRules.UserShouldNotBeExist(await _userManager.FindByEmailAsync(request.Email));
 
-        AppUser user = _mapper.Map<AppUser, RegisterCommandRequest>(request);
+        AppUser user = _mapper.Map<AppUser>(request);
         user.UserName = request.Email;
         user.SecurityStamp = Guid.NewGuid().ToString();
 

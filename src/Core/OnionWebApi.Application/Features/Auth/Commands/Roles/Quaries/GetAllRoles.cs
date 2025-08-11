@@ -1,4 +1,6 @@
 ﻿
+using Mapster;
+
 namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Quaries;
 public class GetAllRolesQueryResponse
 {
@@ -23,7 +25,7 @@ public class GetAllRolesQueryHandler : IRequestHandler<GetAllRolesQueryRequest, 
     public async Task<IEnumerable<GetAllRolesQueryResponse>> Handle(GetAllRolesQueryRequest request, CancellationToken cancellationToken)
     {
         var roles = await _roleManager.Roles.ToListAsync(cancellationToken);
-        return _mapper.Map<GetAllRolesQueryResponse, AppRole>(roles);
+        return _mapper.Map<List<GetAllRolesQueryResponse>>(roles);
     }
 }
 

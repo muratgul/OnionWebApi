@@ -4,6 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,6 +34,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="9.0.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.6.4" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
@@ -42,7 +45,6 @@
     <ProjectReference Include="..\..\Core\OnionWebApi.Application\OnionWebApi.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\OnionWebApi.Infrastructure\OnionWebApi.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\OnionWebApi.Persistence\OnionWebApi.Persistence.csproj" />
-    <ProjectReference Include="..\..\Mapper\OnionWebApi.Mapper\OnionWebApi.Mapper.csproj" />
   </ItemGroup>
 
   <ItemGroup>

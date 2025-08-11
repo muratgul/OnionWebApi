@@ -39,7 +39,7 @@ public class GetAllUsersQueryHandler : BaseHandler, IRequestHandler<GetAllUsersQ
         }
         */
 
-        var mappedUsers = _mapper.Map<GetAllUsersQueryResponse, AppUser>(users);
+        var mappedUsers = _mapper.Map<List<GetAllUsersQueryResponse>>(users);
 
         return mappedUsers;
     }

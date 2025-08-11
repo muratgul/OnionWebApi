@@ -18,7 +18,7 @@ public class CreateBrandCommandHandler : BaseHandler, IRequestHandler<CreateBran
     {
         await _brandRules.BrandNameCheck(request.Name);
 
-        var brand = _mapper.Map<Brand, CreateBrandCommandRequest>(request);
+        var brand = _mapper.Map<Brand>(request);
         brand.IsDeleted = false;
 
         await _unitOfWork.GetWriteRepository<Brand>().AddAsync(brand);

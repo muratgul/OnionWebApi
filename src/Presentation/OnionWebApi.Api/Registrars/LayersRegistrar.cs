@@ -4,9 +4,8 @@ public class LayersRegistrar : IWebApplicationBuilderRegistrar
 {
     public void RegisterServices(WebApplicationBuilder builder)
     {
-        builder.Services.AddPersistence(builder.Configuration);
+        builder.Services.AddPersistence(builder.Configuration, builder);
         builder.Services.AddApplication();
-        builder.Services.AddCustomMapper();
         builder.Services.AddInfrastructure(builder.Configuration);
     }
 }

@@ -1,6 +1,4 @@
-﻿using Polly;
-
-namespace OnionWebApi.Application.Services;
+﻿namespace OnionWebApi.Application.Services;
 public class EmailService : IEmailService
 {
     private readonly EmailConfiguration _emailConfig;

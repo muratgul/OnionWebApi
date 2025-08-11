@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Hosting;
 
 namespace OnionWebApi.Persistence;
 public static class Registration
 {
-    public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
+    public static void AddPersistence(this IServiceCollection services, IConfiguration configuration, WebApplicationBuilder builder)
     {
         services.AddDbContext<AppDbContext>(opt =>
         opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));

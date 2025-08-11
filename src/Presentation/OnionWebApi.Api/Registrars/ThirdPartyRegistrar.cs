@@ -5,8 +5,9 @@ public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
     public void RegisterServices(WebApplicationBuilder builder)
     {        
         builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQ"));
+        
 
-            builder.Services.AddMassTransit(opt =>
+        builder.Services.AddMassTransit(opt =>
             {
                 // Register MassTransit Consumer
                 opt.AddConsumer<BrandMessageConsumer>();

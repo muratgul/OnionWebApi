@@ -23,7 +23,7 @@ public class GetBrandQueryHandler : BaseHandler, IRequestHandler<GetBrandQueryRe
             return new ErrorDataResult<GetBrandQueryResponse>("Brand not found");            
         }
 
-        var mapperBrand = _mapper.Map<GetBrandQueryResponse, Brand>(brand);
+        var mapperBrand = _mapper.Map<GetBrandQueryResponse>(brand);
 
 
         var result = new SuccessDataResult<GetBrandQueryResponse>(mapperBrand, "Data is listed");

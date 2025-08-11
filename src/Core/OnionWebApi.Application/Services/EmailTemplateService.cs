@@ -1,7 +1,4 @@
-﻿using OnionWebApi.Application.Interfaces.Email;
-using OnionWebApi.Domain.Models.Email;
-
-namespace OnionWebApi.Application.Services;
+﻿namespace OnionWebApi.Application.Services;
 internal class EmailTemplateService : IEmailTemplateService
 {
     private readonly Dictionary<string, EmailTemplate> _templates;
