@@ -1,3 +1,5 @@
+DotEnv.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.RegisterServices(typeof(Program));

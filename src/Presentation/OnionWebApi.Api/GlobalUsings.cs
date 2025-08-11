@@ -48,3 +48,4 @@ global using Serilog;
 global using OnionWebApi.Api.Models;
 global using System.Threading.RateLimiting;
 global using Microsoft.AspNetCore.RateLimiting;
+global using dotenv.net;

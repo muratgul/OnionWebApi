@@ -142,13 +142,30 @@ With route-based versioning, no additional query string or header is required to
 ### Installation
 
 1. **Clone the repository:**
-  git clone https://github.com/muratgul/OnionWebApi.git cd OnionWebApi
+  ```bash
+  git clone https://github.com/muratgul/OnionWebApi.git
+  cd OnionWebApi
+  ```
 
-2. **Configure the database and RabbitMQ:**
-   - Update `appsettings.json` with your SQL Server and RabbitMQ/MassTransit connection details.
-
-3. **Restore dependencies:**
+2. **Restore dependencies:**
+  ```bash
   dotnet restore
+  ```
+
+3. **Configure Your Environment:**
+   The application uses a `.env` file to manage environment-specific variables. A sample is provided to make setup easier.
+   - Navigate to the `src/Presentation/OnionWebApi.Api` directory.
+   - Create a copy of the `.env-sample` file and rename it to `.env`.
+   - Open the new `.env` file and update the values for your local environment (e.g., database connection strings, secrets, API keys).
+
+   > **Note:** The `.env` file is included in `.gitignore` to prevent sensitive data from being committed to the repository.
+
+4. **Apply Database Migrations:**
+   Run the following command to apply the Entity Framework migrations and set up the database schema:
+   ```bash
+   dotnet ef database update --project src/Infrastructure/OnionWebApi.Persistence
+   ```
+
 
 4. **Build the project:**
   dotnet run --project src/Presentation/OnionWebApi.Api
