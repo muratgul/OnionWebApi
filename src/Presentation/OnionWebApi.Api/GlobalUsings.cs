@@ -45,3 +45,6 @@ global using OnionWebApi.Infrastructure.Messaging.Settings;
 global using OnionWebApi.Persistence;
 global using Scalar.AspNetCore;
 global using Serilog;
+global using OnionWebApi.Api.Models;
+global using System.Threading.RateLimiting;
+global using Microsoft.AspNetCore.RateLimiting;

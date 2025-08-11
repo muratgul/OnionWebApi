@@ -35,7 +35,8 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
             setup.SetMinimumSecondsBetweenFailureNotifications(120);
         }).AddInMemoryStorage();
         builder.Services.AddControllersWithViews();
-        builder.Services.AddControllers().AddJsonOptions(options =>
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;

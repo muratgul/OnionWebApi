@@ -40,6 +40,29 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **Idempotency:** Prevents duplicate operations for POST and PATCH requests using a middleware and an `[Idempotent]` attribute. It ensures that retried requests with the same `Idempotency-Key` header are processed only once, returning a cached response for subsequent attempts.
 - **Health Checks:** Provides a health check endpoint to monitor the status of the application and its dependencies (e.g., database, Redis).
 - **API Versioning:** OnionWebApi supports route-based API versioning, allowing each version of the API to be clearly defined within the URL path (e.g., `/api/v1/products`). This approach simplifies version management and works seamlessly with tools like Scalar for interactive testing.
+- **Rate Limiting:** Protects the API from excessive requests using a fixed window rate limiter. This feature is highly configurable through `appsettings.json`.
+
+### Rate Limiting Usage
+
+Rate limiting is enabled and configured in `appsettings.Development.json` or `appsettings.Production.json`.
+
+**Example Configuration:**
+
+```json
+"RateLimiting": {
+  "Enabled": true,
+  "PermitLimit": 5,
+  "WindowSeconds": 10,
+  "QueueLimit": 0
+}
+```
+
+-   **Enabled**: Set to `true` to enable rate limiting.
+-   **PermitLimit**: The maximum number of requests allowed in a time window.
+-   **WindowSeconds**: The duration of the time window in seconds.
+-   **QueueLimit**: The number of requests that can be queued when the limit is reached. A value of `0` means requests are rejected immediately.
+
+When the limit is exceeded, the API will return a `429 Too Many Requests` status code.
 ### Idempotency Usage
 
 To make an endpoint idempotent, add the `[Idempotent]` attribute to a controller action and provide a unique `Idempotency-Key` in the request header.
