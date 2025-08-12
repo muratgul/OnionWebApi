@@ -2,6 +2,7 @@
 
 public class RolesController : BaseController
 {
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {

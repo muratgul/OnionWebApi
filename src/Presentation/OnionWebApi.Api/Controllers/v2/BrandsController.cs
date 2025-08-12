@@ -1,14 +1,17 @@
-﻿namespace OnionWebApi.Api.Controllers.v2;
+﻿using TS.MediatR;
+
+namespace OnionWebApi.Api.Controllers.v2;
 
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
 public class BrandsController : BaseController
 {
     private readonly IMassTransitSend _massTransitSend;
-
-    public BrandsController(IMassTransitSend massTransitSend)
+    private readonly Sender Mediator;
+    public BrandsController(IMassTransitSend massTransitSend, Sender mediator)
     {
         _massTransitSend = massTransitSend;
+        Mediator = mediator;
     }
 
     [HttpGet]
@@ -34,7 +37,7 @@ public class BrandsController : BaseController
     [HttpDelete]
     public async Task<IActionResult> Delete([FromBody] DeleteBrandCommandRequest request)
     {
-        return Ok(await Mediator.Send(request));
+        return Ok(Mediator.Send(request));
     }
 
     [HttpGet("{id}")]

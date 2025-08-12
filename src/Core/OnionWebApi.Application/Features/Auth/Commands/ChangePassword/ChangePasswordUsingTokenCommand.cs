@@ -1,12 +1,12 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.ChangePassword;
-public class ChangePasswordUsingTokenCommandRequest : IRequest<Unit>
+public class ChangePasswordUsingTokenCommandRequest : IRequest
 {
     public string Email { get; set; }
     public string Token { get; set; }
     public string NewPassword { get; set; }
 }
 
-public class ChangePasswordUsingTokenCommandRequestHandler : BaseHandler, IRequestHandler<ChangePasswordUsingTokenCommandRequest, Unit>
+public class ChangePasswordUsingTokenCommandRequestHandler : BaseHandler, IRequestHandler<ChangePasswordUsingTokenCommandRequest>
 {
     private readonly UserManager<AppUser> _userManager;
     public ChangePasswordUsingTokenCommandRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
@@ -14,7 +14,7 @@ public class ChangePasswordUsingTokenCommandRequestHandler : BaseHandler, IReque
         _userManager = userManager;
     }
 
-    public async Task<Unit> Handle(ChangePasswordUsingTokenCommandRequest request, CancellationToken cancellationToken)
+    public async Task Handle(ChangePasswordUsingTokenCommandRequest request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
@@ -29,7 +29,5 @@ public class ChangePasswordUsingTokenCommandRequestHandler : BaseHandler, IReque
         {
             throw new Exception("Password change failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
         }
-
-        return Unit.Value;
     }
 }

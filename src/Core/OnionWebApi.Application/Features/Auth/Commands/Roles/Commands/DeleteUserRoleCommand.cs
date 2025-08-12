@@ -1,11 +1,11 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Commands;
-public class DeleteUserRoleCommandRequest : IRequest<Unit>
+public class DeleteUserRoleCommandRequest : IRequest
 {
     public int UserId { get; set; }
     public int RoleId { get; set; }
 }
 
-public class DeleteUserRoleCommandHandler : IRequestHandler<DeleteUserRoleCommandRequest, Unit>
+public class DeleteUserRoleCommandHandler : IRequestHandler<DeleteUserRoleCommandRequest>
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<AppRole> _roleManager;
@@ -16,7 +16,7 @@ public class DeleteUserRoleCommandHandler : IRequestHandler<DeleteUserRoleComman
         _roleManager = roleManager;
     }
 
-    public async Task<Unit> Handle(DeleteUserRoleCommandRequest request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteUserRoleCommandRequest request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(request.UserId.ToString());
         
@@ -31,8 +31,7 @@ public class DeleteUserRoleCommandHandler : IRequestHandler<DeleteUserRoleComman
         var result = await _userManager.RemoveFromRoleAsync(user, role.Name!);
 
 
-        return !result.Succeeded
-            ? throw new Exception($"Kullanı rolü silinemedi: {string.Join(", ", result.Errors.Select(e => e.Description))}")
-            : Unit.Value;
+        if (!result.Succeeded)
+            throw new Exception($"Kullanı rolü silinemedi: {string.Join(", ", result.Errors.Select(e => e.Description))}");
     }
 }

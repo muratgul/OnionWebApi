@@ -18,6 +18,7 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **Newtonsoft.Json & System.Text.Json**: JSON serialization and reference handling.
 - **OData (optional)**: Advanced querying support (available in code comments).
 - **CORS**: Cross-Origin Resource Sharing configuration.
+- **TS.MediatR**: A high-performance implementation of the mediator pattern.
 - **Layered Architecture**: Application, Persistence, Infrastructure, Mapper, and API layers.
 
 ## Features

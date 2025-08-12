@@ -1,5 +1,5 @@
 ﻿namespace OnionWebApi.Application.Beheviors;
-public class RedisCacheBehevior<TRequest, TResponse>(IRedisCacheService redisCacheService, IRedisCacheSettings settings) : IPipelineBehavior<TRequest, TResponse>
+public class RedisCacheBehevior<TRequest, TResponse>(IRedisCacheService redisCacheService, IRedisCacheSettings settings) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly IRedisCacheService _redisCacheService = redisCacheService;
     private readonly IRedisCacheSettings _settings = settings;
@@ -15,7 +15,7 @@ public class RedisCacheBehevior<TRequest, TResponse>(IRedisCacheService redisCac
             if (cachedData is not null)
                 return cachedData;
 
-            var response = await next(cancellationToken);
+            var response = await next();
 
             if (response is not null)
                 await _redisCacheService.SetAsync(cacheKey, response, DateTime.Now.AddMinutes(cacheTime));
@@ -23,6 +23,6 @@ public class RedisCacheBehevior<TRequest, TResponse>(IRedisCacheService redisCac
             return response;
         }
 
-        return await next(cancellationToken);
+        return await next();
     }
 }

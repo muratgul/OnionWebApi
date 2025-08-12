@@ -13,7 +13,6 @@
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
     <PackageReference Include="MassTransit" Version="8.5.1" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.1" />
-    <PackageReference Include="MediatR" Version="13.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
     <PackageReference Include="Otp.NET" Version="1.4.0" />
@@ -22,6 +21,7 @@
     <PackageReference Include="SendGrid" Version="9.29.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.13.0" />
+    <PackageReference Include="TS.MediatR" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>

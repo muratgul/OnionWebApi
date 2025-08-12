@@ -10,13 +10,15 @@ public static class Registration
         config.Scan(assembly);
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
+        services.AddMediatR(opt =>
+        {
+            opt.RegisterServicesFromAssembly(assembly);
+        });
 
         services.AddTransient<ExceptionMiddleware>();
 
         services.AddRulesFromAssemblyContaining(assembly, typeof(BaseRules));
-
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
-
+       
         services.AddValidatorsFromAssembly(assembly);
         ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("tr");
 

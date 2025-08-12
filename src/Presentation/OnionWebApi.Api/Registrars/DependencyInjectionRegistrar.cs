@@ -1,10 +1,12 @@
-﻿namespace OnionWebApi.Api.Registrars;
+﻿using TS.MediatR;
+
+namespace OnionWebApi.Api.Registrars;
 
 public class DependencyInjectionRegistrar : IWebApplicationBuilderRegistrar
 {
     public void RegisterServices(WebApplicationBuilder builder)
     {
-        
+        builder.Services.AddScoped<Sender>();
         builder.Services.Configure<EmailConfiguration>(builder.Configuration.GetSection("EmailConfiguration"));
 
         var uri = builder.Configuration["BaseUri"];        

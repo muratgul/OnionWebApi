@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Hosting;
 
 namespace OnionWebApi.Persistence;
 public static class Registration
