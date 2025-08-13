@@ -42,6 +42,7 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **Health Checks:** Provides a health check endpoint to monitor the status of the application and its dependencies (e.g., database, Redis).
 - **API Versioning:** OnionWebApi supports route-based API versioning, allowing each version of the API to be clearly defined within the URL path (e.g., `/api/v1/products`). This approach simplifies version management and works seamlessly with tools like Scalar for interactive testing.
 - **Rate Limiting:** Protects the API from excessive requests using a fixed window rate limiter. This feature is highly configurable through `appsettings.json`.
+- **Real-time Notifications with SignalR:** Provides real-time communication capabilities using SignalR. A global hub is configured to push notifications to all connected clients.
 
 ### Rate Limiting Usage
 
