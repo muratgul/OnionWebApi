@@ -154,28 +154,17 @@ With route-based versioning, no additional query string or header is required to
   dotnet restore
   ```
 
-3. **Configure Your Environment:**
-   The application uses environment-specific `.env` files to manage variables. It automatically loads the correct file (`.env.development` or `.env.production`) based on the `ASPNETCORE_ENVIRONMENT` variable.
-
-   - Navigate to the `src/Presentation/OnionWebApi.Api` directory.
-   - For local setup, create a copy of `.env-sample` and rename it to `.env.development`.
-   - For the production environment, create a `.env.production` file.
-   - Open your new `.env.*` file(s) and fill in the values for your specific environment (e.g., database connection strings, secrets, API keys).
-
-   > **Note:** All `.env.*` files are included in `.gitignore` to prevent sensitive data from being committed to the repository.
-
-4. **Apply Database Migrations:**
+3. **Apply Database Migrations:**
    Run the following command to apply the Entity Framework migrations and set up the database schema:
    ```bash
    dotnet ef database update --project src/Infrastructure/OnionWebApi.Persistence
    ```
 
-
 4. **Build the project:**
   dotnet run --project src/Presentation/OnionWebApi.Api
 
 
-6. **Access Scalar UI:**
+5. **Access Scalar UI:**
    - Navigate to `https://localhost:<port>/scalar` in your browser.
 
 ## Usage

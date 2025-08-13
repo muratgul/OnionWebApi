@@ -364,3 +364,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /src/Presentation/OnionWebApi.Api/.env
 /src/Presentation/OnionWebApi.Api/.env.development
+/src/Presentation/OnionWebApi.Api/.env.developmentx
