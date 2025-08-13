@@ -1,18 +1,22 @@
-﻿namespace OnionWebApi.Api.Controllers;
+﻿using OnionWebApi.Application.SignalR.Messages;
+
+namespace OnionWebApi.Api.Controllers;
 
 //[Authorize]
 public class BrandsController : BaseController
 {
     private readonly IMassTransitSend _massTransitSend;
+    private readonly INotificationService _notificationService;
    
-    public BrandsController(IMassTransitSend massTransitSend)
+    public BrandsController(IMassTransitSend massTransitSend, INotificationService notificationService)
     {
         _massTransitSend = massTransitSend;
+        _notificationService = notificationService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] GetAllBrandsQueryRequest request)
-    {
+    {       
         return Ok(await Mediator.Send(request));
     }
     
@@ -20,7 +24,13 @@ public class BrandsController : BaseController
     [Idempotent]
     public async Task<IActionResult> Add([FromBody] CreateBrandCommandRequest request)
     {
-        return Ok(await Mediator.Send(request));
+        var result = await Mediator.Send(request);
+        await _notificationService.SendToAllAsync("ReceiveNotofication", new NotificationMessage
+        {
+            Type = "Info",
+            Content = "Brand is created"
+        });
+        return Ok(result);
     }
 
     [HttpPut]

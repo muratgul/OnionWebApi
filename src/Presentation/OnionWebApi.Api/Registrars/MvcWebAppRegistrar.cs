@@ -34,5 +34,6 @@ public class MvcWebAppRegistrar : IWebApplicationRegistrar
         app.UseAuthorization();
         app.MapControllers().RequireRateLimiting("Fixed");
         app.UseCors("AllowAny");
+        app.MapHub<GlobalHub>("/hubs/global");
     }
 }

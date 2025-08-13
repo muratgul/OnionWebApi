@@ -72,7 +72,7 @@ public class AuthController : BaseController
         return StatusCode(StatusCodes.Status200OK);
     }
 
-    [HttpGet("OtpTest")]
+    [HttpGet]
     public IActionResult OtpTest()
     {
         var result = _otpService.FirstCode("OnionWebApi", "muratgul");

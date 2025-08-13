@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Versioning;
+using OnionWebApi.Infrastructure.SignalR;
 
 namespace OnionWebApi.Api.Registrars;
 
@@ -23,6 +24,9 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
             options.ReportApiVersions = true;
             options.ApiVersionReader = new UrlSegmentApiVersionReader();            
         });
+
+        builder.Services.AddSignalR();
+        builder.Services.AddScoped<INotificationService, NotificationService>();
 
         builder.Services.AddHealthChecks().
             AddSqlServer(connectionString: builder.Configuration.GetConnectionString("DefaultConnection")!, name: "SqlServer")

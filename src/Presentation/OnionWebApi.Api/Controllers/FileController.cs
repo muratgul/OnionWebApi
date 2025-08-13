@@ -1,5 +1,4 @@
-﻿using OnionWebApi.Application.DTOs.File;
-using OnionWebApi.Application.Helpers;
+﻿using OnionWebApi.Application.Helpers;
 
 namespace OnionWebApi.Api.Controllers;
 public class FileController : BaseController
