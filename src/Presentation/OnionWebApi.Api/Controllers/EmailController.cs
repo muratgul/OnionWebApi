@@ -72,6 +72,7 @@ public class EmailController : BaseController
             message = "Failed to send email"
         });
     }
+
     [HttpPost("send-templated")]
     public async Task<IActionResult> SendTemplatedEmail([FromBody] SendTemplatedEmailRequestDto request)
     {
@@ -93,6 +94,7 @@ public class EmailController : BaseController
             message = "Failed to send templated email"
         });
     }
+
     [HttpPost("send-bulk")]
     public async Task<IActionResult> SendBulkEmail([FromBody] BulkEmailRequestDto request)
     {
