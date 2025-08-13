@@ -5,6 +5,8 @@ public class RedisCacheService : IRedisCacheService, IDisposable
     private readonly ConnectionMultiplexer _redisConnection;
     private readonly IDatabase _database;
     private readonly IRedisCacheSettings _settings;
+
+    public bool IsEnabled => true;
     public RedisCacheService(IRedisCacheSettings settings)
     {
         _settings = settings;
@@ -14,12 +16,18 @@ public class RedisCacheService : IRedisCacheService, IDisposable
     }
     public async Task<T> GetAsync<T>(string key)
     {
+        if (!_settings.Enabled)
+            return default!;
+
         var value = await _database.StringGetAsync($"{_settings.InstanceName}_{key}");
         return value.HasValue ? JsonConvert.DeserializeObject<T>(value) : default;
     }
 
     public async Task SetAsync<T>(string key, T value, DateTime? expirationTime = null)
     {
+        if (!_settings.Enabled)
+            return;
+
         TimeSpan? expiry = null;
         if (expirationTime.HasValue)
         {
@@ -31,6 +39,8 @@ public class RedisCacheService : IRedisCacheService, IDisposable
 
     public async Task RemoveAsync(string key)
     {
+        if(!_settings.Enabled) return;
+
         await _database.KeyDeleteAsync($"{_settings.InstanceName}_{key}");
     }
     public void Dispose() => _redisConnection?.Dispose();

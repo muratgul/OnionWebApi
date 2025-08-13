@@ -1,19 +1,29 @@
 ﻿namespace OnionWebApi.Infrastructure;
 public static class Registration
-{    
+{
 
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-    {        
+    {
         services.Configure<TokenSettings>(configuration.GetSection("JWT"));
         services.AddTransient<ITokenService, TokenService>();
-        services.AddScoped<IMassTransitSend, MassTransitSend>();       
+        services.AddScoped<IMassTransitSend, MassTransitSend>();
 
+        var redisCacheSettings = configuration.GetSection("RedisCacheSettings").Get<RedisCacheSettings>();
         services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCacheSettings"));
         services.AddSingleton<IRedisCacheSettings>(sp =>
         {
             return sp.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
         });
-        services.AddTransient<IRedisCacheService, RedisCacheService>();
+
+
+        if (redisCacheSettings?.Enabled == true)
+        {
+            services.AddTransient<IRedisCacheService, RedisCacheService>();
+        }
+        else
+        {
+            services.AddTransient<IRedisCacheService, NullRedisCacheService>();
+        }
 
         services.AddHostedService<BackgroundEmailService>();
 

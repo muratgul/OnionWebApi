@@ -24,5 +24,7 @@ public static class Registration
             opt.SignIn.RequireConfirmedEmail = false;
         })
             .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+
+
     }
 }
