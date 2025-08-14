@@ -132,7 +132,7 @@ public class LocalFileStorageService : IFileStorageService
         var fullPath = GetPhysicalPath(directoryPath);
         if (!Directory.Exists(fullPath))
         {
-            return Enumerable.Empty<string>();
+            return [];
         }
 
         var files = Directory.GetFiles(fullPath)
