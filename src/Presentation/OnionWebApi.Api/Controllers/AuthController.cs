@@ -75,7 +75,7 @@ public class AuthController : BaseController
     [HttpGet]
     public IActionResult OtpTest()
     {
-        var result = _otpService.FirstCode("OnionWebApi", "muratgul");
+        var result = _otpService.CreateOtpSetup("OnionWebApi", "muratgul");
 
         return Ok(result);
     }

@@ -6,5 +6,5 @@ public interface IOtpService
     byte[] GenerateQrCode(string account, string issuer, string key);
     Task<byte[]> GenerateQrCodeAsync(string account, string issuer, string key);
     bool ValidateOtp(byte[] secretKey, string otpCode);
-    OtpSetupResult FirstCode(string issuer, string account);
+    OtpSetupResult CreateOtpSetup(string issuer, string account);
 }

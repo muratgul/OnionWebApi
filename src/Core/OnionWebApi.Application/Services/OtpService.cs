@@ -1,42 +1,49 @@
 ﻿namespace OnionWebApi.Application.Services;
 public class OtpService : IOtpService
 {
+    private const int DefaultKeySize = 20;
+    private const int OtpCodeLength = 6;
+    private const int QrCodePixelSize = 20;
     public string GenerateOtpAuthUri(string account, string issuer, string secretKey)
-    {        
-        return $"otpauth://totp/{Uri.EscapeDataString(issuer)}:{Uri.EscapeDataString(account)}?secret={secretKey}&issuer={Uri.EscapeDataString(issuer)}&digits=6";
+    {
+        ValidateOtpAuthParameters(account, issuer, secretKey);
+
+        var encodedIssuer = Uri.EscapeDataString(issuer);
+        var encodedAccount = Uri.EscapeDataString(account);
+
+        return $"otpauth://totp/{encodedIssuer}:{encodedAccount}?secret={secretKey}&issuer={encodedIssuer}&digits={OtpCodeLength}";
     }
     public byte[] GenerateQrCode(string account, string issuer, string key)
     {
         var otpauthUrl = GenerateOtpAuthUri(account, issuer, key);
-        var qrGenerator = new QRCodeGenerator();
-        var qrCodeData = qrGenerator.CreateQrCode(otpauthUrl, QRCodeGenerator.ECCLevel.Q);
-        var qrCode = new PngByteQRCode(qrCodeData);
-        return qrCode.GetGraphic(20);
+        return CreateQrCodeImage(otpauthUrl);
     }
     public async Task<byte[]> GenerateQrCodeAsync(string account, string issuer, string key)
     {
-        return await Task.Run(() => GenerateQrCode(account, issuer, key));
+        return await Task.Run(() => GenerateQrCode(account, issuer, key)).ConfigureAwait(false);
     }
-    public (byte[], string) GenerateRandomKey(int keySize = 20)
+    public (byte[], string) GenerateRandomKey(int keySize = DefaultKeySize)
     {
+        ValidateKeySize(keySize);
+
         var secretKey = KeyGeneration.GenerateRandomKey(keySize);
         var base32Secret = Base32Encoding.ToString(secretKey);
+
         return (secretKey, base32Secret);
     }
 
     public bool ValidateOtp(byte[] secretKey, string otpCode)
     {
-        if (secretKey == null || secretKey.Length == 0)
+        if (!IsValidSecretKey(secretKey) || !IsValidOtpCode(otpCode))
+        {
             return false;
-
-        if (string.IsNullOrWhiteSpace(otpCode) || !otpCode.All(char.IsDigit) || otpCode.Length != 6)
-            return false;
+        }
 
         var totp = new Totp(secretKey);
         return totp.VerifyTotp(otpCode, out _, VerificationWindow.RfcSpecifiedNetworkDelay);
     }
 
-    public OtpSetupResult FirstCode(string issuer, string account)
+    public OtpSetupResult CreateOtpSetup(string issuer, string account)
     {
         var (secretKeyBytes, base32Secret) = GenerateRandomKey();
         var otpAuthUrl = GenerateOtpAuthUri(account, issuer, base32Secret);
@@ -52,4 +59,50 @@ public class OtpService : IOtpService
         };
     }
 
+    private static void ValidateOtpAuthParameters(string account, string issuer, string secretKey)
+    {
+        if (string.IsNullOrWhiteSpace(account))
+        {
+            throw new ArgumentException("Account cannot be null or empty.", nameof(account));
+        }
+
+        if (string.IsNullOrWhiteSpace(issuer))
+        {
+            throw new ArgumentException("Issuer cannot be null or empty.", nameof(issuer));
+        }
+
+        if (string.IsNullOrWhiteSpace(secretKey))
+        {
+            throw new ArgumentException("Secret key cannot be null or empty.", nameof(secretKey));
+        }
+    }
+    private static byte[] CreateQrCodeImage(string otpauthUrl)
+    {
+        var qrGenerator = new QRCodeGenerator();
+        var qrCodeData = qrGenerator.CreateQrCode(otpauthUrl, QRCodeGenerator.ECCLevel.Q);
+        var qrCode = new PngByteQRCode(qrCodeData);
+        return qrCode.GetGraphic(QrCodePixelSize);
+    }
+    private static void ValidateKeySize(int keySize)
+    {
+        if (keySize <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(keySize), "Key size must be greater than zero.");
+        }
+
+        if (keySize < 10)
+        {
+            throw new ArgumentOutOfRangeException(nameof(keySize), "Key size should be at least 10 bytes for security.");
+        }
+    }
+    private static bool IsValidSecretKey(byte[] secretKey)
+    {
+        return secretKey != null && secretKey.Length > 0;
+    }
+    private static bool IsValidOtpCode(string otpCode)
+    {
+        return !string.IsNullOrWhiteSpace(otpCode)
+               && otpCode.Length == OtpCodeLength
+               && otpCode.All(char.IsDigit);
+    }
 }
