@@ -56,3 +56,4 @@ global using Mapster;
 global using OnionWebApi.Application.Features.Brands.Quaries;
 global using Polly;
 global using OnionWebApi.Application.Rules;
+global using OnionWebApi.Application.DTOs.Email;

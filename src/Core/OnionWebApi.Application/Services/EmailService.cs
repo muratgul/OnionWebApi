@@ -210,5 +210,44 @@ public class EmailService : IEmailService
 
         return mailMessage;
     }
+    public async Task<bool> SendEmailAsync(SendEmailRequestDto messageDto)
+    {
+        var message = new EmailMessage
+        {
+            To = messageDto.To,
+            ToList = messageDto.ToList ?? [],
+            CcList = messageDto.CcList ?? [],
+            BccList = messageDto.BccList ?? [],
+            Subject = messageDto.Subject,
+            Body = messageDto.Body,
+            IsHtml = messageDto.IsHtml,
+            From = messageDto.From,
+            FromDisplayName = messageDto.FromDisplayName,
+            Priority = messageDto.Priority,
+            ScheduledDate = messageDto.ScheduledDate,
+            Headers = messageDto.Headers ?? []
+        };
 
+        return await SendEmailAsync(message);
+    }
+    public async Task<Dictionary<EmailMessage, bool>> SendBulkEmailAsync(BulkEmailRequestDto messagesDto)
+    {
+        var messages = messagesDto.Emails.Select(e => new EmailMessage
+        {
+            To = e.To,
+            ToList = e.ToList ?? [],
+            CcList = e.CcList ?? [],
+            BccList = e.BccList ?? [],
+            Subject = e.Subject,
+            Body = e.Body,
+            IsHtml = e.IsHtml,
+            From = e.From,
+            FromDisplayName = e.FromDisplayName,
+            Priority = e.Priority,
+            ScheduledDate = e.ScheduledDate,
+            Headers = e.Headers ?? []
+        }).ToList();
+
+        return await SendBulkEmailAsync(messages);
+    }
 }

@@ -1,14 +1,8 @@
 ﻿namespace OnionWebApi.Api.Controllers;
-public class EmailController : BaseController
+public class EmailController(IEmailService emailService, IEmailTemplateService templateService) : BaseController
 {
-    private readonly IEmailService _emailService;
-    private readonly IEmailTemplateService _templateService;
-
-    public EmailController(IEmailService emailService, IEmailTemplateService templateService)
-    {
-        _emailService = emailService;
-        _templateService = templateService;
-    }
+    private readonly IEmailService _emailService = emailService;
+    private readonly IEmailTemplateService _templateService = templateService;
 
     [HttpPost("test")]
     public async Task<IActionResult> TestEmail()
@@ -39,23 +33,7 @@ public class EmailController : BaseController
     [HttpPost("send")]
     public async Task<IActionResult> SendEmail([FromBody] SendEmailRequestDto request)
     {
-        var message = new EmailMessage
-        {
-            To = request.To,
-            ToList = request.ToList ?? new List<string>(),
-            CcList = request.CcList ?? new List<string>(),
-            BccList = request.BccList ?? new List<string>(),
-            Subject = request.Subject,
-            Body = request.Body,
-            IsHtml = request.IsHtml,
-            From = request.From,
-            FromDisplayName = request.FromDisplayName,
-            Priority = request.Priority,
-            ScheduledDate = request.ScheduledDate,
-            Headers = request.Headers ?? new Dictionary<string, string>()
-        };
-
-        var result = await _emailService.SendEmailAsync(message);
+        var result = await _emailService.SendEmailAsync(request);
 
         if (result)
         {
@@ -76,17 +54,16 @@ public class EmailController : BaseController
     [HttpPost("send-templated")]
     public async Task<IActionResult> SendTemplatedEmail([FromBody] SendTemplatedEmailRequestDto request)
     {
-        var result = await _emailService.SendEmailWithTemplateAsync(
-            request.To,
-            request.TemplateName,
-            request.TemplateData);
+        var result = await _emailService.SendEmailWithTemplateAsync(request.To,request.TemplateName,request.TemplateData);
 
         if (result)
+        {
             return Ok(new
             {
                 success = true,
                 message = "Templated email sent successfully"
             });
+        }
 
         return BadRequest(new
         {
@@ -98,23 +75,7 @@ public class EmailController : BaseController
     [HttpPost("send-bulk")]
     public async Task<IActionResult> SendBulkEmail([FromBody] BulkEmailRequestDto request)
     {
-        var messages = request.Emails.Select(e => new EmailMessage
-        {
-            To = e.To,
-            ToList = e.ToList ?? new List<string>(),
-            CcList = e.CcList ?? new List<string>(),
-            BccList = e.BccList ?? new List<string>(),
-            Subject = e.Subject,
-            Body = e.Body,
-            IsHtml = e.IsHtml,
-            From = e.From,
-            FromDisplayName = e.FromDisplayName,
-            Priority = e.Priority,
-            ScheduledDate = e.ScheduledDate,
-            Headers = e.Headers ?? new Dictionary<string, string>()
-        }).ToList();
-
-        var result = await _emailService.SendBulkEmailAsync(messages);
+        var result = await _emailService.SendBulkEmailAsync(request);
 
         if (result.All(x => x.Value))
             return Ok(new
