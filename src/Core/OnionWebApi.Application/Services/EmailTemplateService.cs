@@ -1,5 +1,5 @@
 ﻿namespace OnionWebApi.Application.Services;
-internal class EmailTemplateService : IEmailTemplateService
+public class EmailTemplateService : IEmailTemplateService
 {
     private readonly Dictionary<string, EmailTemplate> _templates;
 
@@ -7,7 +7,7 @@ internal class EmailTemplateService : IEmailTemplateService
     {
         _templates = LoadDefaultTemplates();
     }
-    public async Task<EmailTemplate> GetTemplateAsync(string templateName)
+    public async Task<EmailTemplate?> GetTemplateAsync(string templateName)
     {
         await Task.CompletedTask;
         return _templates.TryGetValue(templateName.ToLower(), out var template) ? template : null;
@@ -15,7 +15,9 @@ internal class EmailTemplateService : IEmailTemplateService
     public string ProcessTemplate<T>(string template, T model)
     {
         if (string.IsNullOrEmpty(template) || model == null)
+        {
             return template;
+        }
 
         var result = template;
         var properties = typeof(T).GetProperties();
@@ -33,19 +35,19 @@ internal class EmailTemplateService : IEmailTemplateService
     {
         try
         {
-            await Task.CompletedTask; // Async for future database integration
+            await Task.CompletedTask;
             _templates[template.Name.ToLower()] = template;
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
     }
     public async Task<List<EmailTemplate>> GetAllTemplatesAsync()
     {
-        await Task.CompletedTask; // Async for future database integration
-        return _templates.Values.ToList();
+        await Task.CompletedTask;
+        return [.. _templates.Values];
     }
     private Dictionary<string, EmailTemplate> LoadDefaultTemplates()
     {
@@ -65,7 +67,7 @@ internal class EmailTemplateService : IEmailTemplateService
                     </div>
                 ",
                 TextBody = "Hoş Geldiniz {{UserName}}! Aramıza katıldığınız için teşekkür ederiz. Email: {{Email}}",
-                RequiredParameters = new List<string> { "UserName", "Email" }
+                RequiredParameters = ["UserName", "Email"]
             },
             ["passwordreset"] = new EmailTemplate
             {
@@ -88,7 +90,7 @@ internal class EmailTemplateService : IEmailTemplateService
                     </div>
                 ",
                 TextBody = "Merhaba {{UserName}}, Şifre sıfırlama bağlantısı: {{ResetLink}} Bu bağlantı {{ExpirationHours}} saat geçerlidir.",
-                RequiredParameters = new List<string> { "UserName", "ResetLink", "ExpirationHours" }
+                RequiredParameters = [ "UserName", "ResetLink", "ExpirationHours" ]
             },
             ["emailverification"] = new EmailTemplate
             {
@@ -111,7 +113,7 @@ internal class EmailTemplateService : IEmailTemplateService
                     </div>
                 ",
                 TextBody = "Merhaba {{UserName}}, Email doğrulama bağlantısı: {{VerificationLink}} Doğrulama kodu: {{VerificationCode}}",
-                RequiredParameters = new List<string> { "UserName", "VerificationLink", "VerificationCode", "ExpirationMinutes" }
+                RequiredParameters = [ "UserName", "VerificationLink", "VerificationCode", "ExpirationMinutes" ]
             },
             ["notification"] = new EmailTemplate
             {
@@ -130,7 +132,7 @@ internal class EmailTemplateService : IEmailTemplateService
                     </div>
                 ",
                 TextBody = "{{NotificationTitle}} - Merhaba {{UserName}}, {{NotificationMessage}}",
-                RequiredParameters = new List<string> { "UserName", "NotificationTitle", "NotificationMessage", "NotificationDate" }
+                RequiredParameters = [ "UserName", "NotificationTitle", "NotificationMessage", "NotificationDate" ]
             }
         };
     }
