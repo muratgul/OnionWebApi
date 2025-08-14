@@ -1,14 +1,9 @@
 ﻿namespace OnionWebApi.Application.Services;
-public class FileService : IFileService
+public class FileService(IFileStorageService fileStorageService, IConfiguration configuration) : IFileService
 {
-    private readonly IFileStorageService _fileStorageService;
-    private readonly FileServiceOptions _options;
+    private readonly IFileStorageService _fileStorageService = fileStorageService;
+    private readonly FileServiceOptions _options = configuration.GetSection("FileService").Get<FileServiceOptions>() ?? new FileServiceOptions();
 
-    public FileService(IFileStorageService fileStorageService, IConfiguration configuration)
-    {
-        _fileStorageService = fileStorageService;
-        _options = configuration.GetSection("FileService").Get<FileServiceOptions>() ?? new FileServiceOptions();
-    }
     public async Task<FileProcessResultDto> SaveFileAsync(FileUploadDto fileUpload)
     {
         var validationResult = await ValidateFileAsync(fileUpload);
@@ -40,11 +35,7 @@ public class FileService : IFileService
             return null;
         }
 
-        var content = await _fileStorageService.GetFileContentAsync(filePath);
-        if (content is null)
-        {
-            throw new FileNotFoundException(nameof(filePath));
-        }
+        var content = await _fileStorageService.GetFileContentAsync(filePath) ?? throw new FileNotFoundException(nameof(filePath));
 
         var fileName = Path.GetFileName(filePath);
         var contentType = await _fileStorageService.GetFileContentTypeAsync(filePath);
@@ -105,7 +96,7 @@ public class FileService : IFileService
             result.Errors.Add($"Desteklenmeyen dosya türü: {fileUpload.ContentType}");
         }
 
-        result.IsValid = !result.Errors.Any();
+        result.IsValid = result.Errors.Count == 0;
 
         return await Task.FromResult(result);
     }
