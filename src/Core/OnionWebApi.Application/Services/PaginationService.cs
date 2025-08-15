@@ -11,6 +11,14 @@ public class PaginationService(IMapper mapper, IUnitOfWork unitOfWork, IUriServi
             where TEntity : class, IEntityBase, new()
             where TDto : class, new()
     {
+
+        ArgumentNullException.ThrowIfNull(request);
+
+        if (string.IsNullOrWhiteSpace(request.Route))
+        {
+            throw new ArgumentNullException("Route is required for pagination links.", nameof(request.Route));
+        }
+
         var pagedData = await _unitOfWork.GetReadRepository<TEntity>().GetAllByPagingAsync(
             predicate: request.Predicate,
             include: request.Include,

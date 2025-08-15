@@ -1,16 +1,38 @@
 ﻿namespace OnionWebApi.Application.Services;
 public class EmailTemplateService : IEmailTemplateService
 {
-    private readonly Dictionary<string, EmailTemplate> _templates;
+    private readonly ConcurrentDictionary<string, EmailTemplate> _templates;
 
     public EmailTemplateService()
     {
-        _templates = LoadDefaultTemplates();
+        _templates = new ConcurrentDictionary<string, EmailTemplate>(LoadDefaultTemplates());
     }
-    public async Task<EmailTemplate?> GetTemplateAsync(string templateName)
+    public Task<EmailTemplate?> GetTemplateAsync(string templateName)
     {
-        await Task.CompletedTask;
-        return _templates.TryGetValue(templateName.ToLower(), out var template) ? template : null;
+        return string.IsNullOrWhiteSpace(templateName)
+            ? Task.FromResult<EmailTemplate?>(null)
+            : Task.FromResult<EmailTemplate?>(_templates.TryGetValue(templateName.ToLowerInvariant(), out var template) ? template : null);
+    }
+    public Task<List<EmailTemplate>> GetAllTemplatesAsync()
+    {
+        return Task.FromResult(_templates.Values.ToList());
+    }
+    public Task<bool> SaveTemplateAsync(EmailTemplate template)
+    {
+        if (template?.Name == null)
+        {
+            return Task.FromResult(false);
+        }
+
+        try
+        {
+            _templates[template.Name.ToLowerInvariant()] = template;
+            return Task.FromResult(true);
+        }
+        catch
+        {
+            return Task.FromResult(false);
+        }
     }
     public string ProcessTemplate<T>(string template, T model)
     {
@@ -20,38 +42,19 @@ public class EmailTemplateService : IEmailTemplateService
         }
 
         var result = template;
-        var properties = typeof(T).GetProperties();
+        var properties = GetPropertiesCache<T>.Properties;
 
         foreach (var property in properties)
         {
-            var value = property.GetValue(model)?.ToString() ?? string.Empty;
-            result = result.Replace($"{{{{{property.Name}}}}}", value);
+            var value = property.Getter(model)?.ToString() ?? string.Empty;
+            result = result.Replace($"{{{{{property.Name}}}}}", value, StringComparison.Ordinal);
         }
 
         return result;
-    }
-
-    public async Task<bool> SaveTemplateAsync(EmailTemplate template)
-    {
-        try
-        {
-            await Task.CompletedTask;
-            _templates[template.Name.ToLower()] = template;
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-    public async Task<List<EmailTemplate>> GetAllTemplatesAsync()
-    {
-        await Task.CompletedTask;
-        return [.. _templates.Values];
-    }
+    }    
     private Dictionary<string, EmailTemplate> LoadDefaultTemplates()
     {
-        return new Dictionary<string, EmailTemplate>
+        return new Dictionary<string, EmailTemplate>(StringComparer.OrdinalIgnoreCase)
         {
             ["welcome"] = new EmailTemplate
             {
@@ -137,4 +140,26 @@ public class EmailTemplateService : IEmailTemplateService
         };
     }
 
+}
+internal static class GetPropertiesCache<T>
+{
+    public static readonly (string Name, Func<T, object?> Getter)[] Properties;
+
+    static GetPropertiesCache()
+    {
+        var type = typeof(T);
+        var instance = Expression.Parameter(typeof(T), "instance");
+        var propertyInfos = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+        var props = new (string Name, Func<T, object?> Getter)[propertyInfos.Length];
+
+        for (int i = 0; i < propertyInfos.Length; i++)
+        {
+            var prop = propertyInfos[i];
+            var cast = Expression.Convert(Expression.Property(instance, prop), typeof(object));
+            props[i] = (prop.Name, Expression.Lambda<Func<T, object?>>(cast, instance).Compile());
+        }
+
+        Properties = props;
+    }
 }

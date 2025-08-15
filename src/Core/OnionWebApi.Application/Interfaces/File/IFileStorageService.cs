@@ -9,7 +9,6 @@ public interface IFileStorageService
     Task<bool> MoveFileAsync(string sourcePath, string destinationPath);
     Task<bool> CopyFileAsync(string sourcePath, string destinationPath);
     Task<string> GetFileContentTypeAsync(string filePath);
-    string GetPhysicalPath(string relativePath);
     Task<IEnumerable<string>> GetFilesInDirectoryAsync(string directoryPath);
     Task<bool> CreateDirectoryAsync(string directoryPath);
     Task<bool> DeleteDirectoryAsync(string directoryPath, bool recursive = false);

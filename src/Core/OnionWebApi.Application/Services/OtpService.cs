@@ -20,7 +20,7 @@ public class OtpService : IOtpService
     }
     public async Task<byte[]> GenerateQrCodeAsync(string account, string issuer, string key)
     {
-        return await Task.Run(() => GenerateQrCode(account, issuer, key)).ConfigureAwait(false);
+        return await Task.Run(() => GenerateQrCode(account, issuer, key), CancellationToken.None).ConfigureAwait(false);
     }
     public (byte[], string) GenerateRandomKey(int keySize = DefaultKeySize)
     {
@@ -31,24 +31,24 @@ public class OtpService : IOtpService
 
         return (secretKey, base32Secret);
     }
-
     public bool ValidateOtp(byte[] secretKey, string otpCode)
     {
         if (!IsValidSecretKey(secretKey) || !IsValidOtpCode(otpCode))
         {
+            Log.Warning("OTP validation failed: Invalid secret or OTP code.");
             return false;
         }
 
         var totp = new Totp(secretKey);
-        return totp.VerifyTotp(otpCode, out _, VerificationWindow.RfcSpecifiedNetworkDelay);
+        var isValid = totp.VerifyTotp(otpCode, out _, new VerificationWindow(1, 1));        
+        return isValid;
     }
-
     public OtpSetupResult CreateOtpSetup(string issuer, string account)
     {
         var (secretKeyBytes, base32Secret) = GenerateRandomKey();
         var otpAuthUrl = GenerateOtpAuthUri(account, issuer, base32Secret);
         var qrCodeBytes = GenerateQrCode(account, issuer, base32Secret);
-        var qrCodeBase64 = Convert.ToBase64String(qrCodeBytes);
+        var qrCodeBase64 = "data:image/png;base64," + Convert.ToBase64String(qrCodeBytes);
 
         return new OtpSetupResult
         {
