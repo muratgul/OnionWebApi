@@ -14,10 +14,10 @@ public class ForgotPasswordCommandHandler : BaseHandler, IRequestHandler<ForgotP
 
     public async Task<ForgotPasswordCommandResponse> Handle(ForgotPasswordCommandRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByEmailAsync(request.email) ?? throw new Exception("User is not found");
+        var user = await _userManager.FindByEmailAsync(request.Email) ?? throw new Exception("User is not found");
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-        return new ForgotPasswordCommandResponse(request.email, token);
+        return new ForgotPasswordCommandResponse(request.Email, token);
     }
 }

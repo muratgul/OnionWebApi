@@ -1,2 +1,2 @@
 ﻿namespace OnionWebApi.Application.DTOs;
-public record ForgotPasswordDto(string email);
+public record ForgotPasswordDto(string Email);

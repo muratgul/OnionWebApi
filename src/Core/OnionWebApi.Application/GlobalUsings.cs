@@ -57,3 +57,7 @@ global using OnionWebApi.Application.Features.Brands.Quaries;
 global using Polly;
 global using OnionWebApi.Application.Rules;
 global using OnionWebApi.Application.DTOs.Email;
+global using System.Text.Json;
+global using System.Collections;
+global using System.Collections.Concurrent;
+global using System.Net.Sockets;

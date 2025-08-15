@@ -1,2 +1,2 @@
 ﻿namespace OnionWebApi.Application.DTOs;
-public record ChangePasswordRequestDto(int userId, string oldPassword, string newPassword);
+public record ChangePasswordRequestDto(int UserId, string OldPassword, string NewPassword);

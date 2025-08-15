@@ -28,4 +28,8 @@
     <ProjectReference Include="..\OnionWebApi.Domain\OnionWebApi.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

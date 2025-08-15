@@ -13,9 +13,9 @@ public class ChangePasswordCommandHandler : BaseHandler, IRequestHandler<ChangeP
 
     public async Task Handle(ChangePasswordCommandRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(request.userId.ToString()) ?? throw new Exception("User not found");
+        var user = await _userManager.FindByIdAsync(request.UserId.ToString()) ?? throw new Exception("User not found");
 
-        var result = await _userManager.ChangePasswordAsync(user, request.oldPassword, request.newPassword);
+        var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
 
         if(!result.Succeeded)
         {

@@ -123,7 +123,7 @@ public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T
             list = list.Where(expression).AsQueryable();
         }
 
-        list = asc ? list.AscOrDescOrder(ESort.ASC, propertyName) : list.AscOrDescOrder(ESort.DESC, propertyName);
+        list = asc ? list.OrderByDynamic(propertyName, ESort.ASC) : list.OrderByDynamic(propertyName, ESort.DESC);
 
         if(list is null)
         {

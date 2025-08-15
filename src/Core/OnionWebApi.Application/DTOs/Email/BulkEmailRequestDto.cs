@@ -2,5 +2,5 @@
 
 public class BulkEmailRequestDto
 {
-    public List<SendEmailRequestDto> Emails { get; set; } = new();
+    public List<SendEmailRequestDto> Emails { get; set; } = [];
 }

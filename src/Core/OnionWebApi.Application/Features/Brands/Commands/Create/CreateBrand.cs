@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.Rules;
-
-namespace OnionWebApi.Application.Features.Brands.Commands.Create;
+﻿namespace OnionWebApi.Application.Features.Brands.Commands.Create;
 public class CreateBrandCommandRequest : IRequest<Brand>
 {
     public string Name { get; set; } = default!;

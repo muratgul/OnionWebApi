@@ -16,8 +16,8 @@ public class EmailController(IEmailService emailService, IEmailTemplateService t
 
             return Ok(new
             {
-                success = result,
-                message = result ? "Email sent" : "Email failed"
+                success = result.IsSuccess,
+                message = result.IsSuccess ? "Email sent" : "Email failed"
             });
         }
         catch (Exception ex)
@@ -35,7 +35,7 @@ public class EmailController(IEmailService emailService, IEmailTemplateService t
     {
         var result = await _emailService.SendEmailAsync(request);
 
-        if (result)
+        if (result.IsSuccess)
         {
             return Ok(new
             {
@@ -56,7 +56,7 @@ public class EmailController(IEmailService emailService, IEmailTemplateService t
     {
         var result = await _emailService.SendEmailWithTemplateAsync(request.To,request.TemplateName,request.TemplateData);
 
-        if (result)
+        if (result.IsSuccess)
         {
             return Ok(new
             {
@@ -77,12 +77,14 @@ public class EmailController(IEmailService emailService, IEmailTemplateService t
     {
         var result = await _emailService.SendBulkEmailAsync(request);
 
-        if (result.All(x => x.Value))
+        if (result.FailureCount > 0)
+        {
             return Ok(new
             {
                 success = true,
                 message = "Bulk emails sent successfully"
             });
+        }
 
         return BadRequest(new
         {
@@ -104,11 +106,13 @@ public class EmailController(IEmailService emailService, IEmailTemplateService t
         var result = await _templateService.SaveTemplateAsync(template);
 
         if (result)
+        {
             return Ok(new
             {
                 success = true,
                 message = "Template saved successfully"
             });
+        }
 
         return BadRequest(new
         {
@@ -131,8 +135,8 @@ public class EmailController(IEmailService emailService, IEmailTemplateService t
             var message = new EmailMessage
             {
                 To = "test@example.com",
-                ToList = new List<string> { "test2@example.com" },
-                CcList = new List<string> { "cc@example.com" },
+                ToList = ["test2@example.com"],
+                CcList = ["cc@example.com"],
                 Subject = "Gelişmiş Test Email",
                 Body = @"
                 <div style='font-family: Arial, sans-serif;'>
@@ -156,8 +160,8 @@ public class EmailController(IEmailService emailService, IEmailTemplateService t
 
             return Ok(new
             {
-                success = result,
-                message = result ? "Gelişmiş email başarıyla gönderildi" : "Email gönderimi başarısız",
+                success = result.IsSuccess,
+                message = result.IsSuccess ? "Gelişmiş email başarıyla gönderildi" : "Email gönderimi başarısız",
                 details = new
                 {
                     to = message.To,
