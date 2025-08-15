@@ -1,30 +1,35 @@
-﻿namespace OnionWebApi.Api.Registrars;
+﻿using OnionWebApi.Infrastructure.Messaging.Settings;
+using MassTransit;
+
+namespace OnionWebApi.Api.Registrars;
 
 public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
 {
     public void RegisterServices(WebApplicationBuilder builder)
-    {        
+    {
+        var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ").Get<RabbitMQSettings>();
         builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQ"));
-        
 
         builder.Services.AddMassTransit(opt =>
+        {
+            // Register MassTransit Consumer
+            opt.AddConsumer<BrandMessageConsumer>();
+
+            opt.ConfigureHealthCheckOptions(cfg =>
             {
-                // Register MassTransit Consumer
-                opt.AddConsumer<BrandMessageConsumer>();
+                cfg.Name = "MassTransit";
+                cfg.MinimalFailureStatus = HealthStatus.Unhealthy;
+                cfg.Tags.Add("health");
+            });
 
-                opt.ConfigureHealthCheckOptions(cfg =>
-                {
-                    cfg.Name = "MassTransit";
-                    cfg.MinimalFailureStatus = HealthStatus.Unhealthy;
-                    cfg.Tags.Add("health");
-                });
-
+            if (rabbitMQSettings?.Enabled == true)
+            {
                 opt.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(builder.Configuration["RabbitMQ:HostName"], "/", h =>
                     {
-                        h.Username(builder.Configuration["RabbitMQ:UserName"]!);
-                        h.Password(builder.Configuration["RabbitMQ:Password"]!);
+                        h.Username(builder.Configuration["RabbitMQ:UserName"]);
+                        h.Password(builder.Configuration["RabbitMQ:Password"]);
                     });
 
                     cfg.ReceiveEndpoint("brand-message-queue", e =>
@@ -39,7 +44,14 @@ public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
 
                     cfg.ConfigureEndpoints(context);
                 });
-
-            });       
-    }   
+            }
+            else
+            {
+                opt.UsingInMemory((context, cfg) =>
+                {
+                    cfg.ConfigureEndpoints(context);
+                });
+            }
+        });
+    }
 }

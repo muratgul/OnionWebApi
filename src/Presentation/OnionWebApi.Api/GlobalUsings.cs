@@ -52,3 +52,4 @@ global using OnionWebApi.Api.Registrars;
 global using TS.MediatR;
 global using OnionWebApi.Infrastructure.SignalR.Hubs;
 global using OnionWebApi.Application.Interfaces.SignalR;
+global using OnionWebApi.Application.SignalR.Messages;

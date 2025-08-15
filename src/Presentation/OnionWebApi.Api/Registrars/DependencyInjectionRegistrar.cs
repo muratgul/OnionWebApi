@@ -1,6 +1,4 @@
-﻿using TS.MediatR;
-
-namespace OnionWebApi.Api.Registrars;
+﻿namespace OnionWebApi.Api.Registrars;
 
 public class DependencyInjectionRegistrar : IWebApplicationBuilderRegistrar
 {
