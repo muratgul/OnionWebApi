@@ -25,7 +25,7 @@ public class PaginationService(IMapper mapper, IUnitOfWork unitOfWork, IUriServi
             orderBy: request.OrderBy,
             enableTracking: request.EnableTracking,
             currentPage: request.PageNumber,
-            pageSize: request.PageSize);
+            pageSize: request.PageSize, cancellationToken);
 
         var mappedData = _mapper.Map<IEnumerable<TDto>>(pagedData.Items);
 
