@@ -10,9 +10,10 @@ public static class Registration
         config.Scan(assembly);
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
-        services.AddMediatR(opt =>
+        services.AddMediatR(conf =>
         {
-            opt.RegisterServicesFromAssembly(assembly);
+            conf.RegisterServicesFromAssembly(assembly);
+            conf.AddOpenBehavior(typeof(FluentValidationBehevior<,>));
         });
 
         services.AddTransient<ExceptionMiddleware>();

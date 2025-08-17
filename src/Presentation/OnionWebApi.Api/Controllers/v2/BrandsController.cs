@@ -1,14 +1,12 @@
-﻿using TS.MediatR;
-
-namespace OnionWebApi.Api.Controllers.v2;
+﻿namespace OnionWebApi.Api.Controllers.v2;
 
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[controller]")]
 public class BrandsController : BaseController
 {
     private readonly IMassTransitSend _massTransitSend;
-    private readonly Sender Mediator;
-    public BrandsController(IMassTransitSend massTransitSend, Sender mediator)
+    private readonly ISender Mediator;
+    public BrandsController(IMassTransitSend massTransitSend, ISender mediator)
     {
         _massTransitSend = massTransitSend;
         Mediator = mediator;

@@ -1,5 +1,7 @@
 ﻿
+using Microsoft.AspNetCore.Http;
 using OnionWebApi.Application.Interfaces.DbContext;
+using System.Security.Claims;
 
 namespace OnionWebApi.Persistence.Context;
 public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbContext
@@ -44,17 +46,23 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
             .Where(e => e.Entity is EntityBase && 
                         (e.State == EntityState.Added || e.State == EntityState.Modified));
 
+        HttpContextAccessor httpContextAccessor = new();
+        string userIdString = httpContextAccessor.HttpContext!.User.Claims.First(p => p.Type == ClaimTypes.NameIdentifier).Value;
+        var userId = int.Parse(userIdString);
+
         foreach (var entry in entries)
         {
             var entity = (EntityBase)entry.Entity;
 
             if (entry.State == EntityState.Added)
             {
+                entity.CreatedUserId = userId;
                 entity.CreatedDate = DateTime.UtcNow;
             }
 
             if (entry.State == EntityState.Modified)
             {
+                entity.UpdatedUserId = userId;
                 entity.UpdatedDate = DateTime.UtcNow;
             }
         }
