@@ -1,8 +1,8 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.ForgotPassword;
 
-public record ForgotPasswordCommandResponse(string email, string token);
+public record ForgotPasswordCommandResponse(string Email, string Token);
 
-public record ForgotPasswordCommandRequest(string email) : ForgotPasswordDto(email), IRequest<ForgotPasswordCommandResponse>;
+public record ForgotPasswordCommandRequest(string Email) :IRequest<ForgotPasswordCommandResponse>;
 
 public class ForgotPasswordCommandHandler : BaseHandler, IRequestHandler<ForgotPasswordCommandRequest, ForgotPasswordCommandResponse>
 {
