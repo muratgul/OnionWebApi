@@ -4,9 +4,7 @@ public class UpdateBrandCommandRequest : IRequest<Brand>
     public int Id { get; set; }
     public string Name { get; set; } = default!;
 }
-
-
-public class UpdateBrandCommandHandler : BaseHandler, IRequestHandler<UpdateBrandCommandRequest, Brand>
+internal class UpdateBrandCommandHandler : BaseHandler, IRequestHandler<UpdateBrandCommandRequest, Brand>
 {
     public UpdateBrandCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
     {

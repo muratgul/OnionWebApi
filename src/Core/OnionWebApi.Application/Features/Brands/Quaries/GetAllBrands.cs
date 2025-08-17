@@ -11,7 +11,7 @@ public class GetAllBrandsQueryRequest : PagingParameter, IRequest<PaginatedResul
     public double CacheTime => 5;
 }
 
-public class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrandsQueryRequest, PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>
+internal class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrandsQueryRequest, PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>
 {
     private readonly IPaginationService _paginationService;
     private readonly IMassTransitSend _massTransitSend;

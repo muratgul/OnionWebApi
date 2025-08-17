@@ -9,7 +9,7 @@ public class TokenService : ITokenService
         _tokenSettings = options.Value;
         _userManager = userManager;
     }
-    public async Task<JwtSecurityToken> CreateToken(AppUser user, IList<string> roles)
+    public async Task<JwtSecurityToken> CreateTokenAsync(AppUser user, string password, IList<string> roles, CancellationToken cancellationToken = default )
     {
         var claims = new List<Claim>()
             {

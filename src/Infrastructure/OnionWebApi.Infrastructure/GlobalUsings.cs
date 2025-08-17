@@ -28,3 +28,5 @@ global using OnionWebApi.Infrastructure.SignalR.Hubs;
 global using OnionWebApi.Infrastructure.Tokens;
 global using Serilog;
 global using StackExchange.Redis;
+global using OnionWebApi.Domain.Dtos;
+global using System.Net;

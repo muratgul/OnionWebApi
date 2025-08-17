@@ -3,7 +3,7 @@ public class RevokeCommandRequest : IRequest
 {
     public string Email { get; set; }
 }
-public class RevokeCommandHandler : BaseHandler, IRequestHandler<RevokeCommandRequest>
+internal class RevokeCommandHandler : BaseHandler, IRequestHandler<RevokeCommandRequest>
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly AuthRules _authRules;

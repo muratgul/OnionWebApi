@@ -18,7 +18,7 @@ public class LoginCommandRequest : IRequest<LoginCommandResponse>
     public string Password { get; set; } = default!;
 }
 
-public class LoginCommandHandler : BaseHandler, IRequestHandler<LoginCommandRequest, LoginCommandResponse>
+internal class LoginCommandHandler : BaseHandler, IRequestHandler<LoginCommandRequest, LoginCommandResponse>
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IConfiguration _configuration;
@@ -47,7 +47,7 @@ public class LoginCommandHandler : BaseHandler, IRequestHandler<LoginCommandRequ
 
         var roles = await _userManager.GetRolesAsync(user!);
 
-        var token = await _tokenService.CreateToken(user!, roles);
+        var token = await _tokenService.CreateTokenAsync(user!, password: "", roles);
         var refreshToken = _tokenService.GenerateRefreshToken();
 
         _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out var refreshTokenValidityInDays);

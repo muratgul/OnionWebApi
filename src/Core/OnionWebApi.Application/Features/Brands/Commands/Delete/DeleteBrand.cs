@@ -6,7 +6,7 @@ public class DeleteBrandCommandRequest : IRequest
 }
 
 
-public class DeleteBrandCommandHandler : BaseHandler, IRequestHandler<DeleteBrandCommandRequest>
+internal class DeleteBrandCommandHandler : BaseHandler, IRequestHandler<DeleteBrandCommandRequest>
 {
     public DeleteBrandCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
     {

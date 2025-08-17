@@ -4,7 +4,7 @@ public class CreateRoleCommandRequest : IRequest
     public string RoleName { get; set; }
 }
 
-public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommandRequest>
+internal class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommandRequest>
 {
     private readonly RoleManager<AppRole> _roleManager;
     public CreateRoleCommandHandler(RoleManager<AppRole> roleManager)

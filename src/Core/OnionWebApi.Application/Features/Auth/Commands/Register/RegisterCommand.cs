@@ -6,7 +6,7 @@ public class RegisterCommandRequest : IRequest
     public string Password { get; set; }
     public string ConfirmPassword { get; set; }
 }
-public class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterCommandRequest>
+internal class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterCommandRequest>
 {
     private readonly AuthRules _authRules;
     private readonly UserManager<AppUser> _userManager;

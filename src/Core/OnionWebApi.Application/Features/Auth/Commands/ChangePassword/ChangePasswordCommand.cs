@@ -3,7 +3,7 @@
 public record ChangePasswordCommandRequest(int UserId, string OldPassword, string NewPassword) : ChangePasswordRequestDto(UserId, OldPassword, NewPassword),  IRequest;
 
 
-public class ChangePasswordCommandHandler : BaseHandler, IRequestHandler<ChangePasswordCommandRequest>
+internal class ChangePasswordCommandHandler : BaseHandler, IRequestHandler<ChangePasswordCommandRequest>
 {
     private readonly UserManager<AppUser> _userManager;
     public ChangePasswordCommandHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)

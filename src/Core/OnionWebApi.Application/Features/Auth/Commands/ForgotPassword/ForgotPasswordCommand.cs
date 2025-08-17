@@ -4,7 +4,7 @@ public record ForgotPasswordCommandResponse(string Email, string Token);
 
 public record ForgotPasswordCommandRequest(string Email) :IRequest<ForgotPasswordCommandResponse>;
 
-public class ForgotPasswordCommandHandler : BaseHandler, IRequestHandler<ForgotPasswordCommandRequest, ForgotPasswordCommandResponse>
+internal class ForgotPasswordCommandHandler : BaseHandler, IRequestHandler<ForgotPasswordCommandRequest, ForgotPasswordCommandResponse>
 {
     private readonly UserManager<AppUser> _userManager;
     public ForgotPasswordCommandHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)

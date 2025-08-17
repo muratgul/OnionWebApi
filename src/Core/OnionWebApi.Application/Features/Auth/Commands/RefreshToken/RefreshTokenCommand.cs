@@ -9,7 +9,7 @@ public class RefreshTokenCommandRequest : IRequest<RefreshTokenCommandResponse>
     public string AccessToken { get; set; } = default!;
     public string RefreshToken { get; set; } = default!;
 }
-public class RefreshTokenCommandHandler : BaseHandler, IRequestHandler<RefreshTokenCommandRequest, RefreshTokenCommandResponse>
+internal class RefreshTokenCommandHandler : BaseHandler, IRequestHandler<RefreshTokenCommandRequest, RefreshTokenCommandResponse>
 {
     private readonly AuthRules _authRules;
     private readonly UserManager<AppUser> _userManager;
@@ -31,7 +31,7 @@ public class RefreshTokenCommandHandler : BaseHandler, IRequestHandler<RefreshTo
 
         await _authRules.RefreshTokenShouldNotBeExpired(user!.RefreshTokenExpiryTime);
 
-        var newAccessToken = await _tokenService.CreateToken(user, roles);
+        var newAccessToken = await _tokenService.CreateTokenAsync(user, password: "", roles);
         var newRefreshToken = _tokenService.GenerateRefreshToken();
 
         user.RefreshToken = newRefreshToken;

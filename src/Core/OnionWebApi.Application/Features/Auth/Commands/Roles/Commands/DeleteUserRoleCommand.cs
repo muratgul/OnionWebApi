@@ -5,7 +5,7 @@ public class DeleteUserRoleCommandRequest : IRequest
     public int RoleId { get; set; }
 }
 
-public class DeleteUserRoleCommandHandler : IRequestHandler<DeleteUserRoleCommandRequest>
+internal class DeleteUserRoleCommandHandler : IRequestHandler<DeleteUserRoleCommandRequest>
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<AppRole> _roleManager;

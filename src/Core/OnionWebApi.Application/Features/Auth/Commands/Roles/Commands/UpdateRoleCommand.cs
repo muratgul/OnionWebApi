@@ -5,7 +5,7 @@ public class UpdateRoleCommandRequest : IRequest
     public string RoleName { get; set; }
 }
 
-public class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommandRequest>
+internal class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommandRequest>
 {
     private readonly RoleManager<AppRole> _roleManager;
     public UpdateRoleCommandHandler(RoleManager<AppRole> roleManager)

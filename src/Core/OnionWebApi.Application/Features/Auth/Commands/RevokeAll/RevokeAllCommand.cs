@@ -2,7 +2,7 @@
 public class RevokeAllCommandRequest : IRequest
 {
 }
-public class RevokeAllCommandHandler : BaseHandler, IRequestHandler<RevokeAllCommandRequest>
+internal class RevokeAllCommandHandler : BaseHandler, IRequestHandler<RevokeAllCommandRequest>
 {
     private readonly UserManager<AppUser> _userManager;
     public RevokeAllCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, UserManager<AppUser> userManager, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
