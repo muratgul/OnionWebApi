@@ -19,9 +19,12 @@ public class EntityBase : IEntityBase
         var appUser = userManager.Users.First(p => p.Id == CreatedUserId);
 
         return $"{appUser.FullName}";
+
     }
     private string GetUpdatedUserName()
     {
+
+        if (UpdatedUserId is null) return null;
         HttpContextAccessor httpContextAccessor = new();
         var userManager = httpContextAccessor.HttpContext.RequestServices.GetRequiredService<UserManager<AppUser>>();
 

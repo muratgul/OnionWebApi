@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.OData;
+using OnionWebApi.Api.Controllers;
 using OnionWebApi.Infrastructure.SignalR;
 
 namespace OnionWebApi.Api.Registrars;
@@ -46,19 +48,17 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
             options.JsonSerializerOptions.WriteIndented = true;
 
-        });
-        /*
-          builder.Services.AddControllers()
-        .AddOData(options =>         
-        options.SetMaxTop(null).EnableQueryFeatures().
-        AddRouteComponents("api/odata", StoklarController.GetEdmModel()))
-        .AddJsonOptions(options =>
+        }).AddOData(opt =>
         {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            options.JsonSerializerOptions.WriteIndented = true;
+            opt
+            .Select()
+            .Filter()
+            .Count()
+            .Expand()
+            .OrderBy()
+            .SetMaxTop(null)
+            .AddRouteComponents("odata", AppODataController.GetEdmModel());
         });
-         */
 
         builder.Services.AddOpenApi(options =>
         {

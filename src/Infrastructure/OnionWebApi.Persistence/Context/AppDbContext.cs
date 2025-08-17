@@ -46,9 +46,9 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
             .Where(e => e.Entity is EntityBase && 
                         (e.State == EntityState.Added || e.State == EntityState.Modified));
 
-        HttpContextAccessor httpContextAccessor = new();
-        string userIdString = httpContextAccessor.HttpContext!.User.Claims.First(p => p.Type == ClaimTypes.NameIdentifier).Value;
-        var userId = int.Parse(userIdString);
+        //HttpContextAccessor httpContextAccessor = new();
+        //string userIdString = httpContextAccessor.HttpContext!.User.Claims.First(p => p.Type == ClaimTypes.NameIdentifier).Value;
+        var userId = 1;//  int.Parse(userIdString);
 
         foreach (var entry in entries)
         {
