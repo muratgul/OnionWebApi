@@ -60,6 +60,11 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
             .AddRouteComponents("odata", AppODataController.GetEdmModel());
         });
 
+        builder.Services.AddResponseCompression(opt =>
+        {
+            opt.EnableForHttps = true;
+        });
+
         builder.Services.AddOpenApi(options =>
         {
             options.AddDocumentTransformer((document, context, cancellationToken) =>

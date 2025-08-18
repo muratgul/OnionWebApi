@@ -1,6 +1,5 @@
 ﻿namespace OnionWebApi.Api.Registrars;
 
-
 public class MvcWebAppRegistrar : IWebApplicationRegistrar
 {
     public void RegisterPipelineComponents(WebApplication app)
@@ -36,6 +35,6 @@ public class MvcWebAppRegistrar : IWebApplicationRegistrar
         app.MapControllers().RequireRateLimiting("Fixed");
         app.UseCors("AllowAny");
         app.MapHub<GlobalHub>("/hubs/global");
-        
+        app.UseResponseCompression();        
     }
 }
