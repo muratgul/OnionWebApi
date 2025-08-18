@@ -1,6 +1,6 @@
 ﻿namespace OnionWebApi.Api.Registrars;
 
-public class DependencyInjectionRegistrar : IWebApplicationBuilderRegistrar
+public class AppRegistrar : IWebApplicationBuilderRegistrar
 {
     public void RegisterServices(WebApplicationBuilder builder)
     {

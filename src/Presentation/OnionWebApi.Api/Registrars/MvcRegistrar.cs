@@ -14,16 +14,14 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
     }
     public void RegisterServices(WebApplicationBuilder builder)
     {
-        //KeyCloak
-        //builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);
-        //builder.Services.AddAuthorization().AddKeycloakAuthorization(builder.Configuration);
+
 
         builder.Services.AddApiVersioning(options =>
         {
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
             options.ReportApiVersions = true;
-            options.ApiVersionReader = new UrlSegmentApiVersionReader();            
+            options.ApiVersionReader = new UrlSegmentApiVersionReader();
         });
 
         builder.Services.AddSignalR();
@@ -42,61 +40,26 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
         builder.Services.AddControllersWithViews();
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-            options.JsonSerializerOptions.WriteIndented = true;
-
-        }).AddOData(opt =>
-        {
-            opt
-            .Select()
-            .Filter()
-            .Count()
-            .Expand()
-            .OrderBy()
-            .SetMaxTop(null)
-            .AddRouteComponents("odata", AppODataController.GetEdmModel());
-        });
-
-        builder.Services.AddResponseCompression(opt =>
-        {
-            opt.EnableForHttps = true;
-        });
-
-        builder.Services.AddOpenApi(options =>
-        {
-            options.AddDocumentTransformer((document, context, cancellationToken) =>
             {
-                document.Components ??= new();
-                document.Components.SecuritySchemes ??= new Dictionary<string, OpenApiSecurityScheme>();
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.JsonSerializerOptions.WriteIndented = true;
 
-                document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    BearerFormat = "JWT",
-                    Description = "JWT Authorization header using the Bearer scheme."
-                };
-
-                document.SecurityRequirements.Add(new OpenApiSecurityRequirement
-        {
+            }).AddOData(opt =>
             {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                },
-                Array.Empty<string>()
-            }
-        });
-
-                return Task.CompletedTask;
+                opt
+                .Select()
+                .Filter()
+                .Count()
+                .Expand()
+                .OrderBy()
+                .SetMaxTop(null)
+                .AddRouteComponents("odata", AppODataController.GetEdmModel());
             });
-        });
+
+
+
+
     }
 }

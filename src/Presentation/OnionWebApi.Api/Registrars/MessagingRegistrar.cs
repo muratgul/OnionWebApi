@@ -1,9 +1,6 @@
-﻿using OnionWebApi.Infrastructure.Messaging.Settings;
-using MassTransit;
+﻿namespace OnionWebApi.Api.Registrars;
 
-namespace OnionWebApi.Api.Registrars;
-
-public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
+public class MessagingRegistrar : IWebApplicationBuilderRegistrar
 {
     public void RegisterServices(WebApplicationBuilder builder)
     {
@@ -28,8 +25,8 @@ public class ThirdPartyRegistrar : IWebApplicationBuilderRegistrar
                 {
                     cfg.Host(builder.Configuration["RabbitMQ:HostName"], "/", h =>
                     {
-                        h.Username(builder.Configuration["RabbitMQ:UserName"]);
-                        h.Password(builder.Configuration["RabbitMQ:Password"]);
+                        h.Username(builder.Configuration["RabbitMQ:UserName"]!);
+                        h.Password(builder.Configuration["RabbitMQ:Password"]!);
                     });
 
                     cfg.ReceiveEndpoint("brand-message-queue", e =>
