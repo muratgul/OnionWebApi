@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using OnionWebApi.Application.SignalR.Messages;
+﻿namespace OnionWebApi.Api.Controllers;
 
-namespace OnionWebApi.Api.Controllers;
-
-[Authorize]
+//[Authorize]
 public class BrandsController : BaseController
 {
     private readonly IMassTransitSend _massTransitSend;

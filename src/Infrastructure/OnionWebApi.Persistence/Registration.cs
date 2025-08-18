@@ -6,6 +6,7 @@ public static class Registration
 {
     public static void AddPersistence(this IServiceCollection services, IConfiguration configuration, WebApplicationBuilder builder)
     {
+        services.AddHttpContextAccessor();
         services.AddDbContext<AppDbContext>(opt =>
         opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 

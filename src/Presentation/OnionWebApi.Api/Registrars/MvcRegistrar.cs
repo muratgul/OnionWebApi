@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.AspNetCore.OData;
-using OnionWebApi.Api.Controllers;
-using OnionWebApi.Infrastructure.SignalR;
-
-namespace OnionWebApi.Api.Registrars;
+﻿namespace OnionWebApi.Api.Registrars;
 
 public class MvcRegistrar : IWebApplicationBuilderRegistrar
 {
@@ -19,6 +14,10 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
     }
     public void RegisterServices(WebApplicationBuilder builder)
     {
+        //KeyCloak
+        //builder.Services.AddKeycloakWebApiAuthentication(builder.Configuration);
+        //builder.Services.AddAuthorization().AddKeycloakAuthorization(builder.Configuration);
+
         builder.Services.AddApiVersioning(options =>
         {
             options.AssumeDefaultVersionWhenUnspecified = true;

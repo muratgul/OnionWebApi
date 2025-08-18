@@ -1,17 +1,14 @@
-﻿
-using Microsoft.AspNetCore.Http;
-using OnionWebApi.Application.Interfaces.DbContext;
-using System.Security.Claims;
-
-namespace OnionWebApi.Persistence.Context;
+﻿namespace OnionWebApi.Persistence.Context;
 public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbContext
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
     public AppDbContext()
     {
     }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
     {
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public DbSet<Brand> Brands { get; set; }
@@ -46,22 +43,21 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
             .Where(e => e.Entity is EntityBase && 
                         (e.State == EntityState.Added || e.State == EntityState.Modified));
 
-        HttpContextAccessor httpContextAccessor = new();
-        string userIdString = httpContextAccessor.HttpContext!.User.Claims.First(p => p.Type == ClaimTypes.NameIdentifier).Value;
-        var userId = int.Parse(userIdString);
+        var userId = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+
         foreach (var entry in entries)
         {
             var entity = (EntityBase)entry.Entity;
 
             if (entry.State == EntityState.Added)
             {
-                entity.CreatedUserId = userId;
+                entity.CreatedUserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId);
                 entity.CreatedDate = DateTime.UtcNow;
             }
 
             if (entry.State == EntityState.Modified)
             {
-                entity.UpdatedUserId = userId;
+                entity.UpdatedUserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId);
                 entity.UpdatedDate = DateTime.UtcNow;
             }
         }

@@ -13,3 +13,6 @@ global using OnionWebApi.Persistence.Repositories;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using OnionWebApi.Persistence.UnitOfWorks;
+global using Microsoft.AspNetCore.Http;
+global using OnionWebApi.Application.Interfaces.DbContext;
+global using System.Security.Claims;
