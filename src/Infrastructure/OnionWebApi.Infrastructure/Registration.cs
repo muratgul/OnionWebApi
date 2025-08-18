@@ -4,9 +4,12 @@ public static class Registration
 
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<KeycloakConfiguration>(configuration.GetSection("KeycloakConfiguration"));
         services.Configure<TokenSettings>(configuration.GetSection("JWT"));
+        services.AddScoped<KeycloakService>();
         services.AddTransient<ITokenService, TokenService>();
         services.AddScoped<IMassTransitSend, MassTransitSend>();
+        
 
         var redisCacheSettings = configuration.GetSection("RedisCacheSettings").Get<RedisCacheSettings>();
         services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCacheSettings"));

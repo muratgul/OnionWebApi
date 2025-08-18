@@ -4,20 +4,16 @@ public class KeycloakService : ITokenService
 {
     private readonly IOptions<KeycloakConfiguration> _options;
     private readonly TokenSettings _tokenSettings;
-
     public KeycloakService(IOptions<KeycloakConfiguration> options, IOptions<TokenSettings> tokenSettings)
     {
         _options = options;
         _tokenSettings = tokenSettings.Value;
     }
-
     public async Task<string> GetAccessToken(CancellationToken cancellationToken = default)
     {
-        HttpClient client = new();
+        var endpoint = $"{_options.Value.HostName}/realms/{_options.Value.Realm}/protocol/openid-connect/token";
 
-        string endpoint = $"{_options.Value.HostName}/realms/{_options.Value.Realm}/protocol/openid-connect/token";
-
-        List<KeyValuePair<string, string>> data = new();
+        List<KeyValuePair<string, string>> data = [];
         KeyValuePair<string, string> grantType = new("grant_type", "client_credentials");
         KeyValuePair<string, string> clientId = new("client_id", _options.Value.ClientId);
         KeyValuePair<string, string> clientSecret = new("client_secret", _options.Value.ClientSecret);
@@ -32,19 +28,18 @@ public class KeycloakService : ITokenService
     }
     public async Task<T> PostUrlEncodedFormAsync<T>(string endpoint, List<KeyValuePair<string, string>> data, bool reqToken = false, CancellationToken cancellationToken = default)
     {
-
         HttpClient httpClient = new();
 
         if (reqToken)
         {
-            string token = await GetAccessToken();
+            var token = await GetAccessToken(cancellationToken);
 
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         }
 
         var message = await httpClient.PostAsync(endpoint, new FormUrlEncodedContent(data), cancellationToken);
 
-        var response = await message.Content.ReadAsStringAsync();
+        var response = await message.Content.ReadAsStringAsync(cancellationToken);
 
         if (!message.IsSuccessStatusCode)
         {
@@ -78,14 +73,14 @@ public class KeycloakService : ITokenService
 
         if (reqToken)
         {
-            string token = await GetAccessToken();
+            var token = await GetAccessToken(cancellationToken);
 
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         }
 
         var message = await httpClient.GetAsync(endpoint, cancellationToken);
 
-        var response = await message.Content.ReadAsStringAsync();
+        var response = await message.Content.ReadAsStringAsync(cancellationToken);
 
         if (!message.IsSuccessStatusCode)
         {
@@ -110,21 +105,21 @@ public class KeycloakService : ITokenService
     }
     public async Task<T> PutAsync<T>(string endpoint, object data, bool reqToken = false, CancellationToken cancellationToken = default)
     {
-        string stringData = System.Text.Json.JsonSerializer.Serialize(data);
+        var stringData = System.Text.Json.JsonSerializer.Serialize(data);
         var content = new StringContent(stringData, Encoding.UTF8, "application/json");
 
         HttpClient httpClient = new();
 
         if (reqToken)
         {
-            string token = await GetAccessToken();
+            var token = await GetAccessToken(cancellationToken);
 
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         }
 
         var message = await httpClient.PutAsync(endpoint, content, cancellationToken);
 
-        var response = await message.Content.ReadAsStringAsync();
+        var response = await message.Content.ReadAsStringAsync(cancellationToken);
 
         if (!message.IsSuccessStatusCode)
         {
@@ -153,14 +148,14 @@ public class KeycloakService : ITokenService
 
         if (reqToken)
         {
-            string token = await GetAccessToken();
+            var token = await GetAccessToken(cancellationToken);
 
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         }
 
         var message = await httpClient.DeleteAsync(endpoint, cancellationToken);
 
-        var response = await message.Content.ReadAsStringAsync();
+        var response = await message.Content.ReadAsStringAsync(cancellationToken);
 
         if (!message.IsSuccessStatusCode)
         {
@@ -189,19 +184,19 @@ public class KeycloakService : ITokenService
 
         if (reqToken)
         {
-            string token = await GetAccessToken();
+            var token = await GetAccessToken(cancellationToken);
 
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         }
 
         var request = new HttpRequestMessage(HttpMethod.Delete, endpoint);
 
-        string str = System.Text.Json.JsonSerializer.Serialize(data);
+        var str = System.Text.Json.JsonSerializer.Serialize(data);
         request.Content = new StringContent(str, Encoding.UTF8, "application/json");
 
         var message = await httpClient.SendAsync(request, cancellationToken);
 
-        var response = await message.Content.ReadAsStringAsync();
+        var response = await message.Content.ReadAsStringAsync(cancellationToken);
 
         if (!message.IsSuccessStatusCode)
         {
@@ -226,21 +221,21 @@ public class KeycloakService : ITokenService
     }
     public async Task<T> PostAsync<T>(string endpoint, object data, bool reqToken = false, CancellationToken cancellationToken = default)
     {
-        string stringData = System.Text.Json.JsonSerializer.Serialize(data);
+        var stringData = System.Text.Json.JsonSerializer.Serialize(data);
         var content = new StringContent(stringData, Encoding.UTF8, "application/json");
 
         HttpClient httpClient = new();
 
         if (reqToken)
         {
-            string token = await GetAccessToken();
+            var token = await GetAccessToken(cancellationToken);
 
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         }
 
         var message = await httpClient.PostAsync(endpoint, content, cancellationToken);
 
-        var response = await message.Content.ReadAsStringAsync();
+        var response = await message.Content.ReadAsStringAsync(cancellationToken);
 
         if (!message.IsSuccessStatusCode)
         {
@@ -265,7 +260,7 @@ public class KeycloakService : ITokenService
     }
     public async Task<JwtSecurityToken> CreateTokenAsync(AppUser user, string password, IList<string> roles, CancellationToken cancellationToken = default)
     {
-        string endpoint = $"{_options.Value.HostName}/realms/{_options.Value.Realm}/protocol/openid-connect/token";
+        var endpoint = $"{_options.Value.HostName}/realms/{_options.Value.Realm}/protocol/openid-connect/token";
 
         List<KeyValuePair<string, string>> data = new();
         KeyValuePair<string, string> grantType = new("grant_type", "password");
@@ -280,19 +275,13 @@ public class KeycloakService : ITokenService
         data.Add(username);
         data.Add(passwordKey);
 
-        var response = await PostUrlEncodedFormAsync<GetAccessTokenResponseDto>(endpoint, data, false, cancellationToken = default);
+        var response = await PostUrlEncodedFormAsync<GetAccessTokenResponseDto>(endpoint, data, false, cancellationToken);
 
-        var token = new JwtSecurityToken(
-            issuer: _tokenSettings.Issuer,
-            audience: _tokenSettings.Audience,
-            expires: DateTime.Now.AddMinutes(_tokenSettings.TokenValidityInMunitues),
-            claims: null,
-            signingCredentials: null
-            );
-      
+        var handler = new JwtSecurityTokenHandler();
+        var jsonToken = handler.ReadToken(response.AccessToken);
+        var token = jsonToken as JwtSecurityToken;
 
-
-        return token;
+        return token!;
     }
     public string GenerateRefreshToken()
     {
@@ -313,12 +302,14 @@ public class KeycloakService : ITokenService
         };
 
         JwtSecurityTokenHandler tokenHandler = new();
-        var principal = tokenHandler.ValidateToken(token, tokenValidationParamaters, out SecurityToken securityToken);
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParamaters, out var securityToken);
         if (securityToken is not JwtSecurityToken jwtSecurityToken
             || !jwtSecurityToken.Header.Alg
             .Equals(SecurityAlgorithms.HmacSha256,
             StringComparison.InvariantCultureIgnoreCase))
+        {
             throw new SecurityTokenException("Token bulunamadı.");
+        }
 
         return principal;
     }
