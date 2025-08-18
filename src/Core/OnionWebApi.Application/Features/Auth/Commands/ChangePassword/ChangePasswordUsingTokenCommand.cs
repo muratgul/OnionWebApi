@@ -1,12 +1,12 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.ChangePassword;
-public class ChangePasswordUsingTokenCommandRequest : IRequest
+public class ChangePasswordUsingTokenCommandRequest : IRequest<Unit>
 {
-    public string Email { get; set; }
-    public string Token { get; set; }
-    public string NewPassword { get; set; }
+    public string Email { get; set; } = default!;
+    public string Token { get; set; } = default!;
+    public string NewPassword { get; set; } = default!;
 }
 
-public class ChangePasswordUsingTokenCommandRequestHandler : BaseHandler, IRequestHandler<ChangePasswordUsingTokenCommandRequest>
+public class ChangePasswordUsingTokenCommandRequestHandler : BaseHandler, IRequestHandler<ChangePasswordUsingTokenCommandRequest, Unit>
 {
     private readonly UserManager<AppUser> _userManager;
     public ChangePasswordUsingTokenCommandRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
@@ -14,13 +14,14 @@ public class ChangePasswordUsingTokenCommandRequestHandler : BaseHandler, IReque
         _userManager = userManager;
     }
 
-    public async Task Handle(ChangePasswordUsingTokenCommandRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ChangePasswordUsingTokenCommandRequest request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
         if (user is null)
         {
-            throw new NotFoundException("User is not found");
+            throw new Exception("User is not found");
+
         }
 
         var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
@@ -29,5 +30,7 @@ public class ChangePasswordUsingTokenCommandRequestHandler : BaseHandler, IReque
         {
             throw new Exception("Password change failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
         }
+
+        return Unit.Value;
     }
 }

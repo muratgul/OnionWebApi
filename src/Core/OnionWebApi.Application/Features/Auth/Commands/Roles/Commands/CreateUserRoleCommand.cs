@@ -1,11 +1,11 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Commands;
-public class CreateUserRoleCommandRequest : IRequest
+public class CreateUserRoleCommandRequest : IRequest<Unit>
 {
     public int UserId { get; set; }
     public int RoleId { get; set; }
 }
 
-internal class CreateUserRoleCommandHandler : IRequestHandler<CreateUserRoleCommandRequest>
+internal class CreateUserRoleCommandHandler : IRequestHandler<CreateUserRoleCommandRequest, Unit>
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly RoleManager<AppRole> _roleManager;
@@ -16,7 +16,7 @@ internal class CreateUserRoleCommandHandler : IRequestHandler<CreateUserRoleComm
         _roleManager = roleManager;
     }
 
-    public async Task Handle(CreateUserRoleCommandRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CreateUserRoleCommandRequest request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(request.UserId.ToString());
         
@@ -32,5 +32,7 @@ internal class CreateUserRoleCommandHandler : IRequestHandler<CreateUserRoleComm
 
         if (!result.Succeeded)
             throw new Exception($"Kullanıcıya rol atanamadı: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+
+        return Unit.Value;
     }
 }

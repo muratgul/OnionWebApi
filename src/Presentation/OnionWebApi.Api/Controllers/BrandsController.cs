@@ -40,7 +40,7 @@ public class BrandsController : BaseController
     [HttpDelete]
     public async Task<IActionResult> Delete([FromBody] DeleteBrandCommandRequest request)
     {
-        return Ok(Mediator.Send(request));
+        return Ok(await Mediator.Send(request));
     }
 
     [HttpGet("{id}")]

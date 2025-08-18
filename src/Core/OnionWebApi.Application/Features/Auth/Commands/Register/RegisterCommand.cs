@@ -1,12 +1,12 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.Register;
-public class RegisterCommandRequest : IRequest
+public class RegisterCommandRequest : IRequest<Unit>
 {
-    public string FullName  { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public string ConfirmPassword { get; set; }
+    public string FullName { get; set; } = default!;
+    public string Email { get; set; } = default!;
+    public string Password { get; set; } = default!;
+    public string ConfirmPassword { get; set; } = default!;
 }
-internal class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterCommandRequest>
+internal class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterCommandRequest, Unit>
 {
     private readonly AuthRules _authRules;
     private readonly UserManager<AppUser> _userManager;
@@ -18,7 +18,7 @@ internal class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterCom
         _userManager = userManager;
         _roleManager = roleManager;
     }
-    public async Task Handle(RegisterCommandRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RegisterCommandRequest request, CancellationToken cancellationToken)
     {
         await _authRules.UserShouldNotBeExist(await _userManager.FindByEmailAsync(request.Email));
 
@@ -39,6 +39,8 @@ internal class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterCom
 
             await _userManager.AddToRoleAsync(user, "user");
         }
+
+        return Unit.Value;
 
         
     }

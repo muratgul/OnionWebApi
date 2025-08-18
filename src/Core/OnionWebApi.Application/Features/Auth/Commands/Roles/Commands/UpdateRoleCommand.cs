@@ -1,11 +1,11 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Commands;
-public class UpdateRoleCommandRequest : IRequest
+public class UpdateRoleCommandRequest : IRequest<Unit>
 {
     public int Id { get; set; }
-    public string RoleName { get; set; }
+    public string RoleName { get; set; } = default!;
 }
 
-internal class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommandRequest>
+internal class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommandRequest, Unit>
 {
     private readonly RoleManager<AppRole> _roleManager;
     public UpdateRoleCommandHandler(RoleManager<AppRole> roleManager)
@@ -13,7 +13,7 @@ internal class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommandReque
         _roleManager = roleManager;
     }
 
-    public async Task Handle(UpdateRoleCommandRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateRoleCommandRequest request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.RoleName))
         {
@@ -36,6 +36,6 @@ internal class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommandReque
             throw new Exception(result.Errors.Select(x => x.Description).FirstOrDefault());
         }
 
-        
+        return Unit.Value;
     }
 }

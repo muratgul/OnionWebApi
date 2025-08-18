@@ -1,8 +1,8 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.RevokeAll;
-public class RevokeAllCommandRequest : IRequest
+public class RevokeAllCommandRequest : IRequest<Unit>
 {
 }
-internal class RevokeAllCommandHandler : BaseHandler, IRequestHandler<RevokeAllCommandRequest>
+internal class RevokeAllCommandHandler : BaseHandler, IRequestHandler<RevokeAllCommandRequest, Unit>
 {
     private readonly UserManager<AppUser> _userManager;
     public RevokeAllCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, UserManager<AppUser> userManager, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
@@ -10,7 +10,7 @@ internal class RevokeAllCommandHandler : BaseHandler, IRequestHandler<RevokeAllC
         _userManager = userManager;
     }
 
-    public async Task Handle(RevokeAllCommandRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RevokeAllCommandRequest request, CancellationToken cancellationToken)
     {
         var users = await _userManager.Users.ToListAsync(cancellationToken);
 
@@ -19,5 +19,7 @@ internal class RevokeAllCommandHandler : BaseHandler, IRequestHandler<RevokeAllC
             user.RefreshToken = null;
             await _userManager.UpdateAsync(user);
         }
+
+        return Unit.Value;
     }
 }

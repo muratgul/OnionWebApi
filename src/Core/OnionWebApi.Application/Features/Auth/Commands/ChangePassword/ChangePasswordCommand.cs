@@ -1,9 +1,9 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.ChangePassword;
 
-public record ChangePasswordCommandRequest(int UserId, string OldPassword, string NewPassword) : ChangePasswordRequestDto(UserId, OldPassword, NewPassword),  IRequest;
+public record ChangePasswordCommandRequest(int UserId, string OldPassword, string NewPassword) : ChangePasswordRequestDto(UserId, OldPassword, NewPassword),  IRequest<Unit>;
 
 
-internal class ChangePasswordCommandHandler : BaseHandler, IRequestHandler<ChangePasswordCommandRequest>
+internal class ChangePasswordCommandHandler : BaseHandler, IRequestHandler<ChangePasswordCommandRequest, Unit>
 {
     private readonly UserManager<AppUser> _userManager;
     public ChangePasswordCommandHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
@@ -11,7 +11,7 @@ internal class ChangePasswordCommandHandler : BaseHandler, IRequestHandler<Chang
         _userManager = userManager;
     }
 
-    public async Task Handle(ChangePasswordCommandRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ChangePasswordCommandRequest request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(request.UserId.ToString()) ?? throw new Exception("User not found");
 
@@ -21,5 +21,7 @@ internal class ChangePasswordCommandHandler : BaseHandler, IRequestHandler<Chang
         {
             throw new Exception("Password change failed: " + string.Join(", ", result.Errors.Select(e => e.Description)));
         }
+
+        return Unit.Value;
     }
 }

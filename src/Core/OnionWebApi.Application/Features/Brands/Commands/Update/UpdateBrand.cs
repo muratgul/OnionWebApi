@@ -11,10 +11,7 @@ internal class UpdateBrandCommandHandler : BaseHandler, IRequestHandler<UpdateBr
     }
     public async Task<Brand> Handle(UpdateBrandCommandRequest request, CancellationToken cancellationToken)
     {
-        var brand = await _unitOfWork.GetReadRepository<Brand>().GetAsync(b => b.Id == request.Id);
-
-        if (brand == null)
-            throw new NotFoundException();
+        var brand = await _unitOfWork.GetReadRepository<Brand>().GetAsync(b => b.Id == request.Id) ?? throw new NotFoundException("Brand not found");
 
         brand.Name = request.Name;
 

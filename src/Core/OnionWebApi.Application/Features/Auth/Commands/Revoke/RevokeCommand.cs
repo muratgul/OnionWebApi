@@ -1,9 +1,9 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.Revoke;
-public class RevokeCommandRequest : IRequest
+public class RevokeCommandRequest : IRequest<Unit>
 {
-    public string Email { get; set; }
+    public string Email { get; set; } = default!;
 }
-internal class RevokeCommandHandler : BaseHandler, IRequestHandler<RevokeCommandRequest>
+internal class RevokeCommandHandler : BaseHandler, IRequestHandler<RevokeCommandRequest, Unit>
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly AuthRules _authRules;
@@ -14,12 +14,14 @@ internal class RevokeCommandHandler : BaseHandler, IRequestHandler<RevokeCommand
         _authRules = authRules;
     }
 
-    public async Task Handle(RevokeCommandRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RevokeCommandRequest request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
         await _authRules.EmailAddressShouldBeValid(user);
 
         user.RefreshToken = null;
         await _userManager.UpdateAsync(user);        
+
+        return Unit.Value;
     }
 }

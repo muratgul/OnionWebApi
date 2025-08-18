@@ -1,10 +1,10 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Commands;
-public class DeleteRoleCommandRequest : IRequest
+public class DeleteRoleCommandRequest : IRequest<Unit>
 {
-    public string RoleName { get; set; }
+    public string RoleName { get; set; } = default!;
 }
 
-internal class DeleteRoleCommandHandler : IRequestHandler<DeleteRoleCommandRequest>
+internal class DeleteRoleCommandHandler : IRequestHandler<DeleteRoleCommandRequest, Unit>
 {
     private readonly RoleManager<AppRole> _roleManager;
 
@@ -13,7 +13,7 @@ internal class DeleteRoleCommandHandler : IRequestHandler<DeleteRoleCommandReque
         _roleManager = roleManager;
     }
 
-    public async Task Handle(DeleteRoleCommandRequest request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(DeleteRoleCommandRequest request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.RoleName))
         {
@@ -27,6 +27,6 @@ internal class DeleteRoleCommandHandler : IRequestHandler<DeleteRoleCommandReque
             throw new Exception(result.Errors.Select(x => x.Description).FirstOrDefault());
         }
 
-        
+        return Unit.Value;
     }
 }
