@@ -142,7 +142,5 @@ public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T
         IQueryable<T> queryable = Table;
 
         return Task.FromResult(queryable);
-    }
-
-    
+    }    
 }

@@ -10,9 +10,13 @@
 
   <ItemGroup>
     <Compile Remove="Helpers\**" />
+    <Compile Remove="uploads\**" />
     <Content Remove="Helpers\**" />
+    <Content Remove="uploads\**" />
     <EmbeddedResource Remove="Helpers\**" />
+    <EmbeddedResource Remove="uploads\**" />
     <None Remove="Helpers\**" />
+    <None Remove="uploads\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,9 +52,5 @@
     <ProjectReference Include="..\..\Core\OnionWebApi.Application\OnionWebApi.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\OnionWebApi.Infrastructure\OnionWebApi.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infrastructure\OnionWebApi.Persistence\OnionWebApi.Persistence.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="uploads\" />
   </ItemGroup>
 </Project>

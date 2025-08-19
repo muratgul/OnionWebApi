@@ -1,6 +1,9 @@
 ﻿namespace OnionWebApi.Application.Features.Brands.Quaries;
 public class GetAllBrandsQueryResponse : BrandDto
 {
+    public string CreatedUserName { get; set; } = default!;
+    public string? UpdatedUserName { get; set; }
+    public string? DeletedUserName { get; set; }
 }
 
 public class GetAllBrandsQueryRequest : PagingParameter, IRequest<PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>, ICacheableQuery
@@ -31,7 +34,7 @@ internal class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBra
             PageNumber = request.PageNumber,
             PageSize = request.PageSize,
             Predicate = null,
-            Include = null,
+            Include = q => q.Include(e => e.CreatedUser).Include(e => e.UpdatedUser).Include(e => e.DeletedUser),
             OrderBy = null,
             EnableTracking = false,
             Route = "Brands/GetAll",

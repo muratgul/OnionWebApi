@@ -7,4 +7,5 @@ public class Brand : EntityBase
         Name = name;
     }
     public string Name { get; set; }
+    public AppUser CreatedUser { get; set; }
 }

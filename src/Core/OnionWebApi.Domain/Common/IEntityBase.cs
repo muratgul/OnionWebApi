@@ -1,4 +1,2 @@
 ﻿namespace OnionWebApi.Domain.Common;
-public interface IEntityBase
-{
-}
+public interface IEntityBase { }
