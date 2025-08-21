@@ -23,7 +23,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
             var type = entityType.ClrType;
 
             // BaseEntity'den türeyen ve IsDeleted property'si olan entity'ler için
-            if (typeof(EntityBase).IsAssignableFrom(type) &&
+            if (typeof(BaseEntity).IsAssignableFrom(type) &&
                 type.GetProperty("IsDeleted") != null)
             {
                 var parameter = Expression.Parameter(type, "e");
@@ -40,14 +40,14 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entries = ChangeTracker.Entries()
-            .Where(e => e.Entity is EntityBase && 
+            .Where(e => e.Entity is BaseEntity && 
                         (e.State == EntityState.Added || e.State == EntityState.Modified));
 
         var userId = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
 
         foreach (var entry in entries)
         {
-            var entity = (EntityBase)entry.Entity;
+            var entity = (BaseEntity)entry.Entity;
 
             if (entry.State == EntityState.Added)
             {

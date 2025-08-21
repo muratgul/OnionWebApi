@@ -1,5 +1,7 @@
-﻿namespace OnionWebApi.Domain.Entities;
-public class Brand : EntityBase
+﻿using OnionWebApi.Domain.Events.Brands;
+
+namespace OnionWebApi.Domain.Entities;
+public class Brand : BaseEntity
 {
     public Brand() { }
     public Brand(string name)
@@ -8,4 +10,11 @@ public class Brand : EntityBase
     }
     public string Name { get; set; }
     public AppUser CreatedUser { get; set; }
+   
+
+    public void CreateBrand(string name)
+    {
+        Name = name;
+        AddDomainEvent(new BrandCreateDomainEvent(Id, name));
+    }
 }

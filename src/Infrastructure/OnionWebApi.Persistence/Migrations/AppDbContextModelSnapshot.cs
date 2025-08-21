@@ -17,7 +17,7 @@ namespace OnionWebApi.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -266,6 +266,12 @@ namespace OnionWebApi.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedUserId");
+
+                    b.HasIndex("DeletedUserId");
+
+                    b.HasIndex("UpdatedUserId");
+
                     b.ToTable("Brands");
                 });
 
@@ -318,6 +324,29 @@ namespace OnionWebApi.Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("OnionWebApi.Domain.Entities.Brand", b =>
+                {
+                    b.HasOne("OnionWebApi.Domain.Entities.AppUser", "CreatedUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OnionWebApi.Domain.Entities.AppUser", "DeletedUser")
+                        .WithMany()
+                        .HasForeignKey("DeletedUserId");
+
+                    b.HasOne("OnionWebApi.Domain.Entities.AppUser", "UpdatedUser")
+                        .WithMany()
+                        .HasForeignKey("UpdatedUserId");
+
+                    b.Navigation("CreatedUser");
+
+                    b.Navigation("DeletedUser");
+
+                    b.Navigation("UpdatedUser");
                 });
 #pragma warning restore 612, 618
         }

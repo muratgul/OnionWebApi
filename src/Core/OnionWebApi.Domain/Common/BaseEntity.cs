@@ -1,6 +1,8 @@
-﻿namespace OnionWebApi.Domain.Common;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-public class EntityBase : IEntityBase
+namespace OnionWebApi.Domain.Common;
+
+public class BaseEntity : IEntityBase
 {
     public int Id { get; set; }
     public DateTime CreatedDate { get; set; }
@@ -19,5 +21,27 @@ public class EntityBase : IEntityBase
     public string CreatedUserName => CreatedUser?.FullName ?? "";
     public string? UpdatedUserName => UpdatedUser?.FullName;
     public string? DeletedUserName => DeletedUser?.FullName;
+
+    private readonly List<INotification> _domainEvents = new List<INotification>();
+
+
+    // Events
+    [NotMapped]
+    public IReadOnlyCollection<INotification> DomainEvents => _domainEvents.AsReadOnly();
+
+    public void AddDomainEvent(INotification eventItem)
+    {
+        _domainEvents.Add(eventItem);
+    }
+
+    public void RemoveDomainEvent(INotification eventItem)
+    {
+        _domainEvents.Remove(eventItem);
+    }
+
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
 
 }
