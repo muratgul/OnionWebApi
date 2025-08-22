@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace OnionWebApi.Domain.Common;
+﻿namespace OnionWebApi.Domain.Common;
 
 public class BaseEntity : IEntityBase
 {
@@ -22,7 +20,7 @@ public class BaseEntity : IEntityBase
     public string? UpdatedUserName => UpdatedUser?.FullName;
     public string? DeletedUserName => DeletedUser?.FullName;
 
-    private readonly List<INotification> _domainEvents = new List<INotification>();
+    private readonly List<INotification> _domainEvents = [];
 
 
     // Events

@@ -7,8 +7,8 @@ public class CreateBrandCommandRequest : IRequest<Brand>
 internal class CreateBrandCommandHandler : BaseHandler, IRequestHandler<CreateBrandCommandRequest, Brand>
 {
     private readonly BrandRules _brandRules;
-    public CreateBrandCommandHandler(BrandRules brandRules, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
-    {        
+    public CreateBrandCommandHandler(BrandRules brandRules, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(null, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    {
         _brandRules = brandRules;
     }
 

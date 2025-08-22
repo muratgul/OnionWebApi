@@ -3,18 +3,20 @@
 namespace OnionWebApi.Domain.Entities;
 public class Brand : BaseEntity
 {
-    public Brand() { }
+    public Brand()
+    {
+    }
     public Brand(string name)
     {
         Name = name;
     }
     public string Name { get; set; }
     public AppUser CreatedUser { get; set; }
-   
 
+    //Event
     public void CreateBrand(string name)
     {
         Name = name;
-        AddDomainEvent(new BrandCreateDomainEvent(Id, name));
+        AddDomainEvent(new BrandCreateDomainEvent(name));
     }
 }

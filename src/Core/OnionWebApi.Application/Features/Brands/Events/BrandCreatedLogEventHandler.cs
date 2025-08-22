@@ -3,7 +3,7 @@ public class BrandCreatedLogEventHandler : INotificationHandler<BrandCreateDomai
 {
     public Task Handle(BrandCreateDomainEvent notification, CancellationToken cancellationToken)
     {
-        Log.Information("Brand created with ID: {Id} and Name: {Name}", notification.Id, notification.Name);
+        Log.Information("Brand created with Name: {Name}", notification.Name);
 
         return Task.CompletedTask;
     }

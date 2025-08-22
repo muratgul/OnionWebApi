@@ -1,12 +1,10 @@
 ﻿namespace OnionWebApi.Domain.Events.Brands;
 public class BrandCreateDomainEvent : INotification
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; }
 
-    public BrandCreateDomainEvent(int id, string name)
+    public BrandCreateDomainEvent(string name)
     {
-        Id = id;
         Name = name;
     }
 }
