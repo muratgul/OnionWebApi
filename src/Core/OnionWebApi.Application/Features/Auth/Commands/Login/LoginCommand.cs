@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Auth.Commands.Login;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Auth.Commands.Login;
 public class LoginCommandResponse
 {
     public string Token { get; set; } = default!;

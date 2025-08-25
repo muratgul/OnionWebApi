@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Infrastructure.RedisCache;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Infrastructure.Cache;
 
 public class RedisCacheService : IRedisCacheService, IDisposable
 {

@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Auth.Commands.RevokeAll;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Auth.Commands.RevokeAll;
 public class RevokeAllCommandRequest : IRequest<Unit>
 {
 }

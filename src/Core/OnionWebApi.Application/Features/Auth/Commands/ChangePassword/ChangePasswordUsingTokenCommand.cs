@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Auth.Commands.ChangePassword;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Auth.Commands.ChangePassword;
 public class ChangePasswordUsingTokenCommandRequest : IRequest<Unit>
 {
     public string Email { get; set; } = default!;

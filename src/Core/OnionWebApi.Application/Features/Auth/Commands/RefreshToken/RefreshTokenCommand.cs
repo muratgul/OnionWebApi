@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Auth.Commands.RefreshToken;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Auth.Commands.RefreshToken;
 public class RefreshTokenCommandResponse
 {
     public string AccessToken { get; set; } = default!;

@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Brands.Commands.Update;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Brands.Commands.Update;
 public class UpdateBrandCommandRequest : IRequest<Brand>
 {
     public int Id { get; set; }

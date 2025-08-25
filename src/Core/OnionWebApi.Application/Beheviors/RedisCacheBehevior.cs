@@ -1,28 +1,32 @@
 ﻿namespace OnionWebApi.Application.Beheviors;
-public class RedisCacheBehevior<TRequest, TResponse>(IRedisCacheService redisCacheService, IRedisCacheSettings settings) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+public class RedisCacheBehevior<TRequest, TResponse>(IHybridCacheService hybridCacheService) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
-    private readonly IRedisCacheService _redisCacheService = redisCacheService;
-    private readonly IRedisCacheSettings _settings = settings;
+    private readonly IHybridCacheService _cacheService = hybridCacheService;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        if (_settings.Enabled && request is ICacheableQuery query)
+        if (request is ICacheableQuery query)
         {
             var cacheKey = query.CacheKey;
             var cacheTime = query.CacheTime;
 
-            var cachedData = await _redisCacheService.GetAsync<TResponse>(cacheKey);
-            if (cachedData is not null)
-                return cachedData;
+            var cachedData = await _cacheService.GetAsync<TResponse>(cacheKey);
 
-            var response = await next();
+            if (cachedData is not null)
+            {
+                return cachedData;
+            }
+
+            var response = await next(cancellationToken);
 
             if (response is not null)
-                await _redisCacheService.SetAsync(cacheKey, response, DateTime.Now.AddMinutes(cacheTime));
+            {
+                await _cacheService.SetAsync(cacheKey, response, TimeSpan.FromMinutes(cacheTime), DateTime.Now.AddMinutes(cacheTime));
+            }
 
             return response;
         }
 
-        return await next();
+        return await next(cancellationToken);
     }
 }

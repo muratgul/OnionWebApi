@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Auth.Commands.Register;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Auth.Commands.Register;
 public class RegisterCommandRequest : IRequest<Unit>
 {
     public string FullName { get; set; } = default!;

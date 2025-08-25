@@ -1,4 +1,4 @@
-﻿namespace OnionWebApi.Infrastructure.RedisCache;
+﻿namespace OnionWebApi.Infrastructure.Cache;
 public class RedisCacheSettings : IRedisCacheSettings
 {
     public string ConnectionString { get; set; }

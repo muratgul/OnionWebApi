@@ -24,6 +24,7 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
             options.ApiVersionReader = new UrlSegmentApiVersionReader();
         });
 
+        builder.Services.AddMemoryCache();
         builder.Services.AddSignalR();
         builder.Services.AddScoped<INotificationService, NotificationService>();
 

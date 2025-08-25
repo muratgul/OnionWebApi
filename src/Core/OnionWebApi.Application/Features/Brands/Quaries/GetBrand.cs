@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Brands.Quaries;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Brands.Quaries;
 public class GetBrandQueryResponse : BrandDto
 {
     public string CreatedUserName { get; set; } = default!;

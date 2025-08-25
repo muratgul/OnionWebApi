@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Brands.Commands.Delete;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Brands.Commands.Delete;
 public class DeleteBrandCommandRequest : IRequest<Unit>
 {
     public int Id { get; set;}

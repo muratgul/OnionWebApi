@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Brands.Odata;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Brands.Odata;
 
 public class GetAllBrandODataQueryResponse : BrandDto
 {

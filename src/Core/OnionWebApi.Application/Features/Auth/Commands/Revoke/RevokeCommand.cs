@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Auth.Commands.Revoke;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Auth.Commands.Revoke;
 public class RevokeCommandRequest : IRequest<Unit>
 {
     public string Email { get; set; } = default!;

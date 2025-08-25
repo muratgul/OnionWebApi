@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using OnionWebApi.Application.Interfaces.Cache;
 
 namespace OnionWebApi.Application.Features.Auth.Queries;
 public class GetAllUsersQueryResponse : UserDto

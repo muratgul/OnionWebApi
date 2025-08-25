@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Application.Features.Auth.Commands.ChangePassword;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+
+namespace OnionWebApi.Application.Features.Auth.Commands.ChangePassword;
 
 public record ChangePasswordCommandRequest(int UserId, string OldPassword, string NewPassword) : ChangePasswordRequestDto(UserId, OldPassword, NewPassword),  IRequest<Unit>;
 

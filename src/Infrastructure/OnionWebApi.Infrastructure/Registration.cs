@@ -1,4 +1,7 @@
-﻿namespace OnionWebApi.Infrastructure;
+﻿using OnionWebApi.Application.Interfaces.Cache;
+using OnionWebApi.Infrastructure.Cache;
+
+namespace OnionWebApi.Infrastructure;
 public static class Registration
 {
 
@@ -27,6 +30,8 @@ public static class Registration
         {
             services.AddTransient<IRedisCacheService, NullRedisCacheService>();
         }
+
+        services.AddSingleton<IHybridCacheService, HybridCacheService>();
 
         services.AddHostedService<BackgroundEmailService>();
 

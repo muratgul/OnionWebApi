@@ -1,4 +1,4 @@
-﻿namespace OnionWebApi.Application.Interfaces.RedisCache;
+﻿namespace OnionWebApi.Application.Interfaces.Cache;
 public interface IRedisCacheService
 {
     Task<T> GetAsync<T>(string key);

@@ -62,3 +62,4 @@ global using System.Collections.Concurrent;
 global using System.Net.Sockets;
 global using MediatR;
 global using OnionWebApi.Domain.Events.Brands;
+global using OnionWebApi.Application.Interfaces.Cache;
