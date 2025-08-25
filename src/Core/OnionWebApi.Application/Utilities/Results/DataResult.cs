@@ -2,6 +2,7 @@
 
 public class DataResult<T> : Result, IDataResult<T>
 {
+    public DataResult() : base(true) { }
     public DataResult(T data, bool success, string message)
         : base(success, message)
     {

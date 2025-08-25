@@ -18,7 +18,7 @@ internal class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBra
 {
     private readonly IPaginationService _paginationService;
     private readonly IMassTransitSend _massTransitSend;
-    public GetAllBrandsQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService, IPaginationService paginationService, IMassTransitSend massTransitSend) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public GetAllBrandsQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService, IPaginationService paginationService, IMassTransitSend massTransitSend) : base(mapper, unitOfWork, httpContextAccessor, uriService, cacheService)
     {
         _paginationService = paginationService;
         _massTransitSend = massTransitSend;
@@ -26,7 +26,6 @@ internal class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBra
 
     public async Task<PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>> Handle(GetAllBrandsQueryRequest request, CancellationToken cancellationToken)
     {
-        
         await _massTransitSend.SendToQueue(message: "Buraya bilgi gelecek", queueName: "xxx", cancellationToken: default);
 
         var paginationRequest = new PaginationRequest<Brand>
@@ -41,6 +40,8 @@ internal class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBra
             Fields = null
         };
 
-        return await _paginationService.GetPaginatedDataAsync<Brand, GetAllBrandsQueryResponse>(paginationRequest, cancellationToken);        
+        var result = await _paginationService.GetPaginatedDataAsync<Brand, GetAllBrandsQueryResponse>(paginationRequest, cancellationToken);
+
+        return result;        
     }
 }

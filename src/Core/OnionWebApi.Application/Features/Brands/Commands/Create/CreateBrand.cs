@@ -9,7 +9,7 @@ public class CreateBrandCommandRequest : IRequest<Brand>
 internal class CreateBrandCommandHandler : BaseHandler, IRequestHandler<CreateBrandCommandRequest, Brand>
 {
     private readonly BrandRules _brandRules;
-    public CreateBrandCommandHandler(BrandRules brandRules, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(null, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public CreateBrandCommandHandler(BrandRules brandRules, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService) : base(null, unitOfWork, httpContextAccessor, uriService, cacheService)
     {
         _brandRules = brandRules;
     }
@@ -26,7 +26,7 @@ internal class CreateBrandCommandHandler : BaseHandler, IRequestHandler<CreateBr
         await _unitOfWork.GetWriteRepository<Brand>().AddAsync(brand);
         await _unitOfWork.SaveAsync();
 
-        await _redisCacheService.RemoveAsync("GetAllBrands");
+        await _cacheService.RemoveAsync("GetAllBrands");
 
         return brand;
     }

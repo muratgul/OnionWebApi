@@ -8,18 +8,23 @@ public class GetBrandQueryResponse : BrandDto
     public string? DeletedUserName { get; set; }
 }
 
-public class GetBrandQueryRequest : IRequest<IDataResult<GetBrandQueryResponse>>
+public class GetBrandQueryRequest : IRequest<DataResult<GetBrandQueryResponse>>, ICacheableQuery
 {
+    [JsonIgnore]
+    public string CacheKey => $"GetBrand_{Id}";
+    [JsonIgnore]
+    public double CacheTime => 5;
+
     public int Id { get; set; }
 }
 
-internal class GetBrandQueryHandler : BaseHandler, IRequestHandler<GetBrandQueryRequest, IDataResult<GetBrandQueryResponse>>
+internal class GetBrandQueryHandler : BaseHandler, IRequestHandler<GetBrandQueryRequest, DataResult<GetBrandQueryResponse>>
 {
-    public GetBrandQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public GetBrandQueryHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, cacheService)
     {
     }
 
-    public async Task<IDataResult<GetBrandQueryResponse>> Handle(GetBrandQueryRequest request, CancellationToken cancellationToken)
+    public async Task<DataResult<GetBrandQueryResponse>> Handle(GetBrandQueryRequest request, CancellationToken cancellationToken)
     {
         var brand = await _unitOfWork.GetReadRepository<Brand>().GetAsync(
             predicate: x => x.Id == request.Id,

@@ -34,7 +34,8 @@ public static class Registration
 
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehevior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RedisCacheBehevior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(HybridCacheBehavior<,>));
+        //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RedisCacheBehevior<,>));
         services.AddHttpContextAccessor();
 
     }

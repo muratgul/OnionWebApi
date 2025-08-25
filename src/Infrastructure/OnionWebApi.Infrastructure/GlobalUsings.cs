@@ -31,3 +31,4 @@ global using OnionWebApi.Domain.Dtos;
 global using System.Net;
 global using Microsoft.Extensions.Caching.Memory;
 global using OnionWebApi.Application.Interfaces.Cache;
+global using Microsoft.Extensions.Caching.Hybrid;

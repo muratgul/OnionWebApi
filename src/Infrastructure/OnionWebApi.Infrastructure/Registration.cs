@@ -1,5 +1,4 @@
-﻿using OnionWebApi.Application.Interfaces.Cache;
-using OnionWebApi.Infrastructure.Cache;
+﻿using OnionWebApi.Infrastructure.Cache;
 
 namespace OnionWebApi.Infrastructure;
 public static class Registration
@@ -14,6 +13,7 @@ public static class Registration
         services.AddScoped<IMassTransitSend, MassTransitSend>();
         
 
+        /*
         var redisCacheSettings = configuration.GetSection("RedisCacheSettings").Get<RedisCacheSettings>();
         services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCacheSettings"));
         services.AddSingleton<IRedisCacheSettings>(sp =>
@@ -30,8 +30,8 @@ public static class Registration
         {
             services.AddTransient<IRedisCacheService, NullRedisCacheService>();
         }
-
-        services.AddSingleton<IHybridCacheService, HybridCacheService>();
+        */
+       
 
         services.AddHostedService<BackgroundEmailService>();
 

@@ -8,7 +8,7 @@ public record ChangePasswordCommandRequest(int UserId, string OldPassword, strin
 internal class ChangePasswordCommandHandler : BaseHandler, IRequestHandler<ChangePasswordCommandRequest, Unit>
 {
     private readonly UserManager<AppUser> _userManager;
-    public ChangePasswordCommandHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public ChangePasswordCommandHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, cacheService)
     {
         _userManager = userManager;
     }

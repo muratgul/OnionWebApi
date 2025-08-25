@@ -16,7 +16,7 @@ internal class RefreshTokenCommandHandler : BaseHandler, IRequestHandler<Refresh
     private readonly AuthRules _authRules;
     private readonly UserManager<AppUser> _userManager;
     private readonly ITokenService _tokenService;
-    public RefreshTokenCommandHandler(IMapper mapper, AuthRules authRules, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager, ITokenService tokenService, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public RefreshTokenCommandHandler(IMapper mapper, AuthRules authRules, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager, ITokenService tokenService, IUriService uriService, ICacheService cacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, cacheService)
     {
         _authRules = authRules;
         _userManager = userManager;

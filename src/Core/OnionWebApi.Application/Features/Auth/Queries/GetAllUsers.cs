@@ -14,7 +14,7 @@ public class GetAllUsersQueryRequest : IRequest<IEnumerable<GetAllUsersQueryResp
 public class GetAllUsersQueryHandler : BaseHandler, IRequestHandler<GetAllUsersQueryRequest, IEnumerable<GetAllUsersQueryResponse>>
 {
     private readonly UserManager<AppUser> _userManager;
-    public GetAllUsersQueryHandler(UserManager<AppUser> userManager,  IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public GetAllUsersQueryHandler(UserManager<AppUser> userManager,  IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, cacheService)
     {
         _userManager = userManager;
     }

@@ -11,7 +11,7 @@ public class ChangePasswordUsingTokenCommandRequest : IRequest<Unit>
 public class ChangePasswordUsingTokenCommandRequestHandler : BaseHandler, IRequestHandler<ChangePasswordUsingTokenCommandRequest, Unit>
 {
     private readonly UserManager<AppUser> _userManager;
-    public ChangePasswordUsingTokenCommandRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public ChangePasswordUsingTokenCommandRequestHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, cacheService)
     {
         _userManager = userManager;
     }

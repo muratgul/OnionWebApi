@@ -27,7 +27,7 @@ internal class LoginCommandHandler : BaseHandler, IRequestHandler<LoginCommandRe
     private readonly ITokenService _tokenService;
     private readonly AuthRules _authRules;
 
-    public LoginCommandHandler(UserManager<AppUser> userManager, IConfiguration configuration, ITokenService tokenService, AuthRules authRules, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public LoginCommandHandler(UserManager<AppUser> userManager, IConfiguration configuration, ITokenService tokenService, AuthRules authRules, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, cacheService)
     {
         _userManager = userManager;
         _configuration = configuration;

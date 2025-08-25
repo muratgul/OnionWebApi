@@ -9,7 +9,7 @@ public record ForgotPasswordCommandRequest(string Email) :IRequest<ForgotPasswor
 internal class ForgotPasswordCommandHandler : BaseHandler, IRequestHandler<ForgotPasswordCommandRequest, ForgotPasswordCommandResponse>
 {
     private readonly UserManager<AppUser> _userManager;
-    public ForgotPasswordCommandHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, IRedisCacheService redisCacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, redisCacheService)
+    public ForgotPasswordCommandHandler(UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, cacheService)
     {
         _userManager = userManager;
     }
