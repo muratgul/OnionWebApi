@@ -9,7 +9,7 @@ public class GetAllBrandsQueryResponse : BrandDto
 public class GetAllBrandsQueryRequest : PagingParameter, IRequest<PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>, ICacheableQuery
 {
     [JsonIgnore]
-    public string CacheKey => "GetAllBrands";
+    public string CacheKey => $"GetAllBrands_P{PageNumber}_S{PageSize}";
     [JsonIgnore]
     public double CacheTime => 5;
 }
