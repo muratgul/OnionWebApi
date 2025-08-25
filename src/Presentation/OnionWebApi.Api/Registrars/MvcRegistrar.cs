@@ -1,4 +1,5 @@
-﻿﻿using System.Text.Json.Serialization;
+using OnionWebApi.Infrastructure.Cache;
+using System.Text.Json.Serialization;
 
 namespace OnionWebApi.Api.Registrars;
 
@@ -16,38 +17,42 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
     }
     public void RegisterServices(WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<ICacheService, HybridCacheService>();
+        var redisCacheSettings = builder.Configuration.GetSection("RedisCacheSettings").Get<RedisCacheSettings>();
 
-        // HybridCache yapılandırması - Resilience özellikleri ile
-        builder.Services.AddHybridCache(options =>
+        if (redisCacheSettings is not null && redisCacheSettings.Enabled)
         {
-            options.MaximumPayloadBytes = 1024 * 1024; // 1MB
-            options.MaximumKeyLength = 1024;
-            options.DefaultEntryOptions = new HybridCacheEntryOptions
-            {
-                Expiration = TimeSpan.FromMinutes(30),
-                LocalCacheExpiration = TimeSpan.FromMinutes(5), // L1 cache daha kısa süreli
-            };
-        });
+            builder.Services.AddScoped<ICacheService, HybridCacheService>();
 
-        // Redis distributed cache - Resilient configuration
-        builder.Services.AddStackExchangeRedisCache(options =>
+            builder.Services.AddHybridCache(options =>
+            {
+                options.MaximumPayloadBytes = 1024 * 1024;
+                options.MaximumKeyLength = 1024;
+                options.DefaultEntryOptions = new HybridCacheEntryOptions
+                {
+                    Expiration = TimeSpan.FromMinutes(30),
+                    LocalCacheExpiration = TimeSpan.FromMinutes(5),
+                };
+            });
+
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisCacheSettings.ConnectionString;
+                options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
+                {
+                    EndPoints = { redisCacheSettings.ConnectionString },
+                    AbortOnConnectFail = false,
+                    ConnectTimeout = 1000,
+                    SyncTimeout = 1000,
+                    ConnectRetry = 3,
+                    ReconnectRetryPolicy = new StackExchange.Redis.ExponentialRetry(1000),
+                };
+            });
+        }
+        else
         {
-            options.Configuration = builder.Configuration.GetConnectionString("Redis");
+            builder.Services.AddScoped<ICacheService, InMemoryCacheService>();
+        }
 
-            // Redis connection resilience settings
-            options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
-            {
-                EndPoints = { builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379" },
-                AbortOnConnectFail = false, // Redis bağlanamadığında app'i durdurma
-                ConnectTimeout = 5000, // 5 saniye connection timeout
-                SyncTimeout = 3000, // 3 saniye sync timeout
-                ConnectRetry = 3, // 3 kere retry
-                ReconnectRetryPolicy = new StackExchange.Redis.ExponentialRetry(1000), // Exponential backoff
-            };
-        });
-
-        builder.Services.AddScoped<ICacheService, HybridCacheService>();
 
         builder.Services.AddApiVersioning(options =>
         {
@@ -61,10 +66,16 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
         builder.Services.AddSignalR();
         builder.Services.AddScoped<INotificationService, NotificationService>();
 
-        builder.Services.AddHealthChecks().
-            AddSqlServer(connectionString: builder.Configuration.GetConnectionString("DefaultConnection")!, name: "SqlServer")
-            .AddRedis(builder.Configuration["RedisCacheSettings:ConnectionString"]!, name: "Redis")
-            .AddUrlGroup(new Uri("https://www.tcmb.gov.tr/kurlar/kurlar_tr.html"), name: "External Api");
+        var healthChecksBuilder = builder.Services.AddHealthChecks().
+            AddSqlServer(connectionString: builder.Configuration.GetConnectionString("DefaultConnection")!, name: "SqlServer");
+
+        if (redisCacheSettings is not null && redisCacheSettings.Enabled)
+        {
+            healthChecksBuilder.AddRedis(redisCacheSettings.ConnectionString, name: "Redis");
+        }
+
+        healthChecksBuilder.AddUrlGroup(new Uri("https://www.tcmb.gov.tr/kurlar/kurlar_tr.html"), name: "External Api");
+
         builder.Services.AddHealthChecksUI(setup =>
         {
             setup.AddHealthCheckEndpoint("HealthCheck API", "/healthapi");
@@ -91,9 +102,5 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
                 .SetMaxTop(null)
                 .AddRouteComponents("odata", AppODataController.GetEdmModel());
             });
-
-
-
-
     }
 }
