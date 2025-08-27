@@ -40,7 +40,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entries = ChangeTracker.Entries()
-            .Where(e => e.Entity is BaseEntity && 
+            .Where(e => e.Entity is BaseAuditableEntity && 
                         (e.State == EntityState.Added || e.State == EntityState.Modified));
 
         var userId = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;

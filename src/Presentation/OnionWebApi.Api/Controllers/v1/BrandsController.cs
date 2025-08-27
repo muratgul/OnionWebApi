@@ -13,16 +13,16 @@ public class BrandsController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] GetAllBrandsQueryRequest request)
+    public async Task<IActionResult> GetAll([FromQuery] GetAllBrandsQueryRequest request, CancellationToken cancellationToken)
     {       
-        return Ok(await Mediator.Send(request));
+        return Ok(await Mediator.Send(request, cancellationToken));
     }
     
     [HttpPost]
     [Idempotent]
-    public async Task<IActionResult> Add([FromBody] CreateBrandCommandRequest request)
+    public async Task<IActionResult> Add([FromBody] CreateBrandCommandRequest request, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(request);
+        var result = await Mediator.Send(request, cancellationToken);
         await _notificationService.SendToAllAsync("ReceiveNotofication", new NotificationMessage
         {
             Type = "Info",
@@ -32,21 +32,21 @@ public class BrandsController : BaseController
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] UpdateBrandCommandRequest request)
+    public async Task<IActionResult> Update([FromBody] UpdateBrandCommandRequest request, CancellationToken cancellationToken)
     {
-        return Ok(await Mediator.Send(request));
+        return Ok(await Mediator.Send(request, cancellationToken));
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] DeleteBrandCommandRequest request)
+    public async Task<IActionResult> Delete([FromBody] DeleteBrandCommandRequest request, CancellationToken cancellationToken)
     {
-        return Ok(await Mediator.Send(request));
+        return Ok(await Mediator.Send(request, cancellationToken));
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetById([FromQuery] GetBrandQueryRequest request)
+    public async Task<IActionResult> GetById([FromQuery] GetBrandQueryRequest request, CancellationToken cancellationToken)
     {
-        return Ok(await Mediator.Send(request));
+        return Ok(await Mediator.Send(request, cancellationToken));
     }
 
     [HttpPost("PublishTestEvent")]
