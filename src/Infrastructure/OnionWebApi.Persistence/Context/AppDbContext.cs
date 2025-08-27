@@ -47,7 +47,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
 
         foreach (var entry in entries)
         {
-            var entity = (BaseEntity)entry.Entity;
+            var entity = (BaseAuditableEntity)entry.Entity;
 
             if (entry.State == EntityState.Added)
             {

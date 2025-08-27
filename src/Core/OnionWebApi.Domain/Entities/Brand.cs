@@ -1,7 +1,7 @@
 ﻿using OnionWebApi.Domain.Events.Brands;
 
 namespace OnionWebApi.Domain.Entities;
-public class Brand : BaseEntity
+public class Brand : BaseAuditableEntity
 {
     public Brand()
     {
