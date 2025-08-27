@@ -1,4 +1,4 @@
-﻿namespace OnionWebApi.Api.Controllers;
+﻿namespace OnionWebApi.Api.Controllers.v1;
 
 public class RolesController : BaseController
 {

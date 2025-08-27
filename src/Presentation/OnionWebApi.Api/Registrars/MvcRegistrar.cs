@@ -1,3 +1,4 @@
+using OnionWebApi.Api.Controllers.v1;
 using OnionWebApi.Infrastructure.Cache;
 using System.Text.Json.Serialization;
 

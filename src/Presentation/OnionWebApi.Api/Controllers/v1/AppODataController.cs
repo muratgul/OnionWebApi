@@ -1,8 +1,4 @@
-﻿using Microsoft.OData.Edm;
-using Microsoft.OData.ModelBuilder;
-using OnionWebApi.Application.Features.Brands.Odata;
-
-namespace OnionWebApi.Api.Controllers;
+﻿namespace OnionWebApi.Api.Controllers.v1;
 
 [Route("odata")]
 [ApiController]

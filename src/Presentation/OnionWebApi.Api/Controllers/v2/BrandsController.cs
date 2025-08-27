@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Api.Controllers.v2;
+﻿using OnionWebApi.Api.Controllers.v1;
+
+namespace OnionWebApi.Api.Controllers.v2;
 
 [ApiVersion("2.0")]
 [Route("api/v{version:apiVersion}/[controller]")]

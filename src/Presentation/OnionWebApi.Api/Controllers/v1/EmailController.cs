@@ -1,4 +1,4 @@
-﻿namespace OnionWebApi.Api.Controllers;
+﻿namespace OnionWebApi.Api.Controllers.v1;
 public class EmailController(IEmailService emailService, IEmailTemplateService templateService) : BaseController
 {
     private readonly IEmailService _emailService = emailService;
