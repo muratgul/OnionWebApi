@@ -1,16 +1,14 @@
-﻿using OnionWebApi.Application.Enums;
-using OnionWebApi.Application.Extensions;
-using OnionWebApi.Application.Utilities.Results;
-
-namespace OnionWebApi.Persistence.Repositories;
+﻿namespace OnionWebApi.Persistence.Repositories;
 public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T : class, IEntityBase, new()
 {
     private readonly DbContext dbContext = dbContext;
-
     private DbSet<T> Table => dbContext.Set<T>();
 
 
-    public IQueryable<T> GetAllQueryable(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enableTracking = false)
+    public IQueryable<T> GetAllQueryable(Expression<Func<T, bool>>? predicate = null, 
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, 
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, 
+        bool enableTracking = false)
     {
         IQueryable<T> queryable = Table;
         if (!enableTracking)
@@ -32,25 +30,14 @@ public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T
     }
 
 
-    public async Task<IList<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enableTracking = false)
+    public async Task<IList<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null, 
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, 
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, 
+        bool enableTracking = false, 
+        CancellationToken cancellationToken = default)
     {
-        IQueryable<T> queryable = Table;
-        if (!enableTracking)
-        {
-            queryable = queryable.AsNoTracking();
-        }
-
-        if (include is not null)
-        {
-            queryable = include(queryable);
-        }
-
-        if (predicate is not null)
-        {
-            queryable = queryable.Where(predicate);
-        }
-
-        return orderBy is not null ? await orderBy(queryable).ToListAsync() : await queryable.ToListAsync();
+        var queryable = GetAllQueryable(predicate, include, orderBy, enableTracking);
+        return await queryable.ToListAsync(cancellationToken);
     }
 
     public async Task<PagedList<T>> GetAllByPagingAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, bool enableTracking = false, int currentPage = 1, int pageSize = 3, CancellationToken token = default)
@@ -76,7 +63,10 @@ public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T
             : await PagedList<T>.CreateAsync(queryable, currentPage, pageSize);
     }
 
-    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, bool enableTracking = false)
+    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, 
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, 
+        bool enableTracking = false, 
+        CancellationToken cancellationToken = default)
     {
         IQueryable<T> queryable = Table;
         if (!enableTracking)
@@ -89,55 +79,65 @@ public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T
             queryable = include(queryable);
         }
 
-        //queryable.Where(predicate);
-
-        return await queryable.FirstOrDefaultAsync(predicate);
+        return await queryable.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
-    public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
+    public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null, 
+        CancellationToken cancellationToken = default)
     {
-        return predicate == null ? await Table.AsNoTracking().CountAsync() : await Table.AsNoTracking().CountAsync(predicate);
+        var queryable = Table.AsNoTracking();
+        return predicate == null 
+            ? await queryable.CountAsync(cancellationToken) 
+            : await queryable.CountAsync(predicate, cancellationToken);
     }
 
     public IQueryable<T> Find(Expression<Func<T, bool>> predicate, bool enableTracking = false)
     {
+        var queryable = Table.AsQueryable();
         if (!enableTracking)
         {
-            Table.AsNoTracking();
+            queryable = queryable.AsNoTracking();
         }
 
-        return Table.Where(predicate);
+        return queryable.Where(predicate);
     }
 
-    public PagingResult<T> GetListForPaging(int page, string propertyName, bool asc, Expression<Func<T, bool>>? expression = null, params Expression<Func<T, object>>[]? includeEntities)
+    public PagingResult<T> GetListForPaging(int page, 
+        string propertyName, 
+        bool asc, 
+        Expression<Func<T, bool>>? expression = null, 
+        params Expression<Func<T, object>>[]? includeEntities)
     {
-        var list = Table.AsQueryable();
+        var list = Table.AsNoTracking().AsQueryable();
 
-        if (includeEntities.Length > 0)
+        if (includeEntities?.Length > 0)
         {
             list = list.IncludeMultiple(includeEntities);
         }
 
-        if (expression != null)
+        if (expression is not null)
         {
-            list = list.Where(expression).AsQueryable();
+            list = list.Where(expression);
         }
 
-        list = asc ? list.OrderByDynamic(propertyName, ESort.ASC) : list.OrderByDynamic(propertyName, ESort.DESC);
-
-        if(list is null)
-        {
-            return new PagingResult<T>(new List<T>(), 0, false, "No record found");
-        }
-
+        list = asc 
+            ? list.OrderByDynamic(propertyName, ESort.ASC) 
+            : list.OrderByDynamic(propertyName, ESort.DESC);
+        
         var totalCount = list.Count();
 
-        var start = (page - 1) * 10;
-        list = list.Skip(start).Take(10);
+        if (totalCount == 0)
+        {
+            return new PagingResult<T>(new List<T>(), 0, true, "No record found");
+        }
 
-        return new PagingResult<T>(list.ToList(), totalCount, true, $"{totalCount} record listed");
+        const int pageSize = 0;
+        var start = (page - 1) * pageSize;
+        var pagedData = list.Skip(start).Take(pageSize).ToList();
+
+        return new PagingResult<T>(pagedData, totalCount, true, $"{totalCount} record(s) found, showing page {page}");
     }
-    public Task<IQueryable<T>> GetAllQueryable()
+    public Task<IQueryable<T>> GetAllQueryable(CancellationToken token = default)
     {
         IQueryable<T> queryable = Table;
 

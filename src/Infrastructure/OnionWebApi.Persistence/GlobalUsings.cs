@@ -16,3 +16,6 @@ global using OnionWebApi.Persistence.UnitOfWorks;
 global using Microsoft.AspNetCore.Http;
 global using OnionWebApi.Application.Interfaces.DbContext;
 global using System.Security.Claims;
+global using OnionWebApi.Application.Enums;
+global using OnionWebApi.Application.Extensions;
+global using OnionWebApi.Application.Utilities.Results;
