@@ -142,5 +142,10 @@ public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T
         IQueryable<T> queryable = Table;
 
         return Task.FromResult(queryable);
-    }    
+    }
+
+    public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await Table.AnyAsync(predicate, cancellationToken);
+    }
 }

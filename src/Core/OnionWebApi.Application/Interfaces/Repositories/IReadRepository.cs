@@ -28,4 +28,6 @@ public interface IReadRepository<T> where T : class, IEntityBase, new()
        Expression<Func<T, bool>>? expression = null, params Expression<Func<T, object>>[]? includeEntities);
 
     Task<IQueryable<T>> GetAllQueryable(CancellationToken cancellationToken = default);
+
+    Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
 }
