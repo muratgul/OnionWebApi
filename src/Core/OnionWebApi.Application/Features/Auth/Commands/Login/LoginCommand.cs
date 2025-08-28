@@ -6,6 +6,7 @@ public class LoginCommandResponse
     public string Token { get; set; } = default!;
     public string RefreshToken { get; set; } = default!;
     public DateTime Expiration { get; set; }
+    public DateTime RefreshTokenExpiryTime { get; set; }
 }
 
 public class LoginCommandRequest : IRequest<LoginCommandResponse>
@@ -68,7 +69,8 @@ internal class LoginCommandHandler : BaseHandler, IRequestHandler<LoginCommandRe
         {
             Token = _token,
             RefreshToken = refreshToken,
-            Expiration = token.ValidTo
+            Expiration = token.ValidTo,
+            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime!.Value
         };
 
     }

@@ -1,4 +1,6 @@
-﻿namespace OnionWebApi.Api.Controllers.v1;
+﻿using OnionWebApi.Api.Extensions;
+
+namespace OnionWebApi.Api.Controllers.v1;
 
 [Route("api/[controller]/[action]")]
 public class AuthController : BaseController
@@ -34,7 +36,9 @@ public class AuthController : BaseController
     public async Task<IActionResult> Login(LoginCommandRequest request)
     {
         var response = await Mediator.Send(request);
-        return StatusCode(StatusCodes.Status200OK, response);
+        Response.SetRefreshTokenCookie(response.RefreshToken, response.RefreshTokenExpiryTime);
+        var clientResponse = new { Token = response.Token, Expiration = response.Expiration };
+        return StatusCode(StatusCodes.Status200OK, clientResponse);
     }
 
     [HttpPost]
@@ -52,10 +56,12 @@ public class AuthController : BaseController
     }
 
     [HttpPost]
-    public async Task<IActionResult> RefreshToken(RefreshTokenCommandRequest request)
+    public async Task<IActionResult> RefreshToken()
     {
-        var response = await Mediator.Send(request);
-        return StatusCode(StatusCodes.Status200OK, response);
+        var response = await Mediator.Send(new RefreshTokenCommandRequest());
+        Response.SetRefreshTokenCookie(response.RefreshToken, response.RefreshTokenExpiryTime);
+        var clientResponse = new { Token = response.AccessToken };
+        return StatusCode(StatusCodes.Status200OK, clientResponse);
     }
 
     [HttpPost]

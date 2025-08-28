@@ -26,4 +26,18 @@ public class AuthRules : BaseRules
             throw new EmailAddressShouldBeValidException();
         return Task.CompletedTask;
     }
+
+    public Task TokensShouldNotBeEmpty(string? accessToken, string? refreshToken)
+    {
+        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
+            throw new TokensShouldNotBeEmptyException();
+        return Task.CompletedTask;
+    }
+
+    public Task RefreshTokenShouldBeValid(AppUser? user, string refreshTokenFromCookie)
+    {
+        if (user is null || user.RefreshToken != refreshTokenFromCookie || user.RefreshTokenExpiryTime <= DateTime.Now)
+            throw new RefreshTokenShouldBeValidException();
+        return Task.CompletedTask;
+    }
 }
