@@ -5,5 +5,5 @@ public class BrandDto
     public string Name { get; set; } = default!;
     public DateTime CreatedDate { get; set; }
     public DateTime? UpdatedDate { get; set; }
-    public string NameId { get; set; }
+    public string? NameId { get; set; }
 }

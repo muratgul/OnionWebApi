@@ -16,7 +16,10 @@ public static class DataShapingHelper
                 if (propertyInfo != null)
                 {
                     var fieldValue = propertyInfo.GetValue(sourceObject);
-                    (dataShapedObject as IDictionary<string, object>).Add(propertyInfo.Name, fieldValue);
+                    if (fieldValue != null)
+                    {
+                        (dataShapedObject as IDictionary<string, object>).Add(propertyInfo.Name, fieldValue);
+                    }
                 }
             }
 
@@ -38,7 +41,11 @@ public static class DataShapingHelper
             if (propertyInfo != null)
             {
                 var fieldValue = propertyInfo.GetValue(source);
-                (dataShapedObject as IDictionary<string, object>).Add(propertyInfo.Name, fieldValue);
+                if (fieldValue != null)
+                {
+                    (dataShapedObject as IDictionary<string, object>).Add(propertyInfo.Name, fieldValue);
+                }
+                
             }
         }
 

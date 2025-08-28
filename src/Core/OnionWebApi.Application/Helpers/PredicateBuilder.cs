@@ -12,7 +12,8 @@ public class PredicateBuilder<T>
         }
 
         var parameter = Expression.Parameter(typeof(T), "x");
-        Expression combinedExpression = null;
+        Expression? combinedExpression = null;
+
 
         void AddCondition(Expression condition)
         {
@@ -24,7 +25,7 @@ public class PredicateBuilder<T>
         // Check if the first element is a JArray or not
         if (jArray[0] is JArray)
         {
-            for (int i = 0; i < jArray.Count; i++)
+            for (var i = 0; i < jArray.Count; i++)
             {
                 if (jArray[i] is JArray condition)
                 {
@@ -85,7 +86,7 @@ public class PredicateBuilder<T>
             AddCondition(comparison);
         }
 
-        return Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
+        return Expression.Lambda<Func<T, bool>>(combinedExpression!, parameter);
     }
 
 
@@ -142,9 +143,9 @@ public class PredicateBuilder<T>
 
     private static Expression<Func<T, bool>> BuildPredicate(string[] tokens)
     {
-        Expression<Func<T, bool>> predicate = null;
+        Expression<Func<T, bool>>? predicate = null;
 
-        for (int i = 0; i < tokens.Length; i += 2)
+        for (var i = 0; i < tokens.Length; i += 2)
         {
             var propertyName = tokens[i].Trim('"');
             var operation = tokens[i + 1].Trim('"');
@@ -155,21 +156,13 @@ public class PredicateBuilder<T>
             var propertyValue = Convert.ChangeType(value, property.Type);
             var constant = Expression.Constant(propertyValue);
 
-            Expression comparison;
-
-            switch (operation)
+            Expression comparison = operation switch
             {
-                case "contains":
-                    comparison = Expression.Call(property, typeof(string).GetMethod("Contains", new[] { typeof(string) }), constant);
-                    break;
-                case "=":
-                    comparison = Expression.Equal(property, constant);
-                    break;
+                "contains" => Expression.Call(property, typeof(string).GetMethod("Contains", new[] { typeof(string) })!, constant),
+                "=" => Expression.Equal(property, constant),
                 // Add more cases for other operations as needed
-                default:
-                    throw new ArgumentException("Unsupported operation: " + operation);
-            }
-
+                _ => throw new ArgumentException("Unsupported operation: " + operation),
+            };
             var body = predicate != null ?
                 Expression.AndAlso(predicate.Body, comparison) :
                 comparison;
@@ -185,11 +178,11 @@ public class PredicateBuilder<T>
             predicate = Expression.Lambda<Func<T, bool>>(body, parameter);
         }
 
-        return predicate;
+        return predicate!;
     }
 
     private static string RemoveNonAlphanumeric(string input)
     {
-        return new string(input.Where(char.IsLetterOrDigit).ToArray());
+        return new string([.. input.Where(char.IsLetterOrDigit)]);
     }
 }

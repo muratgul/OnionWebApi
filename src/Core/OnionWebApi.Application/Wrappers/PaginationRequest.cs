@@ -8,5 +8,5 @@ public class PaginationRequest<TEntity> where TEntity : class
     public Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? Include { get; set; }
     public bool EnableTracking { get; set; } = false; 
     public string Route { get; set; } = string.Empty;
-    public string Fields { get; set; } = string.Empty;
+    public string? Fields { get; set; }
 }

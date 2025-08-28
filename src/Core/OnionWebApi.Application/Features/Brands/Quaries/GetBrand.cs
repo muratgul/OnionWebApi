@@ -24,9 +24,7 @@ internal class GetBrandQueryHandler : BaseHandler, IRequestHandler<GetBrandQuery
 
     public async Task<DataResult<GetBrandQueryResponse>> Handle(GetBrandQueryRequest request, CancellationToken cancellationToken)
     {
-        var brand = await _unitOfWork.GetReadRepository<Brand>().GetAsync(
-            predicate: x => x.Id == request.Id,
-            include: q => q.Include(e => e.CreatedUser).Include(e => e.UpdatedUser).Include(e => e.DeletedUser));
+        var brand = await _unitOfWork.GetReadRepository<Brand>().GetAsync(predicate: x => x.Id == request.Id, include: q => q.Include(e => e.CreatedUser).Include(e => e.UpdatedUser).Include(e => e.DeletedUser)!, cancellationToken: cancellationToken);
 
         if (brand == null)
         {

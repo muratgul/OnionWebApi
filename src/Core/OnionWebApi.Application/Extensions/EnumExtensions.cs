@@ -2,11 +2,11 @@
 public static class EnumExtensions
 {
     public static IEnumerable<T> GetEnumValues<T>(this T input) where T : Enum => Enum.GetValues(typeof(T)).Cast<T>();
-    public static IEnumerable<T> GetEnumFlags<T>(this T input)
+    public static IEnumerable<T> GetEnumFlags<T>(this T input) where T : Enum
     {
         foreach (var value in Enum.GetValues(input.GetType()))
         {
-            if((input as Enum).HasFlag((Enum)value))
+            if(input.HasFlag((Enum)value))
             {
                 yield return (T)value;
             }

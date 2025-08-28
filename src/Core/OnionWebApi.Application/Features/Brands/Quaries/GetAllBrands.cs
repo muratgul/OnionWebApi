@@ -33,7 +33,7 @@ internal class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBra
             PageNumber = request.PageNumber,
             PageSize = request.PageSize,
             Predicate = null,
-            Include = q => q.Include(e => e.CreatedUser).Include(e => e.UpdatedUser).Include(e => e.DeletedUser),
+            Include = q => q.Include(e => e.CreatedUser).Include(e => e.UpdatedUser).Include(e => e.DeletedUser)!,
             OrderBy = null,
             EnableTracking = false,
             Route = "Brands/GetAll",

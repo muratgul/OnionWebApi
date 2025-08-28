@@ -16,7 +16,7 @@ public static class ExpandoExtensions
             return expandoObj;
         }
 
-        IDictionary<string, object> expando = new ExpandoObject();
+        IDictionary<string, object?> expando = new ExpandoObject();
 
         var properties = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
@@ -45,18 +45,24 @@ public static class ExpandoExtensions
     public static ExpandoObject ToExpandoObjectDeep(this object obj)
     {
         if (obj == null)
+        {
             return new ExpandoObject();
+        }
 
         if (obj is ExpandoObject expandoObj)
+        {
             return expandoObj;
+        }
 
-        IDictionary<string, object> expando = new ExpandoObject();
+        IDictionary<string, object?> expando = new ExpandoObject();
         var properties = obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         foreach (var property in properties)
         {
             if (!property.CanRead)
+            {
                 continue;
+            }
 
             var value = property.GetValue(obj);
 
@@ -68,16 +74,14 @@ public static class ExpandoExtensions
             {
                 expando[property.Name] = value;
             }
-            else if (value is IEnumerable enumerable && !(value is string))
+            else if (value is IEnumerable enumerable && value is not string)
             {
-                // Collections için
                 expando[property.Name] = enumerable.Cast<object>()
-                    .Select(item => IsSimpleType(item?.GetType()) ? item : item?.ToExpandoObjectDeep())
+                    .Select(item => IsSimpleType(item.GetType()) ? item : item?.ToExpandoObjectDeep())
                     .ToList();
             }
             else
             {
-                // Complex types için recursive çağrı
                 expando[property.Name] = value.ToExpandoObjectDeep();
             }
         }
@@ -88,7 +92,7 @@ public static class ExpandoExtensions
     /// <summary>
     /// ExpandoObject'i Dictionary'e dönüştürür
     /// </summary>
-    public static Dictionary<string, object> ToDictionary(this ExpandoObject expandoObject)
+    public static Dictionary<string, object?> ToDictionary(this ExpandoObject expandoObject)
     {
         return expandoObject.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
@@ -99,7 +103,7 @@ public static class ExpandoExtensions
     /// </summary>
     public static ExpandoObject AddProperty(this ExpandoObject expandoObject, string name, object value)
     {
-        var dict = (IDictionary<string, object>)expandoObject;
+        var dict = (IDictionary<string, object?>)expandoObject;
         dict[name] = value;
         return expandoObject;
     }
@@ -109,7 +113,7 @@ public static class ExpandoExtensions
     /// </summary>
     public static ExpandoObject RemoveProperty(this ExpandoObject expandoObject, string name)
     {
-        var dict = (IDictionary<string, object>)expandoObject;
+        var dict = (IDictionary<string, object?>)expandoObject;
         dict.Remove(name);
         return expandoObject;
     }
@@ -121,7 +125,9 @@ public static class ExpandoExtensions
     private static bool IsSimpleType(Type type)
     {
         if (type == null)
+        {
             return true;
+        }
 
         return type.IsPrimitive ||
                type.IsEnum ||

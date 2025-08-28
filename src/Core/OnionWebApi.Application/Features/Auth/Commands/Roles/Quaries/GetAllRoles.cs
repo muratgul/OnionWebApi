@@ -1,26 +1,18 @@
-﻿
-using Mapster;
-
-namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Quaries;
+﻿namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Quaries;
 public class GetAllRolesQueryResponse
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 }
 
 public class GetAllRolesQueryRequest : IRequest<IEnumerable<GetAllRolesQueryResponse>>
 {
 }
 
-public class GetAllRolesQueryHandler : IRequestHandler<GetAllRolesQueryRequest, IEnumerable<GetAllRolesQueryResponse>>
+public class GetAllRolesQueryHandler(RoleManager<AppRole> roleManager, IMapper mapper) : IRequestHandler<GetAllRolesQueryRequest, IEnumerable<GetAllRolesQueryResponse>>
 {
-    private readonly RoleManager<AppRole> _roleManager;
-    private readonly IMapper _mapper;
-    public GetAllRolesQueryHandler(RoleManager<AppRole> roleManager, IMapper mapper)
-    {
-        _roleManager = roleManager;
-        _mapper = mapper;
-    }
+    private readonly RoleManager<AppRole> _roleManager = roleManager;
+    private readonly IMapper _mapper = mapper;
 
     public async Task<IEnumerable<GetAllRolesQueryResponse>> Handle(GetAllRolesQueryRequest request, CancellationToken cancellationToken)
     {

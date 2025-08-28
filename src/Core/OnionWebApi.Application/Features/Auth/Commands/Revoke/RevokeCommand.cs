@@ -21,6 +21,11 @@ internal class RevokeCommandHandler : BaseHandler, IRequestHandler<RevokeCommand
         var user = await _userManager.FindByEmailAsync(request.Email);
         await _authRules.EmailAddressShouldBeValid(user);
 
+        if(user is null)
+        {
+            throw new NotFoundException("User not found");
+        }
+
         user.RefreshToken = null;
         await _userManager.UpdateAsync(user);        
 
