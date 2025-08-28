@@ -41,14 +41,20 @@ public class WriteRepository<T>(DbContext dbContext) : IWriteRepository<T> where
     public Task<int> SoftDeleteRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
     {
         var entityList = entities.ToList();
-        var deletedCount = 0;
+        var softDeletableEntities = entityList.OfType<ISoftDeletable>().ToList();
 
-        foreach (var entity in entityList)
+        if (softDeletableEntities.Count == 0)
         {
-            SoftDeleteAsync(entity, cancellationToken);
-            deletedCount++;
+            return Task.FromResult(0);
         }
 
-        return Task.FromResult(deletedCount);
+        foreach (var entity in softDeletableEntities)
+        {
+            entity.IsDeleted = true;
+        }
+
+        Table.UpdateRange(softDeletableEntities.Cast<T>());
+
+        return Task.FromResult(softDeletableEntities.Count);
     }
 }
