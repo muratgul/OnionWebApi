@@ -8,7 +8,7 @@ public static class HttpExtensions
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Lax,
+            SameSite = SameSiteMode.Strict,
             Expires = expiryTime
         };
         response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
