@@ -153,18 +153,22 @@ With route-based versioning, no additional query string or header is required to
   ```bash
   dotnet restore
   ```
-
-3. **Apply Database Migrations:**
-   Run the following command to apply the Entity Framework migrations and set up the database schema:
+3. **Add Migration**
    ```bash
-   dotnet ef database update --project src/Infrastructure/OnionWebApi.Persistence
+   Add-Migration InitialMigration -Context AppDbContext
    ```
 
-4. **Build the project:**
+4. **Apply Database Migrations:**
+   Run the following command to apply the Entity Framework migrations and set up the database schema:
+   ```bash
+   Update-Database -Context AppDbContext
+   ```
+
+5. **Build the project:**
   dotnet run --project src/Presentation/OnionWebApi.Api
 
 
-5. **Access Scalar UI:**
+6. **Access Scalar UI:**
    - Navigate to `https://localhost:<port>/scalar` in your browser.
 
 ## Usage

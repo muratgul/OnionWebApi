@@ -12,8 +12,8 @@ using OnionWebApi.Persistence.Context;
 namespace OnionWebApi.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250821113933_mg1")]
-    partial class mg1
+    [Migration("20250901055738_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
