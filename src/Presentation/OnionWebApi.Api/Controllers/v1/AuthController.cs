@@ -42,6 +42,13 @@ public class AuthController : BaseController
     }
 
     [HttpPost]
+    public IActionResult Logout()
+    {
+        Response.DeleteRefreshTokenCookie();
+        return StatusCode(StatusCodes.Status200OK);
+    }
+
+    [HttpPost]
     public async Task<IActionResult> ChangePassword(ChangePasswordCommandRequest request)
     {
         await Mediator.Send(request);
