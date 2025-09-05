@@ -25,8 +25,7 @@ public class HybridCacheBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
             var response = await next(cancellationToken);
 
             if(response is not null)
-            {
-                
+            {                
                 await _cacheService.SetAsync(cacheKey, response, TimeSpan.FromMinutes(cacheTime), cancellationToken);
             }
 

@@ -20,7 +20,7 @@ internal class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommandReque
             throw new ArgumentNullException(nameof(request.RoleName));
         }
 
-        var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == request.Id);
+        var role = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (role is null)
         {

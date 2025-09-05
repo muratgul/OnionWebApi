@@ -46,33 +46,33 @@ public class ExceptionMiddleware : IMiddleware
             {
                 StatusCode = statusCode,
                 Title = "Validation Error",
-                Errors = validationEx.Errors.Select(x => new ErrorDetail
+                Errors = [.. validationEx.Errors.Select(x => new ErrorDetail
                 {
                     Field = x.PropertyName,
                     Message = x.ErrorMessage,
                     Code = x.ErrorCode
-                }).ToList()
+                })]
             },
             BadRequestException badRequestEx => new ErrorResponse
             {
                 StatusCode = statusCode,
                 Title = "Bad Request",
                 Message = badRequestEx.Message,
-                Errors = new List<ErrorDetail>()
+                Errors = []
             },
             NotFoundException notFoundEx => new ErrorResponse
             {
                 StatusCode = statusCode,
                 Title = "Not Found",
                 Message = notFoundEx.Message,
-                Errors = new List<ErrorDetail>()
+                Errors = []
             },
             _ => new ErrorResponse
             {
                 StatusCode = statusCode,
                 Title = "Internal Server Error",
                 Message = "An unexpected error occurred",
-                Errors = new List<ErrorDetail>()
+                Errors = []
             }
         };
     }

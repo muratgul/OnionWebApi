@@ -37,7 +37,7 @@ public class AuthController : BaseController
     {
         var response = await Mediator.Send(request);
         Response.SetRefreshTokenCookie(response.RefreshToken, response.RefreshTokenExpiryTime);
-        var clientResponse = new { Token = response.Token, Expiration = response.Expiration };
+        var clientResponse = new { response.Token, response.Expiration };
         return StatusCode(StatusCodes.Status200OK, clientResponse);
     }
 

@@ -1,8 +1,5 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Commands;
-public class CreateRoleCommandRequest : IRequest<Unit>
-{
-    public string RoleName { get; set; } = default!;
-}
+public record CreateRoleCommandRequest(string RoleName) : IRequest<Unit>;
 
 internal class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommandRequest, Unit>
 {

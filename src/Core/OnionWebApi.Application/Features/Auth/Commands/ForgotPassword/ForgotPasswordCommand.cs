@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.Interfaces.Cache;
-
-namespace OnionWebApi.Application.Features.Auth.Commands.ForgotPassword;
+﻿namespace OnionWebApi.Application.Features.Auth.Commands.ForgotPassword;
 
 public record ForgotPasswordCommandResponse(string Email, string Token);
 

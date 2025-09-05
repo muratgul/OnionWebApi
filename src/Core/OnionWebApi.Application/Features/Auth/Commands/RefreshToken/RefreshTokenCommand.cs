@@ -38,7 +38,7 @@ internal class RefreshTokenCommandHandler : BaseHandler, IRequestHandler<Refresh
 
         await _authRules.RefreshTokenShouldBeValid(user, refreshTokenFromCookie!);
 
-        var newAccessToken = await _tokenService.CreateTokenAsync(user!, "", roles);
+        var newAccessToken = await _tokenService.CreateTokenAsync(user!, "", roles, cancellationToken: cancellationToken);
         var newRefreshToken = _tokenService.GenerateRefreshToken();
 
         _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out var refreshTokenValidityInDays);

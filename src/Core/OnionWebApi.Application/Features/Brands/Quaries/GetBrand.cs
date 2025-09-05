@@ -12,7 +12,6 @@ public class GetBrandQueryRequest : IRequest<DataResult<GetBrandQueryResponse>>,
     public string CacheKey => $"GetBrand_{Id}";
     [JsonIgnore]
     public double CacheTime => 5;
-
     public int Id { get; set; }
 }
 
@@ -26,7 +25,7 @@ internal class GetBrandQueryHandler : BaseHandler, IRequestHandler<GetBrandQuery
     {
         var brand = await _unitOfWork.GetReadRepository<Brand>().GetAsync(predicate: x => x.Id == request.Id, include: q => q.Include(e => e.CreatedUser).Include(e => e.UpdatedUser).Include(e => e.DeletedUser)!, cancellationToken: cancellationToken);
 
-        if (brand == null)
+        if (brand is null)
         {
             return new ErrorDataResult<GetBrandQueryResponse>("Brand not found");            
         }

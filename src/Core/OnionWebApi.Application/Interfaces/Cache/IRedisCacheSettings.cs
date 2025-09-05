@@ -2,7 +2,7 @@
 
 public interface IRedisCacheSettings
 {
-    public string ConnectionString { get; set; }
-    public string InstanceName { get; set; }
-    public bool Enabled { get; set; }
+    string ConnectionString { get; set; }
+    string InstanceName { get; set; }
+    bool Enabled { get; set; }
 }

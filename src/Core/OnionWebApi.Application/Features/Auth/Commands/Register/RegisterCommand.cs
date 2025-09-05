@@ -24,11 +24,11 @@ internal class RegisterCommandHandler : BaseHandler, IRequestHandler<RegisterCom
     {
         await _authRules.UserShouldNotBeExist(await _userManager.FindByEmailAsync(request.Email));
 
-        AppUser user = _mapper.Map<AppUser>(request);
+        var user = _mapper.Map<AppUser>(request);
         user.UserName = request.Email;
         user.SecurityStamp = Guid.NewGuid().ToString();
 
-        IdentityResult result = await _userManager.CreateAsync(user, request.Password);
+        var result = await _userManager.CreateAsync(user, request.Password);
         if (result.Succeeded)
         {
             if (!await _roleManager.RoleExistsAsync("user"))

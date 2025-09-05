@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.Interfaces.Cache;
-
-namespace OnionWebApi.Application.Bases;
+﻿namespace OnionWebApi.Application.Bases;
 public class BaseHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService)
 {
     public readonly IMapper _mapper = mapper;

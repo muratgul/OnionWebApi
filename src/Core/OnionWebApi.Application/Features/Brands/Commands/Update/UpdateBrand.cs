@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.Interfaces.Cache;
-
-namespace OnionWebApi.Application.Features.Brands.Commands.Update;
+﻿namespace OnionWebApi.Application.Features.Brands.Commands.Update;
 public class UpdateBrandCommandRequest : IRequest<Brand>
 {
     public int Id { get; set; }
@@ -13,11 +11,11 @@ internal class UpdateBrandCommandHandler : BaseHandler, IRequestHandler<UpdateBr
     }
     public async Task<Brand> Handle(UpdateBrandCommandRequest request, CancellationToken cancellationToken)
     {
-        var brand = await _unitOfWork.GetReadRepository<Brand>().GetAsync(b => b.Id == request.Id) ?? throw new NotFoundException("Brand not found");
+        var brand = await _unitOfWork.GetReadRepository<Brand>().GetAsync(b => b.Id == request.Id, cancellationToken: cancellationToken) ?? throw new BrandNotFoundException();
 
         brand.Name = request.Name;
 
-        await _unitOfWork.GetWriteRepository<Brand>().UpdateAsync(brand);
+        await _unitOfWork.GetWriteRepository<Brand>().UpdateAsync(brand, cancellationToken);
         await _unitOfWork.SaveAsync();
 
         await _cacheService.RemoveAsync("GetAllBrands");

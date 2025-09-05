@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.Interfaces.Cache;
-
-namespace OnionWebApi.Application.Features.Brands.Odata;
+﻿namespace OnionWebApi.Application.Features.Brands.Odata;
 
 public class GetAllBrandODataQueryResponse : BrandDto
 {
@@ -19,9 +17,7 @@ internal class GetAllBrandODataQueryHandler : BaseHandler, IRequestHandler<GetAl
 
     public Task<IQueryable<GetAllBrandODataQueryResponse>> Handle(GetAllBrandODataQueryRequest request, CancellationToken cancellationToken)
     {
-        var brands = _unitOfWork.GetReadRepository<Brand>().GetAllQueryable(
-      include: x => x.Include(e => e.CreatedUser) // CreatedUserName değil CreatedUser
-  );
+        var brands = _unitOfWork.GetReadRepository<Brand>().GetAllQueryable(include: x => x.Include(e => e.CreatedUser));
 
         var response = brands.Select(brand => new GetAllBrandODataQueryResponse
         {

@@ -1,13 +1,7 @@
 ﻿namespace OnionWebApi.Application.Features.Auth.Commands.Roles.Quaries;
-public class GetAllRolesQueryResponse
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = default!;
-}
+public record GetAllRolesQueryResponse(int Id, string Name);
 
-public class GetAllRolesQueryRequest : IRequest<IEnumerable<GetAllRolesQueryResponse>>
-{
-}
+public class GetAllRolesQueryRequest : IRequest<IEnumerable<GetAllRolesQueryResponse>> { }
 
 public class GetAllRolesQueryHandler(RoleManager<AppRole> roleManager, IMapper mapper) : IRequestHandler<GetAllRolesQueryRequest, IEnumerable<GetAllRolesQueryResponse>>
 {

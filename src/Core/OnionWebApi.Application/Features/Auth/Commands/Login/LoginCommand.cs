@@ -50,7 +50,7 @@ internal class LoginCommandHandler : BaseHandler, IRequestHandler<LoginCommandRe
 
         var roles = await _userManager.GetRolesAsync(user!);
 
-        var token = await _tokenService.CreateTokenAsync(user!, request.Password, roles);
+        var token = await _tokenService.CreateTokenAsync(user!, request.Password, roles, cancellationToken: cancellationToken);
         var refreshToken = _tokenService.GenerateRefreshToken();
 
         _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out var refreshTokenValidityInDays);
