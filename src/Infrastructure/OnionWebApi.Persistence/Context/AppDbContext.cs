@@ -43,7 +43,8 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
             .Where(e => e.Entity is BaseAuditableEntity && 
                         (e.State == EntityState.Added || e.State == EntityState.Modified));
 
-        var userId = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+        //activate this code before production
+        var userId = "1";//_httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
 
         foreach (var entry in entries)
         {

@@ -1,16 +1,16 @@
-﻿using OnionWebApi.Application.Interfaces.Cache;
-
-namespace OnionWebApi.Application.Features.Brands.Commands.Create;
-public class CreateBrandCommandRequest : IRequest<Brand>
+﻿namespace OnionWebApi.Application.Features.Brands.Commands.Create;
+public class CreateBrandCommandRequest : IRequest<IDataResult<Brand>>
 {
     public string Name { get; set; } = default!;
 }
 
-internal class CreateBrandCommandHandler(BrandRules brandRules, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService) : BaseHandler(null, unitOfWork, httpContextAccessor, uriService, cacheService), IRequestHandler<CreateBrandCommandRequest, Brand>
+internal class CreateBrandCommandHandler(IMapper mapper, BrandRules brandRules, 
+    IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService) : 
+    BaseHandler(mapper, unitOfWork, httpContextAccessor, uriService, cacheService), IRequestHandler<CreateBrandCommandRequest, IDataResult<Brand>>
 {
     private readonly BrandRules _brandRules = brandRules;
 
-    public async Task<Brand> Handle(CreateBrandCommandRequest request, CancellationToken cancellationToken)
+    public async Task<IDataResult<Brand>> Handle(CreateBrandCommandRequest request, CancellationToken cancellationToken)
     {
         await _brandRules.BrandNameCheck(request.Name);
 
@@ -22,8 +22,8 @@ internal class CreateBrandCommandHandler(BrandRules brandRules, IUnitOfWork unit
         await _unitOfWork.GetWriteRepository<Brand>().AddAsync(brand, cancellationToken);
         await _unitOfWork.SaveAsync();
 
-        await _cacheService.RemoveAsync("GetAllBrands", cancellationToken);
+        await _cacheService.RemoveAsync("GetAllBrands", cancellationToken);        
 
-        return brand;
+        return new SuccessDataResult<Brand>(brand);
     }
 }
