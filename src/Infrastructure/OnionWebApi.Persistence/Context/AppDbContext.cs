@@ -23,8 +23,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
             var type = entityType.ClrType;
 
             // BaseEntity'den türeyen ve IsDeleted property'si olan entity'ler için
-            if (typeof(BaseEntity).IsAssignableFrom(type) &&
-                type.GetProperty("IsDeleted") != null)
+            if (typeof(ISoftDeletable).IsAssignableFrom(type))
             {
                 var parameter = Expression.Parameter(type, "e");
                 var body = Expression.Equal(
@@ -35,19 +34,27 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
                     .HasQueryFilter(Expression.Lambda(body, parameter));
             }
         }
+
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entries = ChangeTracker.Entries()
-            .Where(e => e.Entity is BaseAuditableEntity && 
-                        (e.State == EntityState.Added || e.State == EntityState.Modified));
+            .Where(e => e.Entity is BaseAuditableEntity &&
+                        (e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted));
 
         //activate this code before production
         var userId = "1";//_httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
 
         foreach (var entry in entries)
         {
+            if (entry.Entity is ISoftDeletable && entry.State == EntityState.Deleted)
+            {
+                entry.State = EntityState.Modified;
+                ((ISoftDeletable)entry.Entity).IsDeleted = true;
+                ((ISoftDeletable)entry.Entity).DeletedUserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId);
+            }
+
             var entity = (BaseAuditableEntity)entry.Entity;
 
             if (entry.State == EntityState.Added)

@@ -1,19 +1,17 @@
-﻿using OnionWebApi.Application.Interfaces.Cache;
-
-namespace OnionWebApi.Application.Features.Brands.Commands.Delete;
-public class DeleteBrandCommandRequest : IRequest<Unit>
+﻿namespace OnionWebApi.Application.Features.Brands.Commands.Delete;
+public class DeleteBrandCommandRequest : IRequest<IDataResult<Unit>>
 {
     public int Id { get; set;}
 }
 
 
-internal class DeleteBrandCommandHandler : BaseHandler, IRequestHandler<DeleteBrandCommandRequest, Unit>
+internal class DeleteBrandCommandHandler : BaseHandler, IRequestHandler<DeleteBrandCommandRequest, IDataResult<Unit>>
 {
     public DeleteBrandCommandHandler(IMapper mapper, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IUriService uriService, ICacheService cacheService) : base(mapper, unitOfWork, httpContextAccessor, uriService, cacheService)
     {
     }
 
-    public async Task<Unit> Handle(DeleteBrandCommandRequest request, CancellationToken cancellationToken)
+    public async Task<IDataResult<Unit>> Handle(DeleteBrandCommandRequest request, CancellationToken cancellationToken)
     {
         var brand = await _unitOfWork.GetReadRepository<Brand>().GetAsync(b => b.Id == request.Id && !b.IsDeleted, cancellationToken: cancellationToken) ?? throw new BrandNotFoundException();
 
@@ -24,8 +22,6 @@ internal class DeleteBrandCommandHandler : BaseHandler, IRequestHandler<DeleteBr
 
         await _cacheService.RemoveAsync("GetAllBrands", cancellationToken);
 
-        return Unit.Value;
-
-                
+        return new SuccessDataResult<Unit>();                
     }
 }
