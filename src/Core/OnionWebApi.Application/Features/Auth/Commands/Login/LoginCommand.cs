@@ -1,6 +1,4 @@
-﻿using OnionWebApi.Application.Interfaces.Cache;
-
-namespace OnionWebApi.Application.Features.Auth.Commands.Login;
+﻿namespace OnionWebApi.Application.Features.Auth.Commands.Login;
 public class LoginCommandResponse
 {
     public string Token { get; set; } = default!;
@@ -13,7 +11,7 @@ public class LoginCommandRequest : IRequest<LoginCommandResponse>
 {
     [Required]
     [EmailAddress]
-    [DefaultValue("muratgul@gmail.com")]
+    [DefaultValue("admin@localhost")]
     public string Email { get; set; } = default!;
 
     [Required]
