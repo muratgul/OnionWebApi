@@ -1,6 +1,6 @@
 ﻿namespace OnionWebApi.Api.Controllers.v1;
 
-//[Authorize]
+[Authorize]
 public class BrandsController : BaseController
 {
     private readonly IMassTransitSend _massTransitSend;

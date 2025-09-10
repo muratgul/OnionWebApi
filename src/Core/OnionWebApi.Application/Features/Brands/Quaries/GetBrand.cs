@@ -13,6 +13,7 @@ public class GetBrandQueryRequest : IRequest<DataResult<GetBrandQueryResponse>>,
     [JsonIgnore]
     public double CacheTime => 5;
     public int Id { get; set; }
+    public string? CacheTag => "";
 }
 
 internal class GetBrandQueryHandler : BaseHandler, IRequestHandler<GetBrandQueryRequest, DataResult<GetBrandQueryResponse>>

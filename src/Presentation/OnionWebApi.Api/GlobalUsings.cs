@@ -63,3 +63,4 @@ global using OnionWebApi.Infrastructure.SignalR.Hubs;
 global using OnionWebApi.Persistence;
 global using Scalar.AspNetCore;
 global using Serilog;
+global using Microsoft.AspNetCore.Authorization;

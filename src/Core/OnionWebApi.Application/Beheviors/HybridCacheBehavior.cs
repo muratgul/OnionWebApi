@@ -14,6 +14,12 @@ public class HybridCacheBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         {
             var cacheKey = query.CacheKey;
             var cacheTime = query.CacheTime;
+            var cacheTag = query.CacheTag ?? "";
+
+            var tags = new List<string>
+            {
+                cacheTag
+            };
 
             var cachedData = await _cacheService.GetAsync<TResponse>(cacheKey, cancellationToken);
 
@@ -26,7 +32,7 @@ public class HybridCacheBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
 
             if(response is not null)
             {                
-                await _cacheService.SetAsync(cacheKey, response, TimeSpan.FromMinutes(cacheTime), cancellationToken);
+                await _cacheService.SetAsync(cacheKey, response, TimeSpan.FromMinutes(cacheTime), tags, cancellationToken);
             }
 
             return response;

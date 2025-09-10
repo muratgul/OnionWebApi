@@ -22,7 +22,8 @@ internal class CreateBrandCommandHandler(IMapper mapper, BrandRules brandRules,
         await _unitOfWork.GetWriteRepository<Brand>().AddAsync(brand, cancellationToken);
         await _unitOfWork.SaveAsync();
 
-        await _cacheService.RemoveAsync("GetAllBrands", cancellationToken);        
+        
+        await _cacheService.RemoveByTagAsync("GetAllBrands", cancellationToken);        
 
         return new SuccessDataResult<Brand>(brand);
     }

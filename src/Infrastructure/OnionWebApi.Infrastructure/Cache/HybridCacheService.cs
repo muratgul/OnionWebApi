@@ -48,24 +48,24 @@ public class HybridCacheService : ICacheService
 
     public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
     {
-        var result = await _hybridCache.GetOrCreateAsync<T>(key,
+        var result = await _hybridCache.GetOrCreateAsync<T>(key,                    
                     factory: async (cancellationToken) => default(T)!,
                     cancellationToken: cancellationToken);
 
         return result;
     }
-    public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
+    public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null, IEnumerable<string>? tags = null, CancellationToken cancellationToken = default)
     {
         var options = GetCacheOptions(expiration);
-        await _hybridCache.SetAsync(key, value, options, cancellationToken: cancellationToken);
+        await _hybridCache.SetAsync(key, value, options, cancellationToken: cancellationToken, tags: tags);
     }
     public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
     {
         await _hybridCache.RemoveAsync(key, cancellationToken);
     }
-    public async Task RemoveByPatternAsync(string pattern, CancellationToken cancellationToken = default)
+    public async Task RemoveByTagAsync(string tag, CancellationToken cancellationToken = default)
     {
-        await Task.CompletedTask;
+        await _hybridCache.RemoveByTagAsync(tag, cancellationToken);
     }
     
 

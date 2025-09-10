@@ -20,7 +20,7 @@ internal class DeleteBrandCommandHandler : BaseHandler, IRequestHandler<DeleteBr
         await _unitOfWork.GetWriteRepository<Brand>().SoftDeleteAsync(brand, cancellationToken);
         await _unitOfWork.SaveAsync();
 
-        await _cacheService.RemoveAsync("GetAllBrands", cancellationToken);
+        await _cacheService.RemoveByTagAsync("GetAllBrands", cancellationToken);
 
         return new SuccessDataResult<Unit>();                
     }

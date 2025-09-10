@@ -12,6 +12,8 @@ public class GetAllBrandsQueryRequest : PagingParameter, IRequest<PaginatedResul
     public string CacheKey => $"GetAllBrands_P{PageNumber}_S{PageSize}";
     [JsonIgnore]
     public double CacheTime => 5;
+    [JsonIgnore]
+    public string CacheTag => "GetAllBrands";
 }
 
 internal class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrandsQueryRequest, PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>

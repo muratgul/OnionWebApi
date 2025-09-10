@@ -18,7 +18,7 @@ internal class UpdateBrandCommandHandler : BaseHandler, IRequestHandler<UpdateBr
         await _unitOfWork.GetWriteRepository<Brand>().UpdateAsync(brand, cancellationToken);
         await _unitOfWork.SaveAsync();
 
-        await _cacheService.RemoveAsync("GetAllBrands", cancellationToken);
+        await _cacheService.RemoveByTagAsync("GetAllBrands", cancellationToken);
 
         return new SuccessDataResult<Brand>(brand);
     }
