@@ -10,28 +10,7 @@ public static class Registration
         services.Configure<TokenSettings>(configuration.GetSection("JWT"));
         services.AddScoped<KeycloakService>();
         services.AddTransient<ITokenService, TokenService>();
-        services.AddScoped<IMassTransitSend, MassTransitSend>();
-        
-
-        /*
-        var redisCacheSettings = configuration.GetSection("RedisCacheSettings").Get<RedisCacheSettings>();
-        services.Configure<RedisCacheSettings>(configuration.GetSection("RedisCacheSettings"));
-        services.AddSingleton<IRedisCacheSettings>(sp =>
-        {
-            return sp.GetRequiredService<IOptions<RedisCacheSettings>>().Value;
-        });
-
-
-        if (redisCacheSettings?.Enabled == true)
-        {
-            services.AddTransient<IRedisCacheService, RedisCacheService>();
-        }
-        else
-        {
-            services.AddTransient<IRedisCacheService, NullRedisCacheService>();
-        }
-        */
-       
+        services.AddScoped<IMassTransitSend, MassTransitSend>();       
 
         services.AddHostedService<BackgroundEmailService>();
 

@@ -19,7 +19,7 @@ public static class Registration
         services.AddTransient<ExceptionMiddleware>();
 
         services.AddRulesFromAssemblyContaining(assembly, typeof(BaseRules));
-       
+
         services.AddValidatorsFromAssembly(assembly);
         ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("tr");
 

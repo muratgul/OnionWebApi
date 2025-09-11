@@ -26,10 +26,14 @@ public class HybridCacheService : ICacheService
         Expiration = TimeSpan.FromHours(2),
         LocalCacheExpiration = TimeSpan.FromMinutes(15),
         Flags = HybridCacheEntryFlags.None
-    }; private static HybridCacheEntryOptions? GetCacheOptions(TimeSpan? expiration)
+    }; 
+
+    private static HybridCacheEntryOptions? GetCacheOptions(TimeSpan? expiration)
     {
         if (!expiration.HasValue)
+        {
             return null;
+        }
 
         // Pre-configured options kullan, performans için
         return expiration.Value switch
@@ -48,7 +52,7 @@ public class HybridCacheService : ICacheService
 
     public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
     {
-        var result = await _hybridCache.GetOrCreateAsync<T>(key,                    
+        var result = await _hybridCache.GetOrCreateAsync<T>(key,
                     factory: async (cancellationToken) => default(T)!,
                     cancellationToken: cancellationToken);
 
@@ -67,8 +71,5 @@ public class HybridCacheService : ICacheService
     {
         await _hybridCache.RemoveByTagAsync(tag, cancellationToken);
     }
-    
-
-
 
 }
