@@ -10,6 +10,7 @@
     <PackageVersion Include="MassTransit" Version="8.5.2" />
     <PackageVersion Include="MassTransit.RabbitMQ" Version="8.5.2" />
     <PackageVersion Include="MediatR" Version="13.0.0" />
+    <PackageVersion Include="MG.Results" Version="1.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Hybrid" Version="9.8.0" />
