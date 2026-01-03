@@ -4,9 +4,9 @@ public class CreateBrandCommandValidator : AbstractValidator<CreateBrandCommandR
     public CreateBrandCommandValidator()
     {
         RuleFor(x => x.Name)
-            .NotEmpty()
-            .MaximumLength(50)
-            .MinimumLength(2)
+            .NotEmpty().WithMessage("Marka Adı boş geçilemez.")
+            .MaximumLength(50).WithMessage("Marka Adı en fazla 50 karakter olabilir.")
+            .MinimumLength(2).WithMessage("Marka Adı en az 2 karakter olabilir.")
             .WithName("Marka Adı");
     }
 }

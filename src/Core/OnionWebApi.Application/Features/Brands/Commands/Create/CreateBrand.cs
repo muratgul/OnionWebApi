@@ -12,6 +12,14 @@ internal class CreateBrandCommandHandler(IMapper mapper, BrandRules brandRules,
 
     public async Task<IDataResult<Brand>> Handle(CreateBrandCommandRequest request, CancellationToken cancellationToken)
     {
+
+        var existingBrand = await _unitOfWork.GetReadRepository<Brand>().GetAllAsync(b => b.Name.ToLower() == request.Name.ToLower() && !b.IsDeleted);
+
+        if (existingBrand != null) 
+        {
+            throw new BrandAlreadyExistsException();
+        }
+
         await _brandRules.BrandNameCheck(request.Name);
 
         var brand = _mapper.Map<Brand>(request);

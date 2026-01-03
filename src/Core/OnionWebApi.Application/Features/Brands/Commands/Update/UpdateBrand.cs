@@ -13,6 +13,12 @@ internal class UpdateBrandCommandHandler : BaseHandler, IRequestHandler<UpdateBr
     {
         var brand = await _unitOfWork.GetReadRepository<Brand>().GetAsync(b => b.Id == request.Id, cancellationToken: cancellationToken) ?? throw new BrandNotFoundException();
 
+        if (brand.Name == request.Name)
+        {
+            return new SuccessDataResult<Brand>(brand);
+        }
+
+        
         brand.Name = request.Name;
 
         await _unitOfWork.GetWriteRepository<Brand>().UpdateAsync(brand, cancellationToken);

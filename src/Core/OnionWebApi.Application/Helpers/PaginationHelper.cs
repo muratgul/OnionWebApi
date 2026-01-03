@@ -12,7 +12,13 @@ public static class PaginationHelper
             data = data.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         }
 
-        var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+        var totalPages = totalRecords == 0 ? 0 : (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+        if (pageNumber > totalPages && totalPages > 0)
+        {
+            pageNumber = totalPages;
+        }
+
 
         var response = new PaginatedResult<IEnumerable<T>>(data, pageNumber, pageSize)
         {
@@ -46,24 +52,39 @@ public static class PaginationHelper
 }
 public class PaginationFilter
 {
+    private const int MaxPageSize = 100;
+    private const int DefaultPageSize = 10;
+
+    private int _pageNumber = 1;
+    private int _pageSize = DefaultPageSize;
+
     public PaginationFilter()
     {
-        PageNumber = 1;
-        PageSize = 10;
     }
 
     public PaginationFilter(int pageNumber, int pageSize)
     {
-        PageNumber = pageNumber < 1 ? 1 : pageNumber;
-        PageSize = pageSize > 10 ? 10 : pageSize;
+        PageNumber = pageNumber;
+        PageSize = pageSize;
     }
 
     public int PageNumber
     {
-        get; set;
+        get => _pageNumber;
+        set => _pageNumber = value < 1 ? 1 : value;
     }
+
     public int PageSize
     {
-        get; set;
+        get => _pageSize;
+        set => _pageSize = value switch
+        {
+            < 1 => DefaultPageSize,
+            > MaxPageSize => MaxPageSize,
+            _ => value
+        };
     }
+
+    public int Skip => (PageNumber - 1) * PageSize;
+    public int Take => PageSize;
 }
