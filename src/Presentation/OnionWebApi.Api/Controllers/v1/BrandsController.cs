@@ -3,15 +3,6 @@
 [Authorize]
 public class BrandsController : BaseController
 {
-    private readonly IMassTransitSend _massTransitSend;
-    private readonly INotificationService _notificationService;
-   
-    public BrandsController(IMassTransitSend massTransitSend, INotificationService notificationService)
-    {
-        _massTransitSend = massTransitSend;
-        _notificationService = notificationService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] GetAllBrandsQueryRequest request, CancellationToken cancellationToken)
     {       
@@ -23,7 +14,7 @@ public class BrandsController : BaseController
     public async Task<IActionResult> Add([FromBody] CreateBrandCommandRequest request, CancellationToken cancellationToken)
     {
         var result = await Mediator.Send(request, cancellationToken);
-        await _notificationService.SendToAllAsync("ReceiveNotofication", new NotificationMessage
+        await NotificationService.SendToAllAsync("ReceiveNotofication", new NotificationMessage
         {
             Type = "Info",
             Content = "Brand is created"
@@ -57,8 +48,8 @@ public class BrandsController : BaseController
             Data = "Test event from BrandsController" + " at " + DateTime.UtcNow.ToString("o")
         };
 
-        await _massTransitSend.SendToEndpoint("brand-message-queue", message, cancellationToken: default);
-        await _massTransitSend.SendToQueue("Buraya bilgi gelecek","MuratQueue", cancellationToken: default);
+        await MassTransitSend.SendToEndpoint("brand-message-queue", message, cancellationToken: default);
+        await MassTransitSend.SendToQueue("Buraya bilgi gelecek","MuratQueue", cancellationToken: default);
         return Ok("Test event published to RabbitMQ.");
     }
 }
