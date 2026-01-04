@@ -1,6 +1,4 @@
 using OnionWebApi.Api.Controllers.v1;
-using OnionWebApi.Infrastructure.Cache;
-using System.Text.Json.Serialization;
 
 namespace OnionWebApi.Api.Registrars;
 
@@ -19,8 +17,9 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
     public void RegisterServices(WebApplicationBuilder builder)
     {
         var redisCacheSettings = builder.Configuration.GetSection("RedisCacheSettings").Get<RedisCacheSettings>();
+        var cacheSettings = builder.Configuration.GetSection("CacheSettings").Get<CacheSettings>();
 
-        if (redisCacheSettings is not null && redisCacheSettings.Enabled)
+        if (redisCacheSettings?.Enabled == true && cacheSettings?.Enabled == true)
         {
             builder.Services.AddScoped<ICacheService, HybridCacheService>();
 
@@ -49,7 +48,7 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
                 };
             });
         }
-        else
+        else if (cacheSettings?.Enabled == true && cacheSettings.InMemoryCacheEnabled)
         {
             builder.Services.AddScoped<ICacheService, InMemoryCacheService>();
         }

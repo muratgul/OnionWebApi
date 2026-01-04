@@ -4,14 +4,19 @@ public class MessagingRegistrar : IWebApplicationBuilderRegistrar
 {
     public void RegisterServices(WebApplicationBuilder builder)
     {
-        var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ").Get<RabbitMQSettings>();
-        builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("RabbitMQ"));
+        var rabbitMQSettings = builder.Configuration
+            .GetSection("RabbitMQ")
+            .Get<RabbitMQSettings>();
+
+        builder.Services.Configure<RabbitMQSettings>(
+            builder.Configuration.GetSection("RabbitMQ"));
 
         builder.Services.AddMassTransit(opt =>
         {
-            // Register MassTransit Consumer
+            // Register Consumers
             opt.AddConsumer<BrandMessageConsumer>();
 
+            // Health Check Configuration
             opt.ConfigureHealthCheckOptions(cfg =>
             {
                 cfg.Name = "MassTransit";
@@ -23,23 +28,40 @@ public class MessagingRegistrar : IWebApplicationBuilderRegistrar
             {
                 opt.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host(builder.Configuration["RabbitMQ:HostName"], "/", h =>
-                    {
-                        h.Username(builder.Configuration["RabbitMQ:UserName"]!);
-                        h.Password(builder.Configuration["RabbitMQ:Password"]!);
-                    });
+                    // RabbitMQ Host Configuration
+                    cfg.Host(
+                        rabbitMQSettings.HostName ?? "localhost",
+                        rabbitMQSettings.VirtualHost ?? "/",
+                        h =>
+                        {
+                            h.Username(rabbitMQSettings.UserName ?? "guest");
+                            h.Password(rabbitMQSettings.Password ?? "guest");
+                        });
 
+                    // Receive Endpoint Configuration
                     cfg.ReceiveEndpoint("brand-message-queue", e =>
                     {
-                        e.Consumer<BrandMessageConsumer>(context);
-                    });
+                        e.ConfigureConsumer<BrandMessageConsumer>(context);
 
-                    cfg.UseMessageRetry(r =>
-                    {
-                        r.Incremental(5, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10));
-                    });
+                        // Retry Policy
+                        e.UseMessageRetry(r =>
+                        {
+                            r.Incremental(5, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10));
+                        });
 
-                    cfg.ConfigureEndpoints(context);
+                        // Circuit Breaker
+                        e.UseCircuitBreaker(cb =>
+                        {
+                            cb.TrackingPeriod = TimeSpan.FromMinutes(1);
+                            cb.TripThreshold = 15;
+                            cb.ActiveThreshold = 10;
+                            cb.ResetInterval = TimeSpan.FromMinutes(5);
+                        });
+
+                        // Concurrency Limit (Optional)
+                        e.PrefetchCount = 16;
+                        e.ConcurrentMessageLimit = 8;
+                    });
                 });
             }
             else
