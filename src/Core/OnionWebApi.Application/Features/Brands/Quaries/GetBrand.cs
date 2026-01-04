@@ -1,4 +1,5 @@
-﻿namespace OnionWebApi.Application.Features.Brands.Quaries;
+﻿
+namespace OnionWebApi.Application.Features.Brands.Quaries;
 public class GetBrandQueryResponse : BrandDto
 {
     public string CreatedUserName { get; set; } = default!;
@@ -11,9 +12,11 @@ public class GetBrandQueryRequest : IRequest<DataResult<GetBrandQueryResponse>>,
     [JsonIgnore]
     public string CacheKey => $"GetBrand_{Id}";
     [JsonIgnore]
-    public double CacheTime => 5;
+    public TimeSpan CacheDuration => TimeSpan.FromMinutes(5);
+    [JsonIgnore]
+    public IEnumerable<string>? CacheTags => [];
+
     public int Id { get; set; }
-    public string? CacheTag => "";
 }
 
 internal class GetBrandQueryHandler : BaseHandler, IRequestHandler<GetBrandQueryRequest, DataResult<GetBrandQueryResponse>>

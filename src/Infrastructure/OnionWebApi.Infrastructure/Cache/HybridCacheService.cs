@@ -11,7 +11,7 @@ public class HybridCacheService : ICacheService
     {
         Expiration = TimeSpan.FromMinutes(5),
         LocalCacheExpiration = TimeSpan.FromMinutes(2),
-        Flags = HybridCacheEntryFlags.None
+        Flags = HybridCacheEntryFlags.DisableCompression
     };
 
     private static readonly HybridCacheEntryOptions MediumTermOptions = new()
@@ -32,7 +32,7 @@ public class HybridCacheService : ICacheService
     {
         if (!expiration.HasValue)
         {
-            return null;
+            return MediumTermOptions;
         }
 
         // Pre-configured options kullan, performans için
@@ -61,7 +61,7 @@ public class HybridCacheService : ICacheService
     public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null, IEnumerable<string>? tags = null, CancellationToken cancellationToken = default)
     {
         var options = GetCacheOptions(expiration);
-        await _hybridCache.SetAsync(key, value, options, cancellationToken: cancellationToken, tags: tags);
+        await _hybridCache.SetAsync(key, value, options, tags, cancellationToken);
     }
     public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
     {

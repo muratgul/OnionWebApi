@@ -37,6 +37,7 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
             builder.Services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = redisCacheSettings.ConnectionString;
+                options.InstanceName = redisCacheSettings.InstanceName;
                 options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
                 {
                     EndPoints = { redisCacheSettings.ConnectionString },
@@ -51,6 +52,7 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
         else if (cacheSettings?.Enabled == true && cacheSettings.InMemoryCacheEnabled)
         {
             builder.Services.AddScoped<ICacheService, InMemoryCacheService>();
+            builder.Services.AddHybridCache();
         }
 
 

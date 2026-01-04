@@ -1,4 +1,5 @@
-﻿namespace OnionWebApi.Application.Features.Brands.Quaries;
+﻿
+namespace OnionWebApi.Application.Features.Brands.Quaries;
 public class GetAllBrandsQueryResponse : BrandDto
 {
     public string CreatedUserName { get; set; } = default!;
@@ -11,9 +12,9 @@ public class GetAllBrandsQueryRequest : PagingParameter, IRequest<PaginatedResul
     [JsonIgnore]
     public string CacheKey => $"GetAllBrands_P{PageNumber}_S{PageSize}";
     [JsonIgnore]
-    public double CacheTime => 5;
+    public TimeSpan CacheDuration => TimeSpan.FromMinutes(5);
     [JsonIgnore]
-    public string CacheTag => "GetAllBrands";
+    public IEnumerable<string>? CacheTags => ["GetAllBrands"];
 }
 
 internal class GetAllBrandsQueryHandler : BaseHandler, IRequestHandler<GetAllBrandsQueryRequest, PaginatedResult<IEnumerable<GetAllBrandsQueryResponse>>>
