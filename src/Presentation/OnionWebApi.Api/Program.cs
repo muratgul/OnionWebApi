@@ -7,7 +7,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    await IdentityDataSeeder.SeedAdminUserAsync(scope.ServiceProvider);
+    //await IdentityDataSeeder.SeedAdminUserAsync(scope.ServiceProvider);
 }
 
 app.RegisterPipelineComponents(typeof(Program));

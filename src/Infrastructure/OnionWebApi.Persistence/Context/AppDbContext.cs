@@ -1,14 +1,17 @@
 ﻿namespace OnionWebApi.Persistence.Context;
 public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbContext
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IHttpContextAccessor? _httpContextAccessor;
+    private readonly TimeProvider _timeProvider;
     public AppDbContext()
     {
+        _timeProvider = TimeProvider.System;
     }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContextAccessor, TimeProvider? timeProvider) : base(options)
     {
         _httpContextAccessor = httpContextAccessor;
+        _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
     public DbSet<Brand> Brands { get; set; }
@@ -17,57 +20,86 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, int>, IAppDbCont
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
+        ApplySoftDeleteQueryFilter(modelBuilder);
+    }
+    private static void ApplySoftDeleteQueryFilter(ModelBuilder modelBuilder)
+    {
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            var type = entityType.ClrType;
-
-            // BaseEntity'den türeyen ve IsDeleted property'si olan entity'ler için
-            if (typeof(ISoftDeletable).IsAssignableFrom(type))
+            if (typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
             {
-                var parameter = Expression.Parameter(type, "e");
-                var body = Expression.Equal(
-                    Expression.Property(parameter, "IsDeleted"),
-                    Expression.Constant(false));
+                // Global query filter: IsDeleted == false
+                var parameter = Expression.Parameter(entityType.ClrType, "e");
+                var propertyAccess = Expression.Property(parameter, nameof(ISoftDeletable.IsDeleted));
+                var filter = Expression.Equal(propertyAccess, Expression.Constant(false));
+                var lambda = Expression.Lambda(filter, parameter);
 
-                modelBuilder.Entity(type)
-                    .HasQueryFilter(Expression.Lambda(body, parameter));
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
             }
         }
-
     }
-
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        HandleAuditableEntities();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+    public override int SaveChanges()
+    {
+        HandleAuditableEntities();
+        return base.SaveChanges();
+    }
+    private void HandleAuditableEntities()
+    {
+        var userId = GetCurrentUserId();
+        var now = _timeProvider.GetUtcNow().UtcDateTime;
+
         var entries = ChangeTracker.Entries()
             .Where(e => e.Entity is BaseAuditableEntity &&
-                        (e.State == EntityState.Added || e.State == EntityState.Modified || e.State == EntityState.Deleted));
-
-        var userId = _httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(p => p.Type == ClaimTypes.NameIdentifier)?.Value;
+                        e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
+            .ToList();
 
         foreach (var entry in entries)
         {
-            if (entry.Entity is ISoftDeletable && entry.State == EntityState.Deleted)
+            // Soft Delete
+            if (entry.Entity is ISoftDeletable softDeletable && entry.State == EntityState.Deleted)
             {
                 entry.State = EntityState.Modified;
-                ((ISoftDeletable)entry.Entity).IsDeleted = true;
-                ((ISoftDeletable)entry.Entity).DeletedUserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId);
+                softDeletable.IsDeleted = true;
+                softDeletable.DeletedUserId = userId;
+                softDeletable.DeletedDate = now;
             }
 
-            var entity = (BaseAuditableEntity)entry.Entity;
-
-            if (entry.State == EntityState.Added)
+            // Audit fields
+            if (entry.Entity is BaseAuditableEntity auditable)
             {
-                entity.CreatedUserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId);
-                entity.CreatedDate = DateTime.UtcNow;
-            }
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        auditable.CreatedUserId = userId;
+                        auditable.CreatedDate = now;
+                        break;
 
-            if (entry.State == EntityState.Modified)
-            {
-                entity.UpdatedUserId = string.IsNullOrEmpty(userId) ? 0 : int.Parse(userId);
-                entity.UpdatedDate = DateTime.UtcNow;
+                    case EntityState.Modified:
+                        // CreatedDate ve CreatedUserId değişmesin
+                        entry.Property(nameof(BaseAuditableEntity.CreatedDate)).IsModified = false;
+                        entry.Property(nameof(BaseAuditableEntity.CreatedUserId)).IsModified = false;
+
+                        auditable.UpdatedUserId = userId;
+                        auditable.UpdatedDate = now;
+                        break;
+                }
             }
         }
-        return base.SaveChangesAsync(cancellationToken);
+    }
+    private int GetCurrentUserId()
+    {
+        if (_httpContextAccessor?.HttpContext == null)
+        {
+            return 0;
+        }
+
+        var userIdClaim = _httpContextAccessor.HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        return int.TryParse(userIdClaim, out var userId) ? userId : 0;
     }
 }
