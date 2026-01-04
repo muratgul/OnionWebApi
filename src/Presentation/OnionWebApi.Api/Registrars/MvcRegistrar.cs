@@ -54,6 +54,10 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
             builder.Services.AddScoped<ICacheService, InMemoryCacheService>();
             builder.Services.AddHybridCache();
         }
+        else 
+        {
+            builder.Services.AddScoped<ICacheService, NullCacheService>();
+        }
 
 
         builder.Services.AddApiVersioning(options =>
