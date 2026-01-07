@@ -21,7 +21,7 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
 
         if (redisCacheSettings?.Enabled == true && cacheSettings?.Enabled == true)
         {
-            builder.Services.AddScoped<ICacheService, HybridCacheService>();
+            builder.Services.AddSingleton<ICacheService, HybridCacheService>();
 
             builder.Services.AddHybridCache(options =>
             {
@@ -51,7 +51,7 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
         }
         else if (cacheSettings?.Enabled == true && cacheSettings.InMemoryCacheEnabled)
         {
-            builder.Services.AddScoped<ICacheService, InMemoryCacheService>();
+            builder.Services.AddSingleton<ICacheService, InMemoryCacheService>();
             builder.Services.AddHybridCache();
         }
         else 
