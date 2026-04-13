@@ -35,6 +35,11 @@ public class WriteRepository<T>(DbContext dbContext) : IWriteRepository<T> where
     }
     public Task<bool> SoftDeleteAsync(T entity, CancellationToken cancellationToken = default)
     {
+        if (entity is not ISoftDeletable softDeletableEntity)
+        {
+            return Task.FromResult(false);
+        }
+        softDeletableEntity.IsDeleted = true;
         Table.Update(entity);
         return Task.FromResult(true);
     }
