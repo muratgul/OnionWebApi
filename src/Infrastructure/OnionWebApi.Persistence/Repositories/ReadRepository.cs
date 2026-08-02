@@ -1,4 +1,4 @@
-﻿namespace OnionWebApi.Persistence.Repositories;
+namespace OnionWebApi.Persistence.Repositories;
 public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T : class, IEntityBase, new()
 {
     private readonly DbContext dbContext = dbContext;
@@ -79,7 +79,7 @@ public class ReadRepository<T>(DbContext dbContext) : IReadRepository<T> where T
             queryable = include(queryable);
         }
 
-        return await queryable.FirstOrDefaultAsync(predicate, cancellationToken);
+        return (await queryable.FirstOrDefaultAsync(predicate, cancellationToken))!;
     }
 
     public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null, 

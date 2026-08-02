@@ -11,9 +11,10 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **Mapster**: A high-performance object-to-object mapper.
 - **MassTransit**: Distributed application framework for .NET.
 - **RabbitMQ**: Message queue infrastructure.
-- **Scalar / OpenAPI**: Interactive API documentation and testing.
-- **JWT Bearer Authentication**: Secure authentication and authorization.
+- **Clean Architecture**: Organized into Domain, Application, Infrastructure, and Presentation layers.
+- **CQRS & MediatR**: Handled business logic and commands/queries efficiently.
 - **FusionCache & Redis**: Robust multi-level caching layer (via Infrastructure).
+- **Code Quality & Stability**: Addressed nullability warnings, fixed inherited member hiding, and resolved middleware header duplication for a production-ready flawless experience.
 - **Otp.NET & QRCoder**: For Two-Factor Authentication (2FA) using Time-Based One-Time Passwords (TOTP).
 - **Newtonsoft.Json & System.Text.Json**: JSON serialization and reference handling.
 - **OData (optional)**: Advanced querying support (available in code comments).

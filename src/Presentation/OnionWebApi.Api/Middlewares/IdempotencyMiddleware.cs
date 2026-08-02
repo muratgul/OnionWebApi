@@ -1,4 +1,4 @@
-﻿namespace OnionWebApi.Api.Middlewares;
+namespace OnionWebApi.Api.Middlewares;
 
 public class IdempotencyMiddleware
 {
@@ -36,9 +36,9 @@ public class IdempotencyMiddleware
 
         if (_cache.TryGetValue(key, out CachedResponse? cachedResponse))
         {
-            context.Response.StatusCode = cachedResponse.StatusCode;
+            context.Response.StatusCode = cachedResponse!.StatusCode;
             context.Response.ContentType = cachedResponse.ContentType;
-            context.Response.Headers.Add("X-Cache", "HIT");
+            context.Response.Headers["X-Cache"] = "HIT";
             await context.Response.WriteAsync(cachedResponse.Body);
             return;
         }
@@ -63,7 +63,7 @@ public class IdempotencyMiddleware
             var cacheTime = TimeSpan.FromMinutes(idempotentAttribute.CacheMinutes);
             _cache.Set(key, cached, cacheTime);
 
-            context.Response.Headers.Add("X-Cache", "MISS");
+            context.Response.Headers["X-Cache"] = "MISS";
         }
 
         memoryStream.Seek(0, SeekOrigin.Begin);

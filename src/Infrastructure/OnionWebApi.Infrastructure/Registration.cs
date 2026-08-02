@@ -1,4 +1,4 @@
-﻿using OnionWebApi.Infrastructure.Cache;
+using OnionWebApi.Infrastructure.Cache;
 
 namespace OnionWebApi.Infrastructure;
 public static class Registration
@@ -28,7 +28,7 @@ public static class Registration
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"] ?? string.Empty)),
                 ValidateLifetime = true,
                 ValidIssuer = configuration["JWT:ValidIssuer"],
                 ValidAudience = configuration["JWT:Audience"],

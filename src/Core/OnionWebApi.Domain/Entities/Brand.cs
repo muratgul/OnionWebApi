@@ -1,4 +1,4 @@
-﻿using OnionWebApi.Domain.Events.Brands;
+using OnionWebApi.Domain.Events.Brands;
 
 namespace OnionWebApi.Domain.Entities;
 public class Brand : BaseAuditableSoftDeletableEntity
@@ -10,8 +10,7 @@ public class Brand : BaseAuditableSoftDeletableEntity
     {
         Name = name;
     }
-    public string Name { get; set; }
-    public AppUser CreatedUser { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     //Event
     public void CreateBrand(string name)

@@ -1,4 +1,4 @@
-﻿using OnionWebApi.Api.Controllers.v1;
+using OnionWebApi.Api.Controllers.v1;
 
 namespace OnionWebApi.Api.Controllers.v2;
 
@@ -6,18 +6,13 @@ namespace OnionWebApi.Api.Controllers.v2;
 [Route("api/v{version:apiVersion}/[controller]")]
 public class BrandsController : BaseController
 {
-    private readonly IMassTransitSend _massTransitSend;
-    private readonly ISender Mediator;
-    public BrandsController(IMassTransitSend massTransitSend, ISender mediator)
+    public BrandsController()
     {
-        _massTransitSend = massTransitSend;
-        Mediator = mediator;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] GetAllBrandsQueryRequest request)
     {
-        return Ok("Version 2.0 results");
         return Ok(await Mediator.Send(request));
     }
 
@@ -54,8 +49,8 @@ public class BrandsController : BaseController
             Data = "Test event from BrandsController" + " at " + DateTime.UtcNow.ToString("o")
         };
 
-        await _massTransitSend.SendToEndpoint("brand-message-queue", message, cancellationToken: default);
-        await _massTransitSend.SendToQueue("Buraya bilgi gelecek", "MuratQueue", cancellationToken: default);
+        await MassTransitSend.SendToEndpoint("brand-message-queue", message, cancellationToken: default);
+        await MassTransitSend.SendToQueue("Buraya bilgi gelecek", "MuratQueue", cancellationToken: default);
         return Ok("Test event published to RabbitMQ.");
     }
 }
