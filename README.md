@@ -13,7 +13,7 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **RabbitMQ**: Message queue infrastructure.
 - **Scalar / OpenAPI**: Interactive API documentation and testing.
 - **JWT Bearer Authentication**: Secure authentication and authorization.
-- **Redis**: Caching layer (via Infrastructure).
+- **FusionCache & Redis**: Robust multi-level caching layer (via Infrastructure).
 - **Otp.NET & QRCoder**: For Two-Factor Authentication (2FA) using Time-Based One-Time Passwords (TOTP).
 - **Newtonsoft.Json & System.Text.Json**: JSON serialization and reference handling.
 - **OData (optional)**: Advanced querying support (available in code comments).
@@ -43,6 +43,7 @@ OnionWebApi ( Onion Architecture ) is a modular, layered web API project built w
 - **API Versioning:** OnionWebApi supports route-based API versioning, allowing each version of the API to be clearly defined within the URL path (e.g., `/api/v1/products`). This approach simplifies version management and works seamlessly with tools like Scalar for interactive testing.
 - **Rate Limiting:** Protects the API from excessive requests using a fixed window rate limiter. This feature is highly configurable through `appsettings.json`.
 - **Real-time Notifications with SignalR:** Provides real-time communication capabilities using SignalR. A global hub is configured to push notifications to all connected clients.
+- **Advanced Caching with FusionCache:** Implements a robust multi-level caching strategy using FusionCache, with Redis as a distributed second-level cache and backplane, along with fail-safe mechanisms to ensure high availability.
 
 ### Rate Limiting Usage
 

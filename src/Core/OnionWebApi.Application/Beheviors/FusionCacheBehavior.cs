@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace OnionWebApi.Application.Beheviors;
 
-public class HybridCacheBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+public class FusionCacheBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly ICacheService _cacheService;
-    private readonly ILogger<HybridCacheBehavior<TRequest, TResponse>> _logger;
+    private readonly ILogger<FusionCacheBehavior<TRequest, TResponse>> _logger;
     private readonly bool _isCacheEnabled;
 
-    public HybridCacheBehavior(ICacheService cacheService, IConfiguration configuration, ILogger<HybridCacheBehavior<TRequest, TResponse>> logger)
+    public FusionCacheBehavior(ICacheService cacheService, IConfiguration configuration, ILogger<FusionCacheBehavior<TRequest, TResponse>> logger)
     {
         _cacheService = cacheService;
         _logger = logger;
@@ -17,14 +17,14 @@ public class HybridCacheBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        if (!_isCacheEnabled || request is not ICacheableQuery query)
+        if(!_isCacheEnabled || request is not ICacheableQuery query)
         {
             return await next(cancellationToken);
         }
 
         var cacheKey = query.CacheKey;
 
-        if (string.IsNullOrWhiteSpace(cacheKey))
+        if(string.IsNullOrWhiteSpace(cacheKey))
         {
             _logger.LogWarning("Cache key boş: {RequestType}", typeof(TRequest).Name);
             return await next(cancellationToken);
@@ -34,7 +34,7 @@ public class HybridCacheBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         {
             var cachedData = await _cacheService.GetAsync<TResponse>(cacheKey, cancellationToken);
 
-            if (cachedData is not null)
+            if(cachedData is not null)
             {
                 _logger.LogDebug("Cache hit: {CacheKey}", cacheKey);
                 return cachedData;
@@ -42,20 +42,20 @@ public class HybridCacheBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
 
             _logger.LogDebug("Cache miss: {CacheKey}", cacheKey);
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             _logger.LogWarning(ex, "Cache okuma hatası: {CacheKey}, devam ediliyor", cacheKey);
         }
 
         var response = await next(cancellationToken);
 
-        if (response is not null)
+        if(response is not null)
         {
             try
             {
                 await _cacheService.SetAsync(cacheKey, response, query.CacheDuration, query.CacheTags, cancellationToken);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 _logger.LogWarning(ex, "Cache yazma hatası: {CacheKey}", cacheKey);
             }
@@ -63,5 +63,5 @@ public class HybridCacheBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
 
         return response;
     }
-    
+
 }

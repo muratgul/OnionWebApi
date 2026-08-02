@@ -1,4 +1,4 @@
-﻿namespace OnionWebApi.Application;
+namespace OnionWebApi.Application;
 
 public static class Registration
 {
@@ -34,7 +34,7 @@ public static class Registration
 
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FluentValidationBehevior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(HybridCacheBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(FusionCacheBehavior<,>));
         //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RedisCacheBehevior<,>));
         services.AddHttpContextAccessor();
 

@@ -1,86 +1,77 @@
+using ZiggyCreatures.Caching.Fusion;
+using OnionWebApi.Application.Interfaces.Cache;
 using System.Collections.Concurrent;
 
 namespace OnionWebApi.Infrastructure.Cache;
 
-public class InMemoryCacheService : ICacheService
+public class FusionCacheService : ICacheService
 {
-    private readonly IMemoryCache _memoryCache;
+    private readonly IFusionCache _fusionCache;
     private readonly ConcurrentDictionary<string, HashSet<string>> _tagToKeys;
     private readonly ConcurrentDictionary<string, HashSet<string>> _keyToTags;
     private readonly object _lock = new object();
 
-    public InMemoryCacheService(IMemoryCache memoryCache)
+    public FusionCacheService(IFusionCache fusionCache)
     {
-        _memoryCache = memoryCache;
+        _fusionCache = fusionCache;
         _tagToKeys = new ConcurrentDictionary<string, HashSet<string>>();
         _keyToTags = new ConcurrentDictionary<string, HashSet<string>>();
     }
 
-    public Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
+    public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(_memoryCache.Get<T>(key));
+        return await _fusionCache.GetOrDefaultAsync<T>(key, token: cancellationToken);
     }
 
-    public Task SetAsync<T>(string key, T value, TimeSpan? expiration = null, IEnumerable<string>? tags = null, CancellationToken cancellationToken = default)
+    public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null, IEnumerable<string>? tags = null, CancellationToken cancellationToken = default)
     {
-        var options = new MemoryCacheEntryOptions();
-
+        var options = new FusionCacheEntryOptions();
+        
         if (expiration.HasValue)
         {
-            options.SetAbsoluteExpiration(expiration.Value);
+            options.SetDuration(expiration.Value);
+        }
+        else 
+        {
+            options.SetDuration(TimeSpan.FromMinutes(30)); // Default
         }
 
-        // Key silindiðinde tag mapping'lerini de temizle
-        options.PostEvictionCallbacks.Add(new PostEvictionCallbackRegistration
-        {
-            EvictionCallback = (cacheKey, value, reason, state) =>
-            {
-                RemoveKeyFromTagMappings(cacheKey.ToString()!);
-            }
-        });
+        await _fusionCache.SetAsync(key, value, options, token: cancellationToken);
 
-        _memoryCache.Set(key, value, options);
-
-        // Tag mapping'lerini güncelle
         if (tags != null && tags.Any())
         {
             UpdateTagMappings(key, tags);
         }
-
-        return Task.CompletedTask;
     }
 
-    public Task RemoveAsync(string key, CancellationToken cancellationToken = default)
+    public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
     {
-        _memoryCache.Remove(key);
+        await _fusionCache.RemoveAsync(key, token: cancellationToken);
         RemoveKeyFromTagMappings(key);
-        return Task.CompletedTask;
     }
 
-    public Task RemoveByTagAsync(string tag, CancellationToken cancellationToken = default)
+    public async Task RemoveByTagAsync(string tag, CancellationToken cancellationToken = default)
     {
-        if (_tagToKeys.TryGetValue(tag, out var keys))
+        if (_tagToKeys.TryRemove(tag, out var keys))
         {
-            var keysCopy = new List<string>();
+            List<string> keysToRemove;
             lock (_lock)
             {
-                keysCopy.AddRange(keys);
+                keysToRemove = keys.ToList();
             }
 
-            foreach (var key in keysCopy)
+            foreach (var key in keysToRemove)
             {
-                _memoryCache.Remove(key);
+                await _fusionCache.RemoveAsync(key, token: cancellationToken);
                 RemoveKeyFromTagMappings(key);
             }
         }
-
-        return Task.CompletedTask;
     }
+
     private void UpdateTagMappings(string key, IEnumerable<string> tags)
     {
         lock (_lock)
         {
-            // Önce eski tag mapping'lerini temizle
             if (_keyToTags.TryGetValue(key, out var oldTags))
             {
                 foreach (var oldTag in oldTags)
@@ -96,7 +87,6 @@ public class InMemoryCacheService : ICacheService
                 }
             }
 
-            // Yeni tag mapping'lerini ekle
             var newTags = new HashSet<string>(tags);
             _keyToTags.AddOrUpdate(key, newTags, (k, v) => newTags);
 
@@ -112,6 +102,7 @@ public class InMemoryCacheService : ICacheService
             }
         }
     }
+
     private void RemoveKeyFromTagMappings(string key)
     {
         lock (_lock)

@@ -1,5 +1,5 @@
 using OnionWebApi.Api.Controllers.v1;
-
+using ZiggyCreatures.Caching.Fusion;
 namespace OnionWebApi.Api.Registrars;
 
 public class MvcRegistrar : IWebApplicationBuilderRegistrar
@@ -19,40 +19,44 @@ public class MvcRegistrar : IWebApplicationBuilderRegistrar
         var redisCacheSettings = builder.Configuration.GetSection("RedisCacheSettings").Get<RedisCacheSettings>();
         var cacheSettings = builder.Configuration.GetSection("CacheSettings").Get<CacheSettings>();
 
-        if (redisCacheSettings?.Enabled == true && cacheSettings?.Enabled == true)
+        if(cacheSettings?.Enabled == true)
         {
-            builder.Services.AddSingleton<ICacheService, HybridCacheService>();
-
-            builder.Services.AddHybridCache(options =>
-            {
-                options.MaximumPayloadBytes = 1024 * 1024;
-                options.MaximumKeyLength = 1024;
-                options.DefaultEntryOptions = new HybridCacheEntryOptions
+            builder.Services.AddSingleton<ICacheService, FusionCacheService>();
+            
+            var fusionBuilder = builder.Services.AddFusionCache()
+                .WithDefaultEntryOptions(new FusionCacheEntryOptions
                 {
-                    Expiration = TimeSpan.FromMinutes(30),
-                    LocalCacheExpiration = TimeSpan.FromMinutes(5),
-                };
-            });
+                    Duration = TimeSpan.FromMinutes(30),
+                    IsFailSafeEnabled = true,
+                    FailSafeMaxDuration = TimeSpan.FromHours(2),
+                    FailSafeThrottleDuration = TimeSpan.FromSeconds(30),
+                    FactorySoftTimeout = TimeSpan.FromMilliseconds(100),
+                    EagerRefreshThreshold = 0.8f
+                })
+                .WithSerializer(new ZiggyCreatures.Caching.Fusion.Serialization.SystemTextJson.FusionCacheSystemTextJsonSerializer());
 
-            builder.Services.AddStackExchangeRedisCache(options =>
+            if (redisCacheSettings?.Enabled == true)
             {
-                options.Configuration = redisCacheSettings.ConnectionString;
-                options.InstanceName = redisCacheSettings.InstanceName;
-                options.ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
-                {
-                    EndPoints = { redisCacheSettings.ConnectionString },
-                    AbortOnConnectFail = false,
-                    ConnectTimeout = 1000,
-                    SyncTimeout = 1000,
-                    ConnectRetry = 3,
-                    ReconnectRetryPolicy = new StackExchange.Redis.ExponentialRetry(1000),
-                };
-            });
-        }
-        else if (cacheSettings?.Enabled == true && cacheSettings.InMemoryCacheEnabled)
-        {
-            builder.Services.AddSingleton<ICacheService, InMemoryCacheService>();
-            builder.Services.AddHybridCache();
+                fusionBuilder
+                    .WithDistributedCache(new Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache(new Microsoft.Extensions.Caching.StackExchangeRedis.RedisCacheOptions
+                    {
+                        Configuration = redisCacheSettings.ConnectionString,
+                        InstanceName = redisCacheSettings.InstanceName,
+                        ConfigurationOptions = new StackExchange.Redis.ConfigurationOptions
+                        {
+                            EndPoints = { redisCacheSettings.ConnectionString },
+                            AbortOnConnectFail = false,
+                            ConnectTimeout = 1000,
+                            SyncTimeout = 1000,
+                            ConnectRetry = 3,
+                            ReconnectRetryPolicy = new StackExchange.Redis.ExponentialRetry(1000),
+                        }
+                    }))
+                    .WithBackplane(new ZiggyCreatures.Caching.Fusion.Backplane.StackExchangeRedis.RedisBackplane(new ZiggyCreatures.Caching.Fusion.Backplane.StackExchangeRedis.RedisBackplaneOptions
+                    {
+                        Configuration = redisCacheSettings.ConnectionString
+                    }));
+            }
         }
         else 
         {
